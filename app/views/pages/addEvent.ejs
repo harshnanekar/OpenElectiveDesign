@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/style.css">
+    <title>Add Event</title>
+    <%- include ('../partials/partial') %>
+    <style>
+        body{
+            background-color: whitesmoke;
+        }
+        .signin{
+          position: relative;
+          top:10px;
+        }
+        #eventMessage{
+        background-color: red;
+        font-size:18px;
+        width:126%;
+        visibility: hidden;
+        color:white;
+        font-weight:bold;
+        display:flex;
+
+         }
+         #eventMessageName{
+          margin-left:20px;
+          margin-top:3px;
+         
+         }
+         #close{
+          color:white;
+          background-color: red;
+          border:0;
+          position:relative;
+          left:73%;
+        }
+        #close:focus{
+         outline: none;
+        }
+      
+
+       
+ 
+
+    </style>
+</head>
+<body>
+    <%- include('sidebar.ejs') %>
+    <%- include('header.ejs')  %>
+
+    <div id="mains">
+      <div id="eventMessage" >
+       <span id="eventMessageName"><%= event %></span>
+       <button class="fa fa-close" id="close" style="font-size:24px" ></button>
+      </div>
+        <div class="eventForm">
+        <form style="margin:0;" id="formdata" method="post" action="/elective/eventData">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="Event">Event Name</label>
+                <input type="text" class="form-control" id="event" name="eventName" placeholder="Event Name">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="Semester">Semester</label>
+                <select id="session_master" name="semester" class="form-control">
+                  <option value="Select Semester" selected>Select Semester</option>
+                <% acadSession.forEach(data => { %>
+               <option><%= data.current_session %></option> 
+                <% });%>
+              </select>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="acad_year">Acad Year</label>
+                <select id="acad_year" name="acad_year" class="form-control">
+                </select>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="campus">Campus</label>
+                <select id="campus" name="campus" class="form-control campusOption">
+                    <option selected>Select Campus</option>
+                    <% campus.forEach(data => { %>
+                  <option><%= data.campus_name %></option>
+                  <% }); %>
+                </select>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="Start Date">Start Date</label>
+                <input type="datetime-local" name="start_date" class="form-control" id="start_date">
+              </div>
+              <div class="form-group col-md-6">
+                <label for="End Date">End Date</label>
+                <input type="datetime-local" name="end_date" class="form-control" id="end_date">
+              </div>
+            </div>
+            <button type="submit" id="formSubmit" class="btn btn-danger signin">Add Event</button>
+            </div>        
+          </form>
+    </div>
+    </div>
+</body>
+
+<%- include ('../partials/partial2') %>
+<script src= "../js/script.js" ></script>
+<script>
+
+    acadYear();
+
+    function acadYear(){
+    let date =new Date();
+     let currYear = date.getFullYear();
+     let prevYear = currYear - 1;
+     let nextYear = currYear + 1;
+
+     let acadYear = document.querySelector('#acad_year');
+     let year = `<option selected>Select Acad Year</option>
+                 <option value = ${prevYear}-${currYear}>${prevYear}-${currYear}</option>
+                 <option value = ${currYear}-${nextYear}>${currYear}-${nextYear}</option>
+                 <option value = ${nextYear}-${(nextYear + 1)}>${nextYear}-${(nextYear + 1)}</option>`;
+
+     acadYear.innerHTML = year;
+
+
+    }
+
+    datefun();
+
+    function datefun(){
+     let data = '<%= event %>';
+     if(data != ""){
+        let element =  document.getElementById('eventMessage') ;
+        element.style.visibility = "visible" ;
+     }
+
+    }
+
+    document.getElementById('close').addEventListener('click',() => {
+     let message = document.getElementById('eventMessage') ;
+     message.style.visibility = "hidden" ;
+    });
+
+
+
+</script>
+</html>

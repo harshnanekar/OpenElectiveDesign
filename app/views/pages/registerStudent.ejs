@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/style.css">
+    <title>Document</title>
+
+    <%- include ('../partials/partial') %>
+<style>
+    input[type="file"]{
+      margin-top:20px;
+      margin-bottom:30px;
+    }
+    #heading{
+        margin-top:50px
+    }
+    #mains{
+        margin-left:20px;
+    }
+    .downloadFile{
+        text-decoration: none;
+        font-size:20px;
+        position: relative;
+        top:20px;
+        color:red;
+    }
+    #excel{
+        position: relative;
+        top:80px;
+    }
+    #fileErrorMessage{
+        background-color: red;
+        font-size:18px;
+        width:272%;
+        visibility: hidden;
+        color:white;
+        font-weight:bold;
+        display:flex;
+
+         }
+         #errorMessageName{
+          margin-left:20px;
+          margin-top:3px;
+         
+         }
+         #closeBt{
+          color:white;
+          background-color: red;
+          border:0;
+          position: relative; 
+          left:75%;      
+        }
+        #closeBt:focus{
+         outline: none;
+        }
+        .downloadFile:hover{
+            color:red;
+            text-decoration:none;
+        
+        }
+      
+</style>
+</head>
+<body>
+    <%- include('sidebar.ejs') %>
+    <%- include('header.ejs')  %>
+    <div id = "mains">
+
+        <div id="fileErrorMessage" >
+            <span id="errorMessageName"><%= fileError %></span>
+            <button class="fa fa-close" id="closeBt" style="font-size:24px" ></button>
+           </div>
+
+     <div id="heading"><h2>Upload Student's Details file(Excel):</h2></div>
+      <div><form method="post" action = "/elective/uploadStudentData" enctype="multipart/form-data">
+      <input type="file" name = "studentDetails" /></br>
+      <input type="submit" class="btn btn-primary" value ="Upload" />&nbsp;<input type="submit" class="btn btn-danger" value="Cancel" />
+     </form>
+    </div>
+    <div><a class="downloadFile" href="/excel/StudentDetail_Demo1.xlsx" class="text-danger" >Download Sample Template</a></div>
+    <div id="excel">
+     <h4>Excel Format:</h4>
+     <p>Username | Firstname | Lastname | Acad Session | Acad Year | Campus | Roll No.</p>
+    </div>
+</body>
+
+<%- include ('../partials/partial2') %>
+<script src= "../js/script.js" ></script>
+<script>
+ 
+ datefun();
+
+function datefun(){
+ let data = '<%= fileError %>';
+ if(data != ""){
+    let element =  document.getElementById('fileErrorMessage') ;
+    element.style.visibility = "visible" ;
+ }
+
+}
+
+document.getElementById('closeBt').addEventListener('click',() => {
+ let message = document.getElementById('fileErrorMessage') ;
+ message.style.visibility = "hidden" ;
+});
+
+</script>
+</html>
