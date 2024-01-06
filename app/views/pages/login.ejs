@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
    <%- include ('../partials/partial') %>
-    <title>Login</title>
+    <title>Login Page</title>
 
 <style>
    body{
@@ -13,17 +13,18 @@
  .maindiv{
    display:flex;
    justify-content: center;
-   margin-top:100px;
+   margin-top:130px;
    box-sizing: border-box;
    width:100vw;
- }
+  }
  .innerdiv{
     background-color: white;
     box-shadow:0 0 10px lightgrey;
     border-radius:20px;
     padding:20px;
     overflow: hidden;
- }
+    position: fixed;
+  }
  input{
     border:0;
     border-bottom: solid black 2px;
@@ -48,72 +49,109 @@ font-family: 'Lilita One', sans-serif;
 font-family: 'Open Sans', sans-serif;
 font-family: 'Poppins', sans-serif; 
  }
+ #errormessage{
+   display:flex;
+   justify-content: center;
+   background-color: red;
+   visibility: hidden;
+ }
+ span{
+  font-size:20px;
+  font-family: 'Lilita One', sans-serif;
+  font-family: 'Open Sans', sans-serif;
+  font-family: 'Poppins', sans-serif;
+  text-align:center;
+  padding:5px;
+  color:white;
+  font-weight:bold;
+  width:100%;
+ }
+ #closebutton{
+  color:white;
+  background-color: red;
+  margin-right:20px;
+  border:0;
+ }
+ #closebutton:focus{
+  outline: none;
+ }
+
 
 </style>   
 
 </head>
 <body>
+
+   <div id="errormessage">
+      <span id="displayMessage">
+        <%= auth %>
+      </span>
+      <button class="fa fa-close" id= "closebutton" style="font-size:24px" ></button>
+   </div>
+
     <div class="row maindiv">
+
     <div style="display:flex;" class="col-xs-8 col-sm-8 col-md-8 col-lg-8 col-xl-8 innerdiv">
     
     <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 col-xl-8" >
-     <img style=" position: relative;width:80%; left:10px;"  src="../images/login2.jpg" />
+      <img style= "position: relative;width:25%; left:10px; padding-bottom:20px;" src="../images/logo-nmims-prod.png" /></br>
+      <img style= "position: relative;width:80%; left:10px;"  src="../images/login-animate-nmims.svg" />
     </div>
     
-    <div style="position:relative;right:60px;" class="col-xs-8 col-sm-8 col-md-8 col-lg-8 col-xl-8" >
+     <div style="position:relative;right:60px;" class="col-xs-8 col-sm-8 col-md-8 col-lg-8 col-xl-8" >
      <h1 style="width:20%;">Welcome</h1>
    
      <div style="margin-top:25%;" class="col-xs-8 col-sm-8 col-md-8 col-lg-8 col-xl-8" >
-     
-    <i class="fi fi-rr-user" ></i><input id="username" style=" margin-bottom:40px;width:66%;" placeholder="LoginId" type="text"/></br>
-    <i class="fi fi-rr-lock" ></i><input  id="pass" placeholder="Password" type="password" style="width:66%;"/></br>
+    
+     <form method="post" action="/elective/login">
+     <i class="fi fi-rr-user" ></i><input name="username" style="margin-bottom:40px;width:66%;" placeholder="LoginId" type="text"/></br>
+     <i class="fi fi-rr-lock" ></i><input name="password" id="pass" placeholder="Password" type="password" style="width:66%;"/></br>
+     <a href="#" style="position:absolute; right:25%; font-size:18px; color:red; width:20%; text-decoration:none;" >Forgot?</a>
+     <input style="padding:5px; font-weight:bold; border:0; border-radius:10px; background-color: red; color:white; width:70%; position:relative; overflow:hidden; left:30px; top:80px; " id="login" type="submit" />
+     </form>
 
     </div>
     
-    <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 col-xl-8"><a href="#" style="position:absolute;right:25%;font-size:18px; color:#018749; width:20%;text-decoration:none;" >Forgot?</a></br>
-        <button style="padding:5px; font-weight:bold; background:#1CAC78; border:0; border-radius:10px; color:white; width:70%; position:relative; overflow:hidden; left:30px; top:50px; margin-top:15px;" id="login" type="submit">Submit</button>
-   </div>
     </div>
 
     </div>
     </div>
    
 </body>
-
+<%- include ('../partials/partial2') %>
 <script>
 
-   //login Authentication
-   document.getElementById('login').addEventListener('click',()=>{
+  //For Enter Button for Login
+    document.getElementById('pass').addEventListener('keypress', function(event) {
+      if (event.key === 'Enter'){
+        form.submit(); 
+      }
+    });
 
-     let username = document.getElementById('username').value;
-     let password = document.getElementById('pass').value;
+    errormessage();
+    
+    //Displaying Error Message
+    async function errormessage(){
+      let displayMessage = document.getElementById('errormessage');
 
-     let obj={
-     username,
-     password
-     };
+     let ermessage = '<%= auth %>'
+   
+     if(ermessage != ""){
+      displayMessage.style.visibility = "visible";
+    }
 
-     loginauth('/api/login','POST', obj)
+    }
 
+    //Hiding Error Message
+   document.getElementById('closebutton').addEventListener('click', () => {
+    let displayMessage = document.getElementById('errormessage');
+    displayMessage.style.visibility = "hidden";
    });
 
-   async function loginauth(url,method,obj){
 
-     const fetchOptions = {
-      method : method,
-      body : JSON.stringify(obj),
-      headers : {
-         'Content-Type': 'application/json'
-      },
-     }
+    
 
-     const response = await fetch(url,fetchOptions);
-
-     if(response.ok) {
-
-     }
-
-   }
   
+
 </script>
 </html>
