@@ -15,13 +15,17 @@
           top:10px;
         }
         #eventMessage{
-        background-color: red;
-        font-size:18px;
-        width:126%;
-        visibility: hidden;
-        color:white;
-        font-weight:bold;
-        display:flex;
+
+         height: 50px;
+         border-radius: 22px;
+         justify-content: center;
+         display:flex;
+         align-items:center;
+         color: red;
+         box-shadow: 0px 0px 6px 1px red;
+         width:136%;
+         font-weight:bold;
+         visibility: hidden;
 
          }
          #eventMessageName{
@@ -30,16 +34,43 @@
          
          }
          #close{
-          color:white;
-          background-color: red;
+          color:red;
           border:0;
+          background-color: whitesmoke;
           position:relative;
-          left:73%;
+          left:42%;
         }
         #close:focus{
          outline: none;
         }
-      
+        label{
+          font-size: 18px;
+        }
+        #formsubmit{
+          font-size:20px;
+        }
+        .eventNewDiv{
+          background-color: white;
+          padding:10px;
+          width:135%;
+          margin-top: 30px;
+          border-radius:10px;
+        }
+        
+       .eventForm{
+    
+        background-color: white;
+        padding:30px;
+        box-sizing: border-box;
+        border-radius:20px;
+        width:100%;
+        transition: 0.8s;
+        padding-bottom:15%;
+    
+       }
+       input,select{
+        margin-bottom:10px;
+       }
 
        
  
@@ -50,37 +81,37 @@
     <%- include('sidebar.ejs') %>
     <%- include('header.ejs')  %>
 
-    <div id="mains">
+      <div id="mains">
       <div id="eventMessage" >
-       <span id="eventMessageName"><%= event %></span>
-       <button class="fa fa-close" id="close" style="font-size:24px" ></button>
       </div>
-        <div class="eventForm">
-        <form style="margin:0;" id="formdata" method="post" action="/elective/eventData">
-            <div class="form-row">
-              <div class="form-group col-md-6">
-                <label for="Event">Event Name</label>
-                <input type="text" class="form-control" id="event" name="eventName" placeholder="Event Name">
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="Semester">Semester</label>
-                <select id="session_master" name="semester" class="form-control">
-                  <option value="Select Semester" selected>Select Semester</option>
-                <% acadSession.forEach(data => { %>
-               <option><%= data.current_session %></option> 
-                <% });%>
-              </select>
+
+      <div class="eventNewDiv">
+      <div class="eventForm">
+      <div style="margin:0;" id="formdata">
+        <div class="form-row">
+        <div class="form-group col-md-12">
+        <label for="Event">Event Name</label>
+        <input type="text" class="form-control " id="event" name="eventName" placeholder="Event Name">
+      </div>
+      </div>
+      <div class="form-group">
+      <label for="Semester">Semester</label>
+      <select id="session_master" name="semester" class="form-control ">
+      <option value="Select Semester" selected>Select Acad Session</option>
+        <% acadSession.forEach(data => { %>
+      <option><%= data.current_session %></option> 
+        <% });%>
+      </select>
             </div>
             <div class="form-row">
               <div class="form-group col-md-6">
                 <label for="acad_year">Acad Year</label>
-                <select id="acad_year" name="acad_year" class="form-control">
+                <select id="acad_year" name="acad_year" class="form-control ">
                 </select>
               </div>
               <div class="form-group col-md-6">
                 <label for="campus">Campus</label>
-                <select id="campus" name="campus" class="form-control campusOption">
+                <select id="campus" name="campus" class="form-control  campusOption">
                     <option selected>Select Campus</option>
                     <% campus.forEach(data => { %>
                   <option><%= data.campus_name %></option>
@@ -89,17 +120,18 @@
               </div>
               <div class="form-group col-md-6">
                 <label for="Start Date">Start Date</label>
-                <input type="datetime-local" name="start_date" class="form-control" id="start_date">
+                <input type="datetime-local" name="start_date" class="form-control " id="start_date">
               </div>
               <div class="form-group col-md-6">
                 <label for="End Date">End Date</label>
-                <input type="datetime-local" name="end_date" class="form-control" id="end_date">
+                <input type="datetime-local" name="end_date" class="form-control  " id="end_date">
               </div>
             </div>
-            <button type="submit" id="formSubmit" class="btn btn-danger signin">Add Event</button>
+            <button type="submit" id="formSubmit" class="btn btn-danger signin ">Add Event</button>
             </div>        
-          </form>
-    </div>
+          </div>
+ </div>
+</div>
     </div>
 </body>
 
@@ -110,37 +142,89 @@
     acadYear();
 
     function acadYear(){
-    let date =new Date();
-     let currYear = date.getFullYear();
-     let prevYear = currYear - 1;
-     let nextYear = currYear + 1;
-
-     let acadYear = document.querySelector('#acad_year');
-     let year = `<option selected>Select Acad Year</option>
-                 <option value = ${prevYear}-${currYear}>${prevYear}-${currYear}</option>
-                 <option value = ${currYear}-${nextYear}>${currYear}-${nextYear}</option>
-                 <option value = ${nextYear}-${(nextYear + 1)}>${nextYear}-${(nextYear + 1)}</option>`;
-
-     acadYear.innerHTML = year;
-
+    
+    let acadYear = document.querySelector('#acad_year');
+    dynamicYear(acadYear);
 
     }
 
-    datefun();
 
-    function datefun(){
-     let data = '<%= event %>';
-     if(data != ""){
-        let element =  document.getElementById('eventMessage') ;
-        element.style.visibility = "visible" ;
-     }
+    document.getElementById('formSubmit').addEventListener('click',async () => {
+     let eventName = document.getElementById('event').value;
+     let semester = document.getElementById('session_master').value;
+     let acad_year = document.getElementById('acad_year').value;
+     let campus = document.getElementById('campus').value;
+     let start_date = document.getElementById('start_date').value;
+     let end_date = document.getElementById('end_date').value;
 
+     let obj = {eventName,semester,acad_year,campus,start_date,end_date};
+     registerEvent('/elective/eventData','POST',obj)
+     .then(response => {
+      console.log('Error ' , response.message);
+      if(response.message === 'error'){
+        window.location.href = '/elective/loginPage';
+      }else{
+        eventMessage(response);
+      }      
+      });
+
+    });
+
+
+    function registerEvent(url,method,obj){
+
+     return new Promise((resolve,reject) => {
+     
+      let requestDetails = {
+
+        method:method,
+        headers:{
+        'Content-Type':'application/json'
+        },
+        body:JSON.stringify(obj) || undefined,
+      }
+
+      fetch(url,requestDetails)
+      .then(response => {
+        
+        if(response.ok){
+          return response.json();
+        }
+      throw new Error('Error in Response');
+      })
+      .then(data => {
+        resolve(data);
+      })
+      .catch(error => {
+        reject(error);
+      })
+
+     });      
     }
 
-    document.getElementById('close').addEventListener('click',() => {
+    async function eventMessage(response){
+      if(response.status === 'success'){
+       window.location.href = response.redirectTo;
+      }else{
+        let element = document.getElementById('eventMessage');
+        let htmlPage = `<span id ='eventMessageName'>${response.message}</span>
+                        <button class="fa fa-close" id="close" style="font-size:24px" ></button> `;
+
+                        element.innerHTML = htmlPage;
+                        element.style.visibility = "visible" ;
+      }
+      await closeBtnFun();
+    }
+
+    function closeBtnFun(){
+    document.getElementById('close')?.addEventListener('click',() => {
      let message = document.getElementById('eventMessage') ;
      message.style.visibility = "hidden" ;
+     
     });
+   }
+
+  
 
 
 

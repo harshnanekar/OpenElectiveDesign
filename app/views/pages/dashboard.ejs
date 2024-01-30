@@ -11,6 +11,9 @@
   body{
     background-color: whitesmoke;
   }
+  #DashboardTab{
+    width:18%;
+  }
  
 </style>
 
@@ -21,7 +24,7 @@
     <div id="main">
         <% module.forEach(data => { %>
             <div id="mainDiv">
-                <img src="<%= data.photo %>" style= "width:18%;" />&ensp;
+                <img id="DashboardTab" src="<%= data.photo %>" />&ensp;
                 <a id="horizontalModule" href="<%= data.url %>"><%= data.module_name %></a>
             </div>
         <% }); %>

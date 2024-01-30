@@ -1,7 +1,6 @@
-const { Client } = require('pg');
-const redis = require('redis');
+const { Pool } = require('pg');
 
-const postgres = new Client({
+const pgPool = new Pool({
     host: 'localhost',
     port: 5432,
     user: 'postgres',
@@ -9,4 +8,4 @@ const postgres = new Client({
     database: 'open_elective',
 });
 
-module.exports = { postgres };
+module.exports = { pgPool } ;

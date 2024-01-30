@@ -3,53 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet"  href="../css/style.css">
     <title>Document</title>
 
     <%- include ('../partials/partial') %>
-<style>
-    input[type="file"]{
+    <style>
+      body{
+        background-color: whitesmoke;
+      }
+      input[type="file"]{
       margin-top:20px;
       margin-bottom:30px;
-    }
-    #heading{
-        margin-top:50px
-    }
-    #mains{
+      }
+      #heading{
+        margin-top:10px;
+      }
+      #mains{
         margin-left:20px;
-    }
-    .downloadFile{
+      }
+      .downloadFile{
         text-decoration: none;
         font-size:20px;
         position: relative;
         top:20px;
         color:red;
-    }
-    #excel{
-        position: relative;
-        top:80px;
-    }
-    #fileErrorMessage{
-        background-color: red;
-        font-size:18px;
-        width:272%;
-        visibility: hidden;
-        color:white;
-        font-weight:bold;
-        display:flex;
+      }
+      #excel{
+        margin-top:50px;
+      }
+      #fileErrorMessage{
 
-         }
+         height: 50px;
+         border-radius:22px;
+         justify-content:center;
+         display:flex;
+         align-items:center;
+         color: red;
+         box-shadow:0px 0px 6px 1px red;
+         width:100%;
+         font-weight:bold;
+         visibility:hidden;
+
+      }
          #errorMessageName{
           margin-left:20px;
           margin-top:3px;
          
          }
          #closeBt{
-          color:white;
-          background-color: red;
+          color:red;
+          background-color: whitesmoke;
           border:0;
           position: relative; 
-          left:75%;      
+          left:38%;     
+          visibility:hidden;
         }
         #closeBt:focus{
          outline: none;
@@ -59,6 +66,48 @@
             text-decoration:none;
         
         }
+        #registerOptions{
+           
+            background-color: white;
+            padding:20px;
+            border-radius:10px;
+            font-size:18px;
+            position:relative;
+            top:40px;
+            width:1450px;
+
+        }
+        #excelOption{
+            margin-bottom:20px;
+        }
+        #registerFormat{
+            margin-top:100px;
+            padding:30px;
+            border-radius:20px;
+            width:100%;
+            background-color: white;
+        }
+        span{
+            color:red;
+        }
+        #nonInsertedStudents{
+          margin-top:20px;
+          background-color: white; 
+        }
+
+        th,td{
+          text-align:center;
+        }
+        #nonInsertedMessage{
+          visibility:hidden;
+          margin-top:50px;
+          margin-bottom:50px;
+          text-align: center;
+        }    
+
+
+        
+        
       
 </style>
 </head>
@@ -67,43 +116,554 @@
     <%- include('header.ejs')  %>
     <div id = "mains">
 
-        <div id="fileErrorMessage" >
-            <span id="errorMessageName"><%= fileError %></span>
-            <button class="fa fa-close" id="closeBt" style="font-size:24px" ></button>
+        <div id="registerSuccess"></div>
+           <div id="fileErrorMessage" >
+          
            </div>
 
-     <div id="heading"><h2>Upload Student's Details file(Excel):</h2></div>
-      <div><form method="post" action = "/elective/uploadStudentData" enctype="multipart/form-data">
-      <input type="file" name = "studentDetails" /></br>
-      <input type="submit" class="btn btn-primary" value ="Upload" />&nbsp;<input type="submit" class="btn btn-danger" value="Cancel" />
-     </form>
-    </div>
-    <div><a class="downloadFile" href="/excel/StudentDetail_Demo1.xlsx" class="text-danger" >Download Sample Template</a></div>
-    <div id="excel">
-     <h4>Excel Format:</h4>
-     <p>Username | Firstname | Lastname | Acad Session | Acad Year | Campus | Roll No.</p>
-    </div>
+           <div id="registerOptions">
+           <h3>Register Students</h3>
+           <hr/>
+           <input type="radio" name="option" id="excelOption" checked>  Register via Excel</input></br>
+           <input type="radio" name="option" id="manualOption"> Register via Manually</input>
+           </div>
+
+           
+           <div id="registerFormat">
+        
+           </div>
+           
+           <div>
+           <h4 id="nonInsertedMessage">Student's Data Not Inserted Due To Empty Input Fields</h4>
+           <div id="nonInsertedStudents">
+           
+
+           </div>
+           </div>
+           
 </body>
 
 <%- include ('../partials/partial2') %>
 <script src= "../js/script.js" ></script>
 <script>
  
- datefun();
-
-function datefun(){
- let data = '<%= fileError %>';
- if(data != ""){
-    let element =  document.getElementById('fileErrorMessage') ;
-    element.style.visibility = "visible" ;
- }
-
-}
-
-document.getElementById('closeBt').addEventListener('click',() => {
+document.getElementById('closeBt')?.addEventListener('click',() => {
  let message = document.getElementById('fileErrorMessage') ;
  message.style.visibility = "hidden" ;
 });
+
+document.getElementById('excelOption').addEventListener('change',async () => {
+
+  let registerExcelFormat = document.getElementById('registerFormat') ;
+  registerExcelFormat.innerHTML = `<div id="heading"><h2>Upload Student's Details file(Excel):</h2></div>
+             <div>
+             <input type="file" id="fileName" name = "studentDetails" /></br>
+             <button type="submit" class="btn btn-primary" id='excelSubmit' >Upload</button>&nbsp;<button id='excelCancel' type="submit" class="btn btn-danger" >Cancel</button>
+             </div>
+             </div>
+             <div><a class="downloadFile" href="/excel/StudentDetail_Demo1.xlsx" class="text-danger" >Download Sample Template</a></br>
+             <h4 id="excel">Excel Format:</h4>
+             <p>Username | Firstname | Lastname | Acad Session | Acad Year | Campus | Roll No.</p>
+             </div>`;
+
+   await excelSubmitForm();   
+});
+
+document.getElementById("manualOption").addEventListener("change",async () => {
+
+
+    let registerManually = document.getElementById('registerFormat');
+    registerManually.innerHTML = `<div>
+    <div class="form-row">
+    <div class="form-group col-md-6">
+      <label for="inputFname">Firstname</label>&ensp;&ensp;<span id="fnameError"></span>
+      <input type="text" class="form-control" id="inputFname" placeholder="Firstname">
+    </div>
+    <div class="form-group col-md-6">
+      <label for="inputLname">Lastname</label>&ensp;&ensp;<span id="lnameError"></span>
+      <input type="text" class="form-control" id="inputLname" placeholder="Lastname">
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label for="inputUname">Username</label>&ensp;&ensp;<span id="unameError"></span>
+      <input type="text" class="form-control" id="inputUname" placeholder="Username">
+    </div>
+    <div class="form-group col-md-6">
+      <label for="inputrollNo">Roll No.</label>&ensp;&ensp;<span id="rollNoError"></span>
+      <input type="text" class="form-control" id="inputrollNo" placeholder="Roll No.">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="inputCampus">Campus</label>&ensp;&ensp;<span id="campusError"></span>
+    <select id="inputCampus" class="form-control">
+        <option selected>Select Campus</option>
+        <% campus.forEach(data => { %>
+           <option value='<%= data.campus_name %>'><%= data.campus_name %></option>
+        <% }); %>
+      </select>
+      </select>
+  </div>
+  <div class="form-row">
+    <div class="form-group col-md-6">
+        <label for="inputAcadYears">Acad Year</label>&ensp;&ensp;<span id="yearError"></span>
+    <select id="inputAcadYear" class="form-control">
+      </select>
+    </div>
+    <div class="form-group col-md-6">
+      <label for="inputAcadSession">Acad Session</label>&ensp;&ensp;<span id="sessionError"></span>
+      <select id="inputAcadSession" class="form-control">
+        <option selected>Select Acad Session</option>
+        <% acadSession.forEach(data => { %>
+           <option value='<%= data.current_session %>'><%= data.current_session %></option>
+        <% }); %>
+      </select>
+    </div>
+   
+  </div>
+  <button type="submit" id="submitbtn" class="btn btn-danger mt-4">Register Student</button>
+</div>`;
+ 
+await acadYearfun();
+await validatePerformer();
+});
+
+ checkfun();
+
+   async function checkfun() {
+ 
+    let registerExcelFormat = document.getElementById('registerFormat');
+    registerExcelFormat.innerHTML = `<div id="heading"><h2>Upload Student's Details file(Excel):</h2></div>
+             <div>
+             <input type="file" id='fileName' name = "studentDetails" /></br>
+             <button type="submit" class="btn btn-primary" id='excelSubmit' >Upload</button>&nbsp;<button id='excelCancel' type="submit" class="btn btn-danger" >Cancel</button>
+             </div>
+             </div>
+             <div><a class="downloadFile" href="/excel/StudentDetail_Demo1.xlsx" class="text-danger" >Download Sample Template</a></br>
+             <h4 id="excel">Excel Format:</h4>
+             <p>Username | Firstname | Lastname | Acad Session | Acad Year | Campus | Roll No.</p>
+             </div>`;
+             
+      await excelSubmitForm();       
+    }
+
+    
+
+     
+     async function acadYearfun(){
+     
+     let acadYear = await document.querySelector('#inputAcadYear');
+     dynamicYear(acadYear);
+
+     }
+
+     async function excelSubmitForm(){
+
+     document.getElementById('excelSubmit').addEventListener('click',async () => {
+       let files = document.querySelector('#fileName').value;
+       let fileError = document.getElementById('fileErrorMessage');
+       let fileInput = files.lastIndexOf('.');
+       let fileName = files.substring(fileInput,files.length);
+
+       console.log('file path--- ' , fileName);
+
+       if(fileName === '.xlsx'){
+        
+       let fileInput = document.getElementById('fileName');
+       let fileData = fileInput.files[0];
+       const formData = new FormData();
+       formData.append('studentDetails',fileData);
+
+       registerViaExcel('/elective/uploadStudentData','POST',formData)
+       .then(response => {
+        console.log('Error Response: ',response.nonInserted);
+        if(response.status === 'error'){
+         window.location.href = response.redirectTo;    
+        }else{
+        fileMessage(response);
+        } 
+      });
+
+       }else{
+       fileError.innerHTML = `<span id="errorMessageName">File Format Should Be In Excel Only !!</span>
+                              <button class="fa fa-close" id="closeBt" style="font-size:24px" ></button>`;
+
+       let closeBt = document.getElementById('closeBt');             
+       closeBt.style.visibility = 'visible';
+       fileError.style.visibility = 'visible';
+
+       await closeButton();
+       }
+       });
+       }
+
+        async function validatePerformer(){
+        document.querySelector('#submitbtn').addEventListener('click',async () => {
+     
+        let fname = await document.getElementById('inputFname').value;
+        let lname = await document.getElementById('inputLname').value;
+        let rollNo = await document.getElementById('inputrollNo').value;
+        let campus = await document.getElementById('inputCampus').value;
+        let studUsername = await document.getElementById('inputUname').value;
+        let acadYear = await document.getElementById('inputAcadYear').value;
+        let acadSession = await document.getElementById('inputAcadSession').value;
+
+        let fnameVal = await fnameValidation(fname);
+        let lnameVal = await lnameValidation(lname);
+        let rollNoVal = await rollNoValidation(rollNo);
+        let campusVal =  await campusValidation(campus);
+        let unameVal = await unameValidation(studUsername);
+        let yearVal = await acadYearValidation(acadYear);
+        let sessionVal = await acadSessionValidation(acadSession);
+
+        if(fnameVal && lnameVal && rollNoVal && campusVal && unameVal && yearVal && sessionVal){
+
+            let obj = {fname,lname,rollNo,campus,studUsername,acadYear,acadSession};
+            registerStudentManually('/elective/registerStudentManually','POST',obj)
+            .then(responseData => {
+                console.log('response----- ' , responseData.status);
+                if(responseData.status === 'error'){
+                  window.location.href = responseData.redirectTo;
+                }else{
+                manualMessage(responseData);
+                }
+            });
+        }
+      });
+     }
+
+        //FirstName Validation
+        async function fnameValidation(fname){
+
+        let inputFname = document.getElementById('fnameError');
+         
+        if(fname.length > 0){      
+
+        let inputVal = await alphabetsValidation(fname);
+
+        console.log('Validated---- ' , inputVal);
+
+        if(inputVal){
+        
+        inputFname.innerText = '';    
+        return inputVal;    
+          
+        }else{
+
+        inputFname.innerText = '*Invalid Input Field';    
+        return inputVal;
+
+        }
+        }else{
+            
+         inputFname.innerText = '*Required';
+
+        }
+     };
+
+     //LastName Validation
+      async function lnameValidation(lname){
+
+        let inputLname = document.getElementById('lnameError');
+ 
+        if(lname.length > 0){      
+
+        let inputVal = await alphabetsValidation(lname);
+        console.log('Validated---- ' , inputVal);
+
+        if(inputVal){
+
+        inputLname.innerText = '';    
+        return inputVal;    
+  
+        }else{
+
+        console.log("Special Characters present");    
+        inputLname.innerText = '*Invalid Input Field';    
+        return inputVal;
+
+        }
+        }else{
+    
+        inputLname.innerText = '*Required';
+
+        }
+      };
+
+      //RollNo Validation
+      async function rollNoValidation(rollNo){
+      
+        let inputrollNo = document.getElementById('rollNoError');
+    
+        if(rollNo.length > 0){
+        
+        let rollNoVal = await specialCharacterValidation(rollNo); 
+
+        if(rollNoVal){
+         
+        inputrollNo.innerText = ''; 
+        return rollNoVal;
+
+        }else{
+
+        inputrollNo.innerText = '*Invalid Input Field';
+        return rollNoVal;
+
+        }
+        }else{        
+        inputrollNo.innerText = '*Required';
+        return false;
+        }
+      }
+
+        //Campus Validation
+        async function campusValidation(campus){
+
+        let campusError = document.querySelector('#campusError');
+        let campusOptions = document.querySelector('#inputCampus');
+
+        let campusName = campusOptions[0].innerText;
+
+        if(campus == campusName){
+       
+        campusError.innerText = '*Required';
+        return false;
+        
+        }else{
+         
+        campusError.innerText = '';
+        return true;
+        
+        }
+        }
+
+        //Username Validation
+        async function unameValidation(username){
+
+        let unameError = document.getElementById('unameError');
+        
+        if(username.length > 0){
+
+        unameError.innerText = '';
+        return true;
+
+        }else{
+
+        unameError.innerText = '*Required';
+        return false;
+        
+        }
+
+        }
+
+        //AcadYear Validation
+        async function acadYearValidation(acadYear){
+     
+        let yearError = document.querySelector('#yearError');
+        let yearOptions = document.querySelector('#inputAcadYear');
+        
+        let year = yearOptions[0].innerText;
+
+        if(acadYear == year){
+
+        yearError.innerText = '*Required';
+        return false;
+
+        }else{
+
+        yearError.innerText = '';
+        return true;
+
+        }
+        }
+
+         //AcadSession Validation
+        async function acadSessionValidation(session){
+     
+        let sessionError = document.querySelector('#sessionError');
+        let sessionOptions = document.querySelector('#inputAcadSession');
+     
+        let acadSession = sessionOptions[0].innerText;
+
+        if(session == acadSession){
+
+        sessionError.innerText = '*Required';
+        return false;
+
+        }else{
+
+        sessionError.innerText = '';
+        return true;
+
+        }
+        }
+        
+        async function registerStudentManually(url,method,obj){
+
+        return new Promise((resolve,reject) => {   
+
+        let requestDetails = {
+            method : method,
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify(obj) ||  undefined,
+        }    
+
+        fetch(url,requestDetails)
+        .then(responseData => {
+            if(responseData.ok){
+                return responseData.json();
+            }
+            throw new Error('Error in Response');
+        })
+        .then(data => {
+            resolve(data);
+        })
+        .catch(error => {
+            reject(error);
+        })
+
+        }); 
+
+        }
+
+        async function closeButton(){
+        document.getElementById('closeBt').addEventListener('click',async () => {
+
+         let fileError = document.querySelector('#fileErrorMessage');
+         fileError.style.visibility = 'hidden';
+
+         let closeBt = document.getElementById('closeBt');             
+         closeBt.style.visibility = 'hidden';
+
+        });
+        }
+
+        async function registerViaExcel(url,method,obj){
+          
+        return new Promise((resolve,reject) => {
+
+        let  requestDetails = {
+         method : method ,
+         body: obj || undefined,
+        }  
+
+        fetch(url,requestDetails)
+        .then(response => {
+         
+        if(response.ok){
+        return response.json();
+        }
+
+        throw new Error('Error in Response');
+        })
+        .then(data => {
+          resolve(data);
+        })
+        .catch(error => {
+          reject(error);
+        })
+
+        });  
+
+        }
+
+        async function fileMessage(response){
+          let fileError = document.getElementById('fileErrorMessage');
+          fileError.innerHTML = `<span id="errorMessageName">${response.message}</span>
+                                 <button class="fa fa-close" id="closeBt" style="font-size:24px" ></button>`;
+                     
+          let errormessage = document.getElementById('errorMessageName');
+                                
+          let closeBt = document.getElementById('closeBt');    
+          closeBt.style.visibility = 'visible';
+          fileError.style.visibility = 'visible';
+
+          if(response.status === 'success'){
+          closeBt.style.color ='green';
+          closeBt.style.left = '39%';   
+          errormessage.style.color = 'green';                        
+          fileError.style.boxShadow = '0px 0px 6px 1px green';        
+         
+          let studArray = await response.nonInserted;
+          console.log('Non inserted data: ' , studArray);
+
+          if(studArray.length != 0){
+
+          let  iTag = `<i style='font-weight:bold;color:red;'>Empty Field</i>`;
+            
+          let nonInsertedData = `<table class="table table-bordered table-responsive-lg" >
+                                 <tr>
+                                 <th>Sr No.</th>
+                                 <th>Firstname</th>
+                                 <th>Lastname</th>
+                                 <th>Username</th>
+                                 <th>Campus</th>
+                                 <th>Acad Year</th>
+                                 <th>Acad Session</th>
+                                 <th>Roll No.</th>  
+                                 </tr>
+                                 ${studArray.map((data, index) => `
+                                 <tr>
+                                 <td>${index + 1}</td>
+                                 <td>${data.studentFirstName ? data.studentFirstName : iTag }</td>
+                                 <td>${data.studentLastName ? data.studentLastName : iTag}</td>
+                                 <td>${data.studentUname ? data.studentUname : iTag}</td>
+                                 <td>${data.campus ? data.campus : iTag}</td>
+                                 <td>${data.acadYear ? data.acadYear : iTag}</td>
+                                 <td>${data.acadSession ? data.acadSession : iTag}</td>
+                                 <td>${data.rollNo ? data.rollNo : iTag}</td>
+                                 </tr>`
+                                 ).join('')}
+                                 </table>`;
+
+        let nonInsertedMessage = document.querySelector('#nonInsertedMessage');
+        nonInsertedMessage.style.visibility = 'visible';
+
+        let nonInsertedStudents = document.querySelector('#nonInsertedStudents');
+        nonInsertedStudents.innerHTML = nonInsertedData;
+
+         }
+          
+         }
+          await closeButton();
+          
+        }
+
+        async function manualMessage(response) {
+          let fileMessage = document.getElementById('fileErrorMessage');
+          fileMessage.innerHTML = `<span id="errorMessageName">${response.message}</span>
+                                 <button class="fa fa-close" id="closeBt" style="font-size:24px" ></button>`;
+                     
+          let message = document.getElementById('errorMessageName');
+                                
+          let closeBt = document.getElementById('closeBt');    
+          closeBt.style.visibility = 'visible';
+          fileMessage.style.visibility = 'visible';
+
+          if(response.status === 'success'){
+            closeBt.style.color ='green';
+            closeBt.style.left = '39%';   
+            message.style.color = 'green';                        
+            fileMessage.style.boxShadow = '0px 0px 6px 1px green';        
+          }
+
+          await closeButton();
+
+        }
+
+        document.getElementById('excelCancel').addEventListener('click',() => {
+
+        let fileInput = document.querySelector('#fileName').value;
+
+        if(fileInput != undefined){
+         window.location.href = '/elective/loginPage';
+        }else{
+         window.location.href = '/elective/register';
+        }
+
+        })
 
 </script>
 </html>

@@ -4,6 +4,7 @@ const { get } = require("../router/route.js");
 const jwt =require('jsonwebtoken');
 const jwtauth = require('../middleware/request.js');
 
+
 module.exports = {
   loginPage:async function (req, res) {
 
@@ -13,13 +14,14 @@ module.exports = {
     
     if(jwtreturn === "invalid"){
     
-    let error = req.flash('error') || null;
-    res.render("login",{auth:error});
+    res.render("login");
 
     }else{
       return res.redirect('/elective/dashboard');
     }
   }catch(err){
+
+    console.log(err.message);
     return res.redirect("/elective/error");
   }
   },
@@ -30,6 +32,7 @@ module.exports = {
     let password = req.body.password;
 
     console.log("request data " + req.body.username);
+    console.log('Fetch api called');
 
     try {
       let querydata = await query.authenticateLogin(username);
@@ -42,7 +45,10 @@ module.exports = {
   
         if (passwordVal) {
 
-          console.log("Authenticated Successfully");
+          let getUserRole = await query.getUserRole(username);
+          req.session.userRole = getUserRole[0].role_name;
+
+          console.log("Authenticated Successfully " , req.session.userRole);
 
           req.session.modules = querydata[0].username;
        
@@ -52,34 +58,32 @@ module.exports = {
           console.log('secretkey---- ' +  secretkey);
           const token = await jwt.sign({username:user},process.env.JWT_SECRETKEY,{expiresIn:'1 day'});
           
-            res.cookie("jwtauth",token,{signed:true,maxAge:24 * 60 * 60 * 1000,path:'/',httponly:true});
-            return res.redirect("/elective/dashboard");
+          res.cookie("jwtauth",token,{signed:true,maxAge:24 * 60 * 60 * 1000,path:'/',httponly:true});
+          return res.json({status:'success',redirectTo : '/elective/dashboard'});
 
         } else {
           console.log("Unauthenticated");
-
-          req.flash('error','Invalid password');
-          return res.redirect("/elective/loginPage");
+          return res.json({status:'error',redirectTo:'/elective/loginPage',message:'Invalid Password!!'});
        
         }
-      } else {
+        } else {
         console.log("Invalid username");
-        req.flash('error','Invalid username');
-        return res.redirect("/elective/loginPage");
-      }
-    } catch (err) {
-      return res.redirect("/elective/error");
-    }
-  },
+        return res.json({status:'error',redirectTo:'/elective/loginPage',message:'Invalid Username!!'});
+        }
+        } catch (err) {
+        console.log(err.message);
+        return res.redirect("/elective/error");
+        }
+        },
 
 
-  errorPage: async function (req,res) {
-   return res.render("500");
-  },
+    errorPage: async function (req,res) {
+     return res.render("500");
+     },
 
-  dashboard: async function(req,res,next){
+     dashboard: async function(req,res,next){
 
-    try{
+     try{
 
      let usermodules = req.session.modules;
 
@@ -89,9 +93,9 @@ module.exports = {
       return res.render("dashboard",{module : getModules});
 
      }else{
+
       res.clearCookie('jwtauth');
-      req.flash('error','Oops, Session Timeout Login Again!! ');
-      return res.redirect("/elective/loginPage");
+      return res.redirect("/elective/loginPage#sessionTimeout");
 
      } 
     } catch(err){
@@ -109,6 +113,7 @@ module.exports = {
    return res.redirect("/elective/loginPage");
 
     }catch(err){
+      console.log(err.message);
       return res.redirect("/elective/error");
     }
    

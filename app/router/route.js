@@ -2,9 +2,8 @@ const apiRouter = require('express').Router();
 const controller = require('../controller/user.js');
 const middleware = require('../middleware/request.js');
 const eventController = require('../controller/event.js');
+const programController = require('../controller/programs.js');
 const multer = require('multer');
-
-
 
 //Get Requests
 apiRouter.get('/loginPage',controller.loginPage);
@@ -15,10 +14,15 @@ apiRouter.get('/event',middleware.verifyRequest,eventController.event);
 apiRouter.get('/addEvent',middleware.verifyRequest,eventController.addEvent);
 apiRouter.get('/viewEvent',middleware.verifyRequest,eventController.viewEvent);
 apiRouter.get('/register',middleware.verifyRequest,eventController.registerStudent);
+apiRouter.get('/programs',middleware.verifyRequest,programController.programs);
+apiRouter.get('/addPrograms',middleware.verifyRequest,programController.addPrograms);
 
 //Post Requests
 apiRouter.post('/login',controller.login);
 apiRouter.post('/eventData',middleware.verifyRequest,eventController.eventData);
 apiRouter.post('/uploadStudentData',middleware.verifyRequest,multer().single('studentDetails'),eventController.uploadStudentData);
+apiRouter.post('/registerStudentManually',middleware.verifyRequest,eventController.registerStudentManually);
+apiRouter.post('/insertProgramsViaExcel',middleware.verifyRequest,multer().single('programFile'),programController.insertProgramsViaExcel);
+
 
 module.exports = apiRouter;
