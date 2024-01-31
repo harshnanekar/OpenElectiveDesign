@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Programs</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <%- include ('../partials/partial') %>
+    <style>
+        body{
+         background-color: whitesmoke;
+        }
+        #uploadOptions{
+         background-color: white;
+         width:1450px;
+         padding:20px;   
+         position:relative;
+         top: 40px;
+         font-size:18px;
+         border-radius: 10px;
+         left:20px;
+        }
+        #uploadViaExcel{
+          margin-bottom: 20px;       
+        }
+        #uploadMessage{
+         height: 50px;
+         border-radius:22px;
+         justify-content:center;
+         display:flex;
+         align-items:center;
+         color: red;
+         box-shadow:0px 0px 6px 1px red;
+         width:100%;
+         font-weight:bold;
+         margin-left:20px;
+         visibility:hidden; 
+
+        }
+        #uploadFormat{
+          position:relative;
+          top:100px;  
+          background-color: white;
+          padding:30px;
+          border-radius:10px;
+          left:20px;
+        }
+        #fileName{
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        #excelHeading{
+            margin-top:20px;
+            margin-bottom:20px;
+        }
+        #excelProgramSubmit , #excelCancel{
+            margin-top:20px;
+            margin-bottom:20px;
+        }
+        select {
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+        #closeBt{
+          color:red;
+          background-color: whitesmoke;
+          border:0;
+          position: relative; 
+          left:38%;     
+          
+        
+        }
+        #closeBt:focus{
+         outline:none;
+        }
+     
+      
+        
+    </style>
+</head>
+<body>
+    <%- include('sidebar.ejs') %>
+    <%- include('header.ejs')  %>
+    <div id="mains">
+
+     <div id="uploadMessage"></div>  
+     
+     <div id= "uploadOptions" >
+     <h3>Upload Programs</h3>
+     <hr/>
+     <input type="radio" name="uploadPrograms" id="uploadViaExcel" checked /> Upload Via Excel</br>
+     <input type="radio" name="uploadPrograms" id="uploadViaManually" /> Upload Via Manually</br>
+     </div>
+     
+     <div id="uploadFormat">
+
+     </div>
+
+    </div>
+    
+</body>
+<%- include ('../partials/partial2') %>
+<script src= "../js/script.js" ></script>
+<script>
+
+    defaultFormatDisplay();
+
+    async function defaultFormatDisplay(){
+    let upload = document.querySelector('#uploadFormat');
+
+    let excelFormat = `<div id="heading"><h2>Upload Program's file(Excel):</h2></div>
+             <div>
+             <input type="file" id='fileName' name = "programDetails" /></br>
+             <button type="submit" class="btn btn-primary" id='excelProgramSubmit' >Upload</button>&nbsp;<button id='excelCancel' type="submit" class="btn btn-danger" >Cancel</button>
+             </div>
+             </div>
+             <div id='displayNote'><a style="text-decoration:none;font-size:20px;" class="text-danger" href="/excel/Program_Excel.xlsx" id="downloadExcel"  >Download Sample Template</a></br>
+             <h4 id="excelHeading">Excel Format:</h4>
+             <p>Program Name | Campus </p>
+             </div>`;
+        upload.innerHTML = excelFormat;
+
+    await excelDataSubmit();   
+    }
+
+    document.getElementById('uploadViaExcel').addEventListener('change',async () => {
+      console.log('function called');
+        
+    let upload = document.querySelector('#uploadFormat');
+
+    let excelFormat =`<div id="heading"><h2>Upload Program's file(Excel):</h2></div>
+              <div>
+              <input type="file" id='fileName' name = "programDetails" /></br>
+              <button type="submit" class="btn btn-primary" id='excelProgramSubmit' >Upload</button>&nbsp;<button id='excelCancel' type="submit" class="btn btn-danger" >Cancel</button>
+              </div>
+              </div>
+              <div id='displayNote'><a style="text-decoration:none;font-size:20px;" class="text-danger" href="/excel/Program_Excel.xlsx" id="downloadExcel"  >Download Sample Template</a></br>
+              <h4 id="excelHeading">Excel Format:</h4>
+              <p>Program Name | Campus </p>
+              </div>`;
+        upload.innerHTML = excelFormat;
+
+    await excelDataSubmit();
+    });
+
+    document.getElementById('uploadViaManually').addEventListener('change',async () => {
+        let upload = document.querySelector('#uploadFormat');
+        
+        let manualData = `<div>
+      <div class="form-row">
+      <div class="form-group col-md-12">
+      <label for="inputProgramName">Program Name</label>&ensp;&ensp;<span id="ProgramnameError"></span>
+      <input type="text" class="form-control" id="inputProgramName" placeholder="Program Name">
+      </div>
+      </div>
+      <div class="form-row">
+      <label for="inputCampus">Campus</label>&ensp;&ensp;<span id="campusError"></span>
+      <select id="inputCampus" class="form-control">
+        <option selected>Select Campus</option>
+        <% campus.forEach(data => { %>
+           <option value='<%= data.campus_name %>'><%= data.campus_name %></option>
+        <% }); %>
+      </select>
+      </div>
+      <button type="submit" id="submitbtn" class="btn btn-danger mt-4">Add Program</button>
+      </div>`
+
+    upload.innerHTML = manualData;
+
+    });
+
+    async function excelDataSubmit(){
+    
+     document.getElementById('excelProgramSubmit').addEventListener('click',async () => {
+     let fileInput = document.querySelector('#fileName').value;
+     let filePath = fileInput.substring(fileInput.lastIndexOf('.'),fileInput.length);
+
+     let fileValidation = fileError(filePath);
+     console.log('File path: ' + fileValidation);
+
+     if(fileValidation){
+
+     let getFile = document.querySelector('#fileName');
+     let fileData = getFile.files[0];
+     
+     const formData = new FormData();
+     formData.append("programFile",fileData);
+
+     sendExcelData('/elective/insertProgramsViaExcel','POST',formData)
+     .then(response => {
+          
+     });
+
+     }else{
+       let messageDisplay = document.getElementById('uploadMessage');
+       let message = `<span>File Must Be In Excel Format Only !!</span>
+       <button class="fa fa-close" id="closeBt" style="font-size:24px" ></button>`;
+
+       messageDisplay.innerHTML= message ;
+       messageDisplay.style.visibility='visible';
+
+       await closeButton();
+     }
+
+     });   
+    }
+
+    async function closeButton(){
+
+    document.getElementById('closeBt').addEventListener('click',async () => {
+        let messageDisplay = document.getElementById('uploadMessage');
+        messageDisplay.style.visibility='hidden';
+    });
+
+    }
+
+    async function sendExcelData(url,method,obj){
+    
+    return new Promise((resolve,reject) => {    
+    
+    const requestDetails = {
+     method:method,
+     body:obj,   
+    }
+    
+    fetch(url,requestDetails)
+
+    .then(response => {   
+    if(response.ok){
+      return response.json();  
+    }    
+    throw new Error('Error in Getting Response');
+    })
+    .then(data => {
+      resolve(data);
+    })
+    .catch(error => {
+      reject(error);
+    })
+
+    });
+
+    }
+
+
+
+
+
+
+
+</script>
+</html>
