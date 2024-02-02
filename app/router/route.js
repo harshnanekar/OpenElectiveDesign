@@ -3,6 +3,7 @@ const controller = require('../controller/user.js');
 const middleware = require('../middleware/request.js');
 const eventController = require('../controller/event.js');
 const programController = require('../controller/programs.js');
+const courseController = require('../controller/course.js');
 const multer = require('multer');
 
 //Get Requests
@@ -17,6 +18,7 @@ apiRouter.get('/register',middleware.verifyRequest,eventController.registerStude
 apiRouter.get('/programs',middleware.verifyRequest,programController.programs);
 apiRouter.get('/addPrograms',middleware.verifyRequest,programController.addPrograms);
 apiRouter.get('/viewPrograms',middleware.verifyRequest,programController.viewPrograms);
+apiRouter.get('/course',middleware.verifyRequest,courseController.addCourses);
 
 
 //Post Requests

@@ -13,13 +13,14 @@ module.exports = class ProgramQuery {
    return pgPool.query(query);
   }
 
-  static async viewPrograms(){
+  static async viewPrograms(username){
    
     let query ={
     
     text : `select distinct p.program_name,c.campus_name,c.campus_abbr,p.program_id from program_campus_mapping pc 
-    inner join campus c on pc.campus_lid=c.campus_id inner join program_master p on p.program_id = pc.program_lid;`,
-       
+    inner join campus c on pc.campus_lid=c.campus_id inner join program_master p on p.program_id = pc.program_lid
+    where p.createdby=$1;`,
+    values:[username]   
    };
     return pgPool.query(query); 
   }

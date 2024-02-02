@@ -200,7 +200,7 @@ viewPrograms :async (req,res) => {
   if(username != undefined){
 
   let getmodules = await userQuery.getModules(username);  
-  let programData =await programQuery.viewPrograms();
+  let programData =await programQuery.viewPrograms(username);
   
   return res.render('viewPrograms',{module:getmodules,programData : programData.rows});
 
@@ -211,6 +211,7 @@ viewPrograms :async (req,res) => {
 
 
   }catch(error){
+    console.log(error);
    return res.redirect('/elective/loginPage');
   }
 
