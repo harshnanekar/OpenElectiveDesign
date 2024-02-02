@@ -17,6 +17,11 @@ module.exports = {
     res.render("login");
 
     }else{
+  
+      req.session.modules = jwtreturn.username;
+      req.session.userRole = jwtreturn.role[0].role_name;
+      console.log('username and role ' , req.session.modules ,' ' ,req.session.userRoles);
+
       return res.redirect('/elective/dashboard');
     }
   }catch(err){
@@ -56,7 +61,7 @@ module.exports = {
           const secretkey = process.env.JWT_SECRETKEY;
 
           console.log('secretkey---- ' +  secretkey);
-          const token = await jwt.sign({username:user},process.env.JWT_SECRETKEY,{expiresIn:'1 day'});
+          const token = await jwt.sign({username:user,role:getUserRole},process.env.JWT_SECRETKEY,{expiresIn:'1 day'});
           
           res.cookie("jwtauth",token,{signed:true,maxAge:24 * 60 * 60 * 1000,path:'/',httponly:true});
           return res.json({status:'success',redirectTo : '/elective/dashboard'});
