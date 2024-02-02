@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Programs</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <%- include ('../partials/partial') %>
+</head>
+<body>
+    <%- include('sidebar.ejs') %>
+    <%- include('header.ejs')  %>
+    <div id="main">
+        <table class="table table-bordered table-responsive">
+        <thead>
+        <th>Sr.No</th>
+        <th>Program Id</th>
+        <th>Program Name</th>
+        <th>Campus</th>
+        <th>Actions</th>
+        </thead>
+        <tbody>
+        <% let count=1; %>
+        <% programData.forEach(program => { %>
+        <tr>
+        <td><%= count %></td>
+        <td><%= program.program_id %></td>
+        <td><%= program.program_name %></td>
+        <td><%= program.campus_name %></td>
+        <td><a href="#" ><img src='/images/delete.png' data-toggle='tooltip' title = 'Delete' width="3%"/></a>&ensp;
+        <a href="#" ><img src='/images/edit.png'  data-toggle='tooltip' title = 'Edit' width="3%"/></a>&ensp;
+        </td>     
+        </tr>
+        <% count++ %>
+        <% }); %>
+        </tbody>
+        </table>
+    </div> 
+</body>
+<%- include ('../partials/partial2') %>
+<script src= "../js/script.js" ></script>
+</html>

@@ -189,6 +189,31 @@ insertProgramManaully :async (req,res) => {
    return res.json({status : 'error',redirectTo :'/elective/error'})
   }
 
+},
+
+viewPrograms :async (req,res) => {
+
+  try{
+  
+  let username = req.session.modules;
+  
+  if(username != undefined){
+
+  let getmodules = await userQuery.getModules(username);  
+  let programData =await programQuery.viewPrograms();
+  
+  return res.render('viewPrograms',{module:getmodules,programData : programData.rows});
+
+  }else{
+    res.clearCookie('jwtauth');
+    return res.redirect("/elective/loginPage#sessionTimeout");
+  }  
+
+
+  }catch(error){
+   return res.redirect('/elective/loginPage');
+  }
+
 }
 
 

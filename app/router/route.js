@@ -16,6 +16,7 @@ apiRouter.get('/viewEvent',middleware.verifyRequest,eventController.viewEvent);
 apiRouter.get('/register',middleware.verifyRequest,eventController.registerStudent);
 apiRouter.get('/programs',middleware.verifyRequest,programController.programs);
 apiRouter.get('/addPrograms',middleware.verifyRequest,programController.addPrograms);
+apiRouter.get('/viewPrograms',middleware.verifyRequest,programController.viewPrograms);
 
 
 //Post Requests
