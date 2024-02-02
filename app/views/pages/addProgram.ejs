@@ -145,10 +145,10 @@
              </div>`;
         upload.innerHTML = excelFormat;
    
-     Promise.all(excelDataSubmit(),cancelButton())
-     .then(() => {
-      console.log('Functions executed');
-     })   
+      Promise.all(excelDataSubmit(), cancelButton())
+      .then(() => {
+        console.log('Functions executed successfully');
+      });
     }
 
     document.getElementById('uploadViaExcel').addEventListener('change', () => {
@@ -169,10 +169,11 @@
         upload.innerHTML = excelFormat;
 
      
-      Promise.all(excelDataSubmit(),cancelButton())
-     .then(() => {
-      console.log('Functions executed');
-     })  
+      Promise.all(excelDataSubmit(), cancelButton())
+      .then(() => {
+        console.log('Functions executed successfully');
+      });
+     
     });
 
     document.getElementById('uploadViaManually').addEventListener('change', () => {
@@ -465,12 +466,11 @@
     
     });
 
+    }
     function cancelButton(){
     document.getElementById('excelCancel').addEventListener('click',() => {
       cancelButtonRedirect('/elective/dashboard');
     });
-    }
-
     }
 
 
