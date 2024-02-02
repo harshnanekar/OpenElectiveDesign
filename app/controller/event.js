@@ -1,8 +1,8 @@
 const query = require('../queries/user.js');
 const eventQuery = require('../queries/eventQueries.js');
 const validation = require('../controller/validation.js');
-const excelController = require('../controller/excel.js');
 const user = require('./user.js');
+const excelController = require('../controller/excel.js');
 let excel = require('xlsx');
 
 let controller = {
@@ -138,9 +138,7 @@ let controller = {
         let getmodules = await query.getModules(username);
         let campus = await eventQuery.getCampus();
         let acadSession = await eventQuery.getacadSession() ;
-
-        let excelFileName = 'D:/projects/openelective/open_elective/public/excel/StudentDetail_Demo1.xlsx';
-        await excelController.excelDropDownRegisterStudent(excelFileName);
+        excelController.excelDropDownRegisterStudent;
 
         return res.render('registerStudent',{module:getmodules,campus:campus.rows,acadSession:acadSession.rows});
 
@@ -251,8 +249,6 @@ let controller = {
        if(username != undefined){
        
        let {fname,lname,rollNo,campus,studUsername,acadYear,acadSession} = req.body;
-
-       console.log('acadYEar in controller ' , studUsername);
 
        const validationPromises = [
         validation.fnameValidation(res, fname),

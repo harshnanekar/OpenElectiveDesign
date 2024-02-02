@@ -9,6 +9,8 @@
     <style>
         body{
          background-color: whitesmoke;
+         padding:0;
+         margin:0;
         }
         #uploadOptions{
          background-color: white;
@@ -46,20 +48,20 @@
           left:20px;
         }
         #fileName{
-            margin-top: 20px;
-            margin-bottom: 10px;
+          margin-top: 20px;
+          margin-bottom: 10px;
         }
         #excelHeading{
-            margin-top:20px;
-            margin-bottom:20px;
+          margin-top:20px;
+          margin-bottom:20px;
         }
         #excelProgramSubmit , #excelCancel{
-            margin-top:20px;
-            margin-bottom:20px;
+          margin-top:20px;
+          margin-bottom:20px;
         }
         select {
-            padding-top: 10px;
-            padding-bottom: 10px;
+          padding-top: 10px;
+          padding-bottom: 10px;
         }
         #closeBt{
           color:red;
@@ -67,12 +69,29 @@
           border:0;
           position: relative; 
           left:38%;     
-          
-        
         }
         #closeBt:focus{
          outline:none;
         }
+        #campusError,#ProgramnameError,#ProgramIdError{
+         color:red;
+        }
+        #nonInsertedPrograms{
+          margin-top:80px;
+          background-color: white; 
+          margin-left:20px;
+        }
+        #nonInsertedPrgMessage{
+          margin-top:150px;
+          text-align:center;  
+          width:100%;
+          margin-left:20px;
+          visibility:hidden;
+        }    
+        th,td{
+          text-align:center;
+        }
+
      
       
         
@@ -96,7 +115,13 @@
 
      </div>
 
-    </div>
+     <div id="nonInsertedData">
+     <h4 id="nonInsertedPrgMessage">Program's Data Not Inserted Due To Empty Input Fields</h4>
+     <div id="nonInsertedPrograms">
+      
+
+     </div>
+     </div>
     
 </body>
 <%- include ('../partials/partial2') %>
@@ -105,7 +130,7 @@
 
     defaultFormatDisplay();
 
-    async function defaultFormatDisplay(){
+    function defaultFormatDisplay(){
     let upload = document.querySelector('#uploadFormat');
 
     let excelFormat = `<div id="heading"><h2>Upload Program's file(Excel):</h2></div>
@@ -116,14 +141,17 @@
              </div>
              <div id='displayNote'><a style="text-decoration:none;font-size:20px;" class="text-danger" href="/excel/Program_Excel.xlsx" id="downloadExcel"  >Download Sample Template</a></br>
              <h4 id="excelHeading">Excel Format:</h4>
-             <p>Program Name | Campus </p>
+             <p>Program Name | Campus | Program Id</p>
              </div>`;
         upload.innerHTML = excelFormat;
-
-    await excelDataSubmit();   
+   
+     Promise.all(excelDataSubmit(),cancelButton())
+     .then(() => {
+      console.log('Functions executed');
+     })   
     }
 
-    document.getElementById('uploadViaExcel').addEventListener('change',async () => {
+    document.getElementById('uploadViaExcel').addEventListener('change', () => {
       console.log('function called');
         
     let upload = document.querySelector('#uploadFormat');
@@ -136,14 +164,18 @@
               </div>
               <div id='displayNote'><a style="text-decoration:none;font-size:20px;" class="text-danger" href="/excel/Program_Excel.xlsx" id="downloadExcel"  >Download Sample Template</a></br>
               <h4 id="excelHeading">Excel Format:</h4>
-              <p>Program Name | Campus </p>
+              <p>Program Name | Campus | Program Id</p>
               </div>`;
         upload.innerHTML = excelFormat;
 
-    await excelDataSubmit();
+     
+      Promise.all(excelDataSubmit(),cancelButton())
+     .then(() => {
+      console.log('Functions executed');
+     })  
     });
 
-    document.getElementById('uploadViaManually').addEventListener('change',async () => {
+    document.getElementById('uploadViaManually').addEventListener('change', () => {
         let upload = document.querySelector('#uploadFormat');
         
         let manualData = `<div>
@@ -162,10 +194,18 @@
         <% }); %>
       </select>
       </div>
+      <div class="form-row">
+      <div style="margin-top:20px;" class="form-group col-md-12">
+      <label for="inputProgramId">Program Id</label>&ensp;&ensp;<span id="ProgramIdError"></span>
+      <input type="text" class="form-control" id="inputProgramId" placeholder="Program Id">
+      </div>
+      </div>
       <button type="submit" id="submitbtn" class="btn btn-danger mt-4">Add Program</button>
       </div>`
 
     upload.innerHTML = manualData;
+
+    validatePerformer();
 
     });
 
@@ -188,30 +228,25 @@
 
      sendExcelData('/elective/insertProgramsViaExcel','POST',formData)
      .then(response => {
-          
+        if(response.status === 'error'){
+        window.location.href = `${response.redirectTo}`;
+        }else{
+         messageDisplay(response);   
+        }  
      });
 
      }else{
-       let messageDisplay = document.getElementById('uploadMessage');
-       let message = `<span>File Must Be In Excel Format Only !!</span>
-       <button class="fa fa-close" id="closeBt" style="font-size:24px" ></button>`;
+      let messageDisplay = document.getElementById('uploadMessage');
+      let message = `<span>File Must Be In Excel Format Only !!</span>
+      <button class="fa fa-close" id="closeBt" style="font-size:24px" ></button>`;
 
-       messageDisplay.innerHTML= message ;
-       messageDisplay.style.visibility='visible';
+      messageDisplay.innerHTML= message ;
+      messageDisplay.style.visibility='visible';
 
-       await closeButton();
+      await closeButton();
      }
 
      });   
-    }
-
-    async function closeButton(){
-
-    document.getElementById('closeBt').addEventListener('click',async () => {
-        let messageDisplay = document.getElementById('uploadMessage');
-        messageDisplay.style.visibility='hidden';
-    });
-
     }
 
     async function sendExcelData(url,method,obj){
@@ -239,6 +274,202 @@
     })
 
     });
+
+    }
+
+    async function messageDisplay(response){
+      let messageDisplay = document.getElementById('uploadMessage');
+
+      console.log("Table for non-insereted " ,response.nonInsertedPrograms); 
+      
+
+      let message = `<span>Programs Uploaded Successfully !!</span>
+      <button class="fa fa-close" id="closeBt" style="font-size:24px" ></button>`;
+
+      messageDisplay.innerHTML= message ;
+      messageDisplay.style.visibility='visible';
+
+      if(response.status === 'success'){
+
+     
+      let closeButton = document.querySelector('#closeBt'); 
+
+      messageDisplay.style.color = 'green';
+      messageDisplay.style.boxShadow = '0px 0px 6px 1px green';
+      closeButton.style.color = 'green';
+
+      let nonInsertedProgramsArray = await response.nonInsertedPrograms;  
+
+      if(nonInsertedProgramsArray.length != 0){
+
+      let  iTag = `<i style='font-weight:bold;color:red;'>Empty Field</i>`;
+            
+      let nonInsertedData = `<table class="table table-bordered table-responsive-lg" >
+                                 <tr>
+                                 <th>Sr No.</th>
+                                 <th>Program Name</th>
+                                 <th>Campus</th>
+                                 <th>Program Id</th>  
+                                 </tr>
+                                 ${nonInsertedProgramsArray.map((data, index) => `
+                                 <tr>
+                                 <td>${index + 1}</td>
+                                 <td>${data.program ? data.program : iTag }</td>
+                                 <td>${data.campus ? data.campus : iTag}</td>
+                                 <td>${data.programId ? data.programId : iTag}</td>
+                                 </tr>`
+                                 ).join('')}
+                                 </table>`;
+
+      let nonInsertedMessage = document.querySelector('#nonInsertedPrgMessage');
+      nonInsertedMessage.style.visibility = 'visible';
+
+      let nonInsertedPrograms = document.querySelector('#nonInsertedPrograms');
+      nonInsertedPrograms.innerHTML = nonInsertedData;
+
+      }
+      
+      }
+      await closeButton();
+
+
+    }
+
+    function validatePerformer(){
+    document.getElementById('submitbtn').addEventListener('click', () => {
+      
+      let program = document.getElementById('inputProgramName').value;
+      let campus = document.getElementById('inputCampus').value;
+      let programId = document.getElementById('inputProgramId').value;
+
+      let campusValidation =  campusValidator(campus);
+      let programIdValidation = programIdValidatior(programId); 
+
+      console.log('campus------ ' , campusValidation);
+      console.log('program id validation:: ',programIdValidation);
+
+      if(campusValidation && programIdValidation){
+
+       let obj = {program,campus,programId};
+
+      insertProgramManually('/elective/insertprogramManually','POST', obj)
+      .then(responseData => {
+       if(responseData.status === 'error'){
+        window.location.href= `${responseData.redirectTo}`;  
+       }else{
+        manuallyMessage(responseData);
+       }
+      });
+      }
+
+    })
+    }
+
+
+    function campusValidator(campus){
+     
+      let campusData = document.querySelectorAll('#inputCampus');
+      let campusError = document.getElementById('campusError');
+  
+      let campusName = campusData[0][0].innerText;
+    
+      if(campusName == campus){
+      campusError.innerText = '*Invalid Input Field';  
+      console.log('Invalid campus');
+      return false;
+      }
+
+      campusError.innerText = '';
+      return true;
+    
+    }
+
+    function programIdValidatior(programId){
+
+      let programError = document.getElementById('ProgramIdError');
+
+      if(programId.length > 0){
+        
+      let programIdValidate = specialCharacterValidation(programId);
+
+      if(programIdValidate){
+        programError.innerText = '';
+        return true; 
+
+      }else{
+       programError.innerText = '*Invalid Input Field'; 
+       return false;
+      }
+
+      }else{
+        programError.innerText = '*Required';
+        return false;
+      }
+    }
+
+     function insertProgramManually(url,method,obj){
+     
+     return new Promise((resolve,reject) => { 
+     const requestDetails = {
+      method:method ,
+      headers:{
+        'Content-Type':'application/json'
+      },
+      body: obj ? JSON.stringify(obj) : undefined,
+     } 
+
+     fetch(url,requestDetails)
+     .then(response => {
+      if(response.json){
+        return response.json();
+      }
+      throw new Error('Error in getting response');
+     })
+     .then(data => {
+      resolve(data);
+     })
+     .catch(error => {
+      reject(error);
+     })
+       
+    });
+    }
+
+    function manuallyMessage(response){
+      let uploadMessage = document.getElementById('uploadMessage');
+      uploadMessage.innerHTML = `<span id="errorMessageName">${response.message}</span>
+                                 <button class="fa fa-close" id="closeBt" style="font-size:24px" ></button>`;
+                     
+      let message = document.getElementById('errorMessageName');
+                                
+      let closeBt = document.getElementById('closeBt');    
+      uploadMessage.style.visibility = 'visible';
+
+      if(response.status === 'success'){
+        closeBt.style.color ='green';
+        closeBt.style.left = '39%';   
+        message.style.color = 'green';                        
+        uploadMessage.style.boxShadow = '0px 0px 6px 1px green';        
+      }
+
+    closeButton();
+    }
+
+    
+    function closeButton(){
+
+    document.getElementById('closeBt').addEventListener('click', () => {
+
+    let messageDisplay = document.getElementById('uploadMessage');
+    messageDisplay.style.visibility='hidden'; 
+    
+    });
+
+    function cancelButton(){
+    document.getElementById('excelCancel').addEventListener('click',() => {
+      cancelButtonRedirect('/elective/dashboard');
+    });
+    }
 
     }
 

@@ -99,12 +99,12 @@
         let asciiValue = inputText.charCodeAt(i);
 
         if(asciiValue >= 33 && asciiValue <= 47 || asciiValue >= 58 && asciiValue <= 64 || asciiValue >= 91 && asciiValue <= 96 || asciiValue >= 123 && asciiValue <= 126){
-          return false;     
+        return false;     
         }
 
         }
 
-         return true;
+        return true;
       }
 
       function fileError(filePath){
@@ -113,6 +113,10 @@
         return false;
       }  
         return true;
+      }
+
+      function cancelButtonRedirect(redirectPage){
+        window.location.href= `${redirectPage}`;
       }
 
 

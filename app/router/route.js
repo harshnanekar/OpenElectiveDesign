@@ -17,12 +17,13 @@ apiRouter.get('/register',middleware.verifyRequest,eventController.registerStude
 apiRouter.get('/programs',middleware.verifyRequest,programController.programs);
 apiRouter.get('/addPrograms',middleware.verifyRequest,programController.addPrograms);
 
+
 //Post Requests
 apiRouter.post('/login',controller.login);
 apiRouter.post('/eventData',middleware.verifyRequest,eventController.eventData);
 apiRouter.post('/uploadStudentData',middleware.verifyRequest,multer().single('studentDetails'),eventController.uploadStudentData);
 apiRouter.post('/registerStudentManually',middleware.verifyRequest,eventController.registerStudentManually);
 apiRouter.post('/insertProgramsViaExcel',middleware.verifyRequest,multer().single('programFile'),programController.insertProgramsViaExcel);
-
+apiRouter.post('/insertprogramManually',middleware.verifyRequest,programController.insertProgramManaully);
 
 module.exports = apiRouter;

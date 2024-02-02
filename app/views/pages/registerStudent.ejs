@@ -152,7 +152,7 @@ document.getElementById('closeBt')?.addEventListener('click',() => {
  message.style.visibility = "hidden" ;
 });
 
-document.getElementById('excelOption').addEventListener('change',async () => {
+document.getElementById('excelOption').addEventListener('change', () => {
 
   let registerExcelFormat = document.getElementById('registerFormat') ;
   registerExcelFormat.innerHTML = `<div id="heading"><h2>Upload Student's Details file(Excel):</h2></div>
@@ -166,10 +166,13 @@ document.getElementById('excelOption').addEventListener('change',async () => {
              <p>Username | Firstname | Lastname | Acad Session | Acad Year | Campus | Roll No.</p>
              </div>`;
 
-   await excelSubmitForm();   
+   Promise.all(excelSubmitForm(),cancelButton())
+   .then( () => {
+    console.log("Functions runned successfully");
+   });   
 });
 
-document.getElementById("manualOption").addEventListener("change",async () => {
+document.getElementById("manualOption").addEventListener("change", () => {
 
 
     let registerManually = document.getElementById('registerFormat');
@@ -224,13 +227,16 @@ document.getElementById("manualOption").addEventListener("change",async () => {
   <button type="submit" id="submitbtn" class="btn btn-danger mt-4">Register Student</button>
 </div>`;
  
-await acadYearfun();
-await validatePerformer();
+Promise.all(acadYearfun(),validatePerformer())
+.then(() => {
+  console.log('Functions runned successfully');
+});
+
 });
 
  checkfun();
 
-   async function checkfun() {
+    function checkfun() {
  
     let registerExcelFormat = document.getElementById('registerFormat');
     registerExcelFormat.innerHTML = `<div id="heading"><h2>Upload Student's Details file(Excel):</h2></div>
@@ -244,15 +250,18 @@ await validatePerformer();
              <p>Username | Firstname | Lastname | Acad Session | Acad Year | Campus | Roll No.</p>
              </div>`;
              
-      await excelSubmitForm();       
+    Promise.all(excelSubmitForm(),cancelButton())
+    .then( () => {
+     console.log("Functions runned successfully");
+     });      
     }
 
     
 
      
-     async function acadYearfun(){
+     function acadYearfun(){
      
-     let acadYear = await document.querySelector('#inputAcadYear');
+     let acadYear = document.querySelector('#inputAcadYear');
      dynamicYear(acadYear);
 
      }
@@ -297,24 +306,24 @@ await validatePerformer();
        });
        }
 
-        async function validatePerformer(){
-        document.querySelector('#submitbtn').addEventListener('click',async () => {
+         function validatePerformer(){
+        document.querySelector('#submitbtn').addEventListener('click', () => {
      
-        let fname = await document.getElementById('inputFname').value;
-        let lname = await document.getElementById('inputLname').value;
-        let rollNo = await document.getElementById('inputrollNo').value;
-        let campus = await document.getElementById('inputCampus').value;
-        let studUsername = await document.getElementById('inputUname').value;
-        let acadYear = await document.getElementById('inputAcadYear').value;
-        let acadSession = await document.getElementById('inputAcadSession').value;
+        let fname =  document.getElementById('inputFname').value;
+        let lname =  document.getElementById('inputLname').value;
+        let rollNo =  document.getElementById('inputrollNo').value;
+        let campus =  document.getElementById('inputCampus').value;
+        let studUsername =  document.getElementById('inputUname').value;
+        let acadYear =  document.getElementById('inputAcadYear').value;
+        let acadSession =  document.getElementById('inputAcadSession').value;
 
-        let fnameVal = await fnameValidation(fname);
-        let lnameVal = await lnameValidation(lname);
-        let rollNoVal = await rollNoValidation(rollNo);
-        let campusVal =  await campusValidation(campus);
-        let unameVal = await unameValidation(studUsername);
-        let yearVal = await acadYearValidation(acadYear);
-        let sessionVal = await acadSessionValidation(acadSession);
+        let fnameVal =  fnameValidation(fname);
+        let lnameVal =  lnameValidation(lname);
+        let rollNoVal =  rollNoValidation(rollNo);
+        let campusVal =  campusValidation(campus);
+        let unameVal =  unameValidation(studUsername);
+        let yearVal =  acadYearValidation(acadYear);
+        let sessionVal =  acadSessionValidation(acadSession);
 
         if(fnameVal && lnameVal && rollNoVal && campusVal && unameVal && yearVal && sessionVal){
 
@@ -333,13 +342,13 @@ await validatePerformer();
      }
 
         //FirstName Validation
-        async function fnameValidation(fname){
+         function fnameValidation(fname){
 
         let inputFname = document.getElementById('fnameError');
          
         if(fname.length > 0){      
 
-        let inputVal = await alphabetsValidation(fname);
+        let inputVal =  alphabetsValidation(fname);
 
         console.log('Validated---- ' , inputVal);
 
@@ -362,13 +371,13 @@ await validatePerformer();
      };
 
      //LastName Validation
-      async function lnameValidation(lname){
+       function lnameValidation(lname){
 
         let inputLname = document.getElementById('lnameError');
  
         if(lname.length > 0){      
 
-        let inputVal = await alphabetsValidation(lname);
+        let inputVal =  alphabetsValidation(lname);
         console.log('Validated---- ' , inputVal);
 
         if(inputVal){
@@ -391,13 +400,13 @@ await validatePerformer();
       };
 
       //RollNo Validation
-      async function rollNoValidation(rollNo){
+       function rollNoValidation(rollNo){
       
         let inputrollNo = document.getElementById('rollNoError');
     
         if(rollNo.length > 0){
         
-        let rollNoVal = await specialCharacterValidation(rollNo); 
+        let rollNoVal =  specialCharacterValidation(rollNo); 
 
         if(rollNoVal){
          
@@ -417,7 +426,7 @@ await validatePerformer();
       }
 
         //Campus Validation
-        async function campusValidation(campus){
+         function campusValidation(campus){
 
         let campusError = document.querySelector('#campusError');
         let campusOptions = document.querySelector('#inputCampus');
@@ -438,7 +447,7 @@ await validatePerformer();
         }
 
         //Username Validation
-        async function unameValidation(username){
+       function unameValidation(username){
 
         let unameError = document.getElementById('unameError');
         
@@ -457,7 +466,7 @@ await validatePerformer();
         }
 
         //AcadYear Validation
-        async function acadYearValidation(acadYear){
+       function acadYearValidation(acadYear){
      
         let yearError = document.querySelector('#yearError');
         let yearOptions = document.querySelector('#inputAcadYear');
@@ -478,7 +487,7 @@ await validatePerformer();
         }
 
          //AcadSession Validation
-        async function acadSessionValidation(session){
+        function acadSessionValidation(session){
      
         let sessionError = document.querySelector('#sessionError');
         let sessionOptions = document.querySelector('#inputAcadSession');
@@ -528,7 +537,7 @@ await validatePerformer();
 
         }
 
-        async function closeButton(){
+        function closeButton(){
         document.getElementById('closeBt').addEventListener('click',async () => {
 
          let fileError = document.querySelector('#fileErrorMessage');
@@ -627,11 +636,11 @@ await validatePerformer();
          }
           
          }
-          await closeButton();
+         closeButton();
           
         }
 
-        async function manualMessage(response) {
+         function manualMessage(response) {
           let fileMessage = document.getElementById('fileErrorMessage');
           fileMessage.innerHTML = `<span id="errorMessageName">${response.message}</span>
                                  <button class="fa fa-close" id="closeBt" style="font-size:24px" ></button>`;
@@ -649,21 +658,15 @@ await validatePerformer();
             fileMessage.style.boxShadow = '0px 0px 6px 1px green';        
           }
 
-          await closeButton();
+           closeButton();
 
         }
 
+        function cancelButton(){
         document.getElementById('excelCancel').addEventListener('click',() => {
-
-        let fileInput = document.querySelector('#fileName').value;
-
-        if(fileInput != undefined){
-         window.location.href = '/elective/loginPage';
-        }else{
-         window.location.href = '/elective/register';
-        }
-
+          cancelButtonRedirect('/elective/dashboard');
         })
+       }
 
 </script>
 </html>

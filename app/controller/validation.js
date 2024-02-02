@@ -181,5 +181,27 @@ module.exports = class Validation{
     }
   }
 
+  static programIdValidation(res,programId){
+    
+    try{
+
+    console.log("program id:::::: " , programId);
+    if(programId.length > 0){
+ 
+    let programIdValidater = Validation.characterValidation(programId);
+    console.log("length valid " , programIdValidater);
+    return programIdValidater;
+
+    }else{
+    console.log("Invalid length");  
+    return false;
+    }  
+
+    }catch(error){
+    return res.redirect('/elective/loginPage');
+    }
+
+  }
+
 
 };

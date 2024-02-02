@@ -204,7 +204,7 @@ font-family: 'Poppins', sans-serif;
 
       displayMessage.style.color = 'red';
       displayMessage.style.visibility = "visible";
-      await closeButton();
+     closeButton();
     }
    
    
@@ -212,7 +212,7 @@ font-family: 'Poppins', sans-serif;
     }
 
     //Hiding Error Message
-    async function closeButton(){
+    function closeButton(){
 
     document.getElementById('closebutton')?.addEventListener('click',() =>{
     let displayMessage = document.getElementById('errormessage');
