@@ -19,6 +19,8 @@ apiRouter.get('/programs',middleware.verifyRequest,programController.programs);
 apiRouter.get('/addPrograms',middleware.verifyRequest,programController.addPrograms);
 apiRouter.get('/viewPrograms',middleware.verifyRequest,programController.viewPrograms);
 apiRouter.get('/course',middleware.verifyRequest,courseController.addCourses);
+apiRouter.get('/getAllCourses',middleware.verifyRequest,courseController.getAllCourses);
+apiRouter.get('/programList',middleware.verifyRequest,programController.getAllProgramsList);
 
 
 //Post Requests
@@ -28,5 +30,9 @@ apiRouter.post('/uploadStudentData',middleware.verifyRequest,multer().single('st
 apiRouter.post('/registerStudentManually',middleware.verifyRequest,eventController.registerStudentManually);
 apiRouter.post('/insertProgramsViaExcel',middleware.verifyRequest,multer().single('programFile'),programController.insertProgramsViaExcel);
 apiRouter.post('/insertprogramManually',middleware.verifyRequest,programController.insertProgramManaully);
+apiRouter.post('/insertCourseViaExcel',middleware.verifyRequest,multer().single('courseDetails'),courseController.insertCourseViaExcel);
+apiRouter.post('/insertCourseManually',middleware.verifyRequest,courseController.insertCourseManually);
+apiRouter.post('/allocatePrograms',middleware.verifyRequest,courseController.allocatePrograms);
+
 
 module.exports = apiRouter;

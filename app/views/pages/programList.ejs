@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/style.css">
+    <%- include ('../partials/partial') %>
+    <title>Programs</title>
+    
+    <style>
+      body{
+        background-color: whitesmoke;
+      }  
+      #programList{
+        background-color:white;
+        padding:20px;
+        width:1450px;
+        margin-top:30px;
+      }
+      button{
+        margin-top:10px;
+      }
+      #uploadMessage{
+        height: 50px;
+        border-radius:22px;
+        justify-content:center;
+        display:flex;
+        align-items:center;
+        color: red;
+        box-shadow:0px 0px 6px 1px red;
+        width:100%;
+        font-weight:bold;
+        margin-left:20px;
+        visibility:hidden;
+      }
+      #closeBt{
+          color:red;
+          background-color: whitesmoke;
+          border:0;
+          position: relative; 
+          left:38%;     
+        }
+    #closeBt:focus{
+         outline:none;
+    }
+
+    </style>
+
+</head>
+<body>
+    <%- include('sidebar.ejs') %>
+    <%- include('header.ejs')  %>
+    <div id="main">
+        <div id="uploadMessage"></div>
+        <div id="programList">
+        <table id="programTable">
+        <tr>
+        <td><label for="programName"><input type="checkbox" />&nbsp;Select All</label></td>
+        </tr>
+        <% programs.forEach(data => { %>
+           <tr><td><label for="programName"><input type="checkbox" value="<%= data.program_id %>" class="checkProgram"/>&nbsp;<%= data.program_name %></label></td></tr>
+          <% }); %>
+        </table>
+        <button type="button" id="submitbtn" class="btn btn-danger" >Allocate</button>
+        </div>
+    </div>
+</body>
+
+<%- include ('../partials/partial2') %>
+<script src= "../js/script.js" ></script>
+<script>
+
+allCheckedPrograms();
+
+function allCheckedPrograms(){
+ let selectedPrograms = document.querySelectorAll('input');   
+ let checkboxClass = document.querySelectorAll('.checkProgram');
+ let buttonAttr = document.getElementById('submitbtn');
+
+ if(!selectedPrograms[0].checked){
+
+ buttonAttr.setAttribute('disabled','disabled');   
+ selectedPrograms[0].addEventListener('change',() => {   
+
+ for(let i=0;i<checkboxClass.length;i++){
+  if(selectedPrograms[i].checked){
+  
+  checkboxClass[i].setAttribute('checked','checked');
+  buttonAttr.removeAttribute('disabled');
+  
+  }else{
+  checkboxClass[i].removeAttribute('checked');
+  buttonAttr.setAttribute('disabled','disabled');   
+  } 
+ }
+ }); 
+
+ }else{
+  checkboxClass[i].removeAttribute('checked');
+ }
+ }
+
+ document.getElementById('submitbtn').addEventListener('click',() => {
+ let checkPrograms = document.querySelectorAll('.checkProgram');
+ let buttonAttr = document.getElementById('submitbtn');
+
+ let programArray = [];
+
+ let urlValue = window.location.search;
+ let fetchValue = new URLSearchParams(urlValue);
+ let subjectId = fetchValue.get('id');
+ console.log(subjectId);
+ 
+ for(let i=0;i<checkPrograms.length;i++){
+    if(checkPrograms[i].checked){    
+    let programId = checkPrograms[i].getAttribute('value');
+    programArray.push({subjectId,programId});
+    }
+ }
+
+ let obj ={programArray};
+
+ allocatePrograms('/elective/allocatePrograms','POST',obj)
+ .then(response => {
+  if(response.status === 'error'){
+   window.location.href= `${response.redirectTo}`;
+  }else{
+  displayMessage(response); 
+  }
+ });
+
+ });
+
+ function allocatePrograms(url,method,obj){
+  return new Promise((resolve,reject) => {
+
+  const requestDetails = {
+    method:method,
+    headers:{
+    'Content-Type': 'application/json'
+    },
+    body:obj ? JSON.stringify(obj) : undefined
+  }
+
+  fetch(url,requestDetails) 
+  .then(response => {
+    if(response.ok){
+    return response.json();
+    }
+    throw new Error('Error in Fetching Response');
+  })
+  .then(data => {
+    resolve(data);
+  })
+  .catch(error => {
+    reject(error);
+  })
+ });
+ }
+
+ function displayMessage(response){
+    let uploadMessage = document.getElementById('uploadMessage');
+      uploadMessage.innerHTML = `<span id="errorMessageName">${response.message}</span>
+                                 <button class="fa fa-close" id="closeBt" style="font-size:24px" ></button>`;
+                     
+      let message = document.getElementById('errorMessageName');
+                                
+      let closeBt = document.getElementById('closeBt');    
+      uploadMessage.style.visibility = 'visible';
+
+      if(response.status === 'success'){
+        closeBt.style.color ='green';
+        closeBt.style.left = '39%';   
+        message.style.color = 'green';                        
+        uploadMessage.style.boxShadow = '0px 0px 6px 1px green';        
+      }
+
+    closeButton();
+}
+ 
+function closeButton(){
+
+document.getElementById('closeBt').addEventListener('click', () => {
+
+let messageDisplay = document.getElementById('uploadMessage');
+messageDisplay.style.visibility='hidden'; 
+
+});
+}
+
+
+
+</script>
+</html>

@@ -1,7 +1,7 @@
 const query = require('../queries/eventQueries.js')
 const userQuery = require('../queries/user.js')
 const programQuery = require('../queries/programQueries.js')
-const excel = require('xlsx');
+let excelController =  require('../controller/excel.js');
 let validationController = require('../controller/validation.js');
 
 module.exports =  {
@@ -39,7 +39,7 @@ addPrograms : async (req,res) => {
 
    let getmodules = await userQuery.getModules(username);
    let campus = await query.getCampus();
-
+  
    return res.render('addProgram',{module:getmodules,campus:campus.rows});
    
   }else{
@@ -68,10 +68,8 @@ try{
  
  if(file != undefined){
 
- let excelFile = excel.read(file.buffer,{type:'buffer'});
- let sheet = excelFile.Sheets[excelFile.SheetNames[0]];
- let excelData = excel.utils.sheet_to_json(sheet);
- let programArray = excelData.length;
+  let excelData = excelController.readExcelFile(file);
+  let programArray = excelData.length;
 
  console.log('programs::::: ', excelData[0].ProgramId);
  
@@ -97,8 +95,9 @@ try{
   }else{
     nonInsertedPrograms.push({program,campus,programId});
   }
-  console.log('non inserted programs: ' , nonInsertedPrograms);
-  console.log('non inserted programs:::::::: ' , nonInsertedPrograms);  
+
+  console.log('non inserted programs:::::::: ' , nonInsertedPrograms);
+
   if(programArray.length > 0) {
   if(role != undefined && role === 'Role_Admin'){
 
@@ -112,6 +111,7 @@ try{
   }
 
   }else{
+    res.clearCookie('jwtauth');
     res.json({status:'error',redirectTo :'/elective/loginPage'});
   }
   }
@@ -126,6 +126,7 @@ try{
  }
 
  }else{
+  res.clearCookie('jwtauth');
   return res.json({status:'error',redirectTo :'/elective/loginPage' });  
  }
 
@@ -174,6 +175,7 @@ insertProgramManaully :async (req,res) => {
   }  
 
   }else{
+    res.clearCookie('jwtauth');
     return res.json({status:'error',redirectTo : '/elective/loginPage'});
   }  
   
@@ -182,6 +184,7 @@ insertProgramManaully :async (req,res) => {
   }
 
   }else{
+    res.clearCookie('jwtauth');
    return res.json({status:'error',redirectTo : '/elective/loginPage'});
   }  
 
@@ -211,14 +214,33 @@ viewPrograms :async (req,res) => {
 
 
   }catch(error){
-    console.log(error);
-   return res.redirect('/elective/loginPage');
+  console.log(error);
+  return res.redirect('/elective/error');
   }
 
+},
+
+getAllProgramsList : async (req,res) => {
+
+try{
+
+let username = req.session.modules;
+
+if(username != undefined){
+
+let getmodules = await userQuery.getModules(username);    
+let programList = await programQuery.getAllProgramsList(username);
+return res.render('programList',{programs:programList.rows,module:getmodules});
+
+}else{
+res.clearCookie('jwtauth');
+return res.redirect("/elective/loginPage#sessionTimeout");
 }
 
-
-
+}catch(error){
+return res.redirect('/elective/error');
+}  
+}
 
 
 }

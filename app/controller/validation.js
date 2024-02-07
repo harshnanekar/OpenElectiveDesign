@@ -21,7 +21,7 @@ module.exports = class Validation{
     console.log(error.message);
     return res.redirect("/elective/error");
     }
-  }
+   }
 
    static lnameValidation(res,lname){
     console.log('lname>>>>> ' , lname); 
@@ -108,7 +108,6 @@ module.exports = class Validation{
           return false;
         }
     }
-
     return true;
     }catch(error){
       console.log(error.message);
@@ -198,9 +197,48 @@ module.exports = class Validation{
     }  
 
     }catch(error){
-    return res.redirect('/elective/loginPage');
+    return res.redirect('/elective/error');
     }
 
+  }
+
+  static departmentValidator(input_text){
+  if(input_text.length > 0 ){
+   let departmentValidate = Validation.alphabetValidation(input_text);
+   return departmentValidate;
+  }else{
+    return false;
+  }
+  }
+
+  static NumberValidation(input_text){
+  for(let i=0; i < input_text.length; i++){
+  let chars= input_text.charAt(i);  
+  if(chars >=0  && chars <= 9){
+    console.log(chars) 
+  }else{
+    return false;
+  }
+  }
+  return true;
+  }
+
+  static batchValidater(input_text){
+    if(input_text.length > 0){
+     let batchValidate = Validation.NumberValidation(input_text);
+     return batchValidate;
+    }else{
+      return false;
+    }
+  }
+
+  static batchCapacityValidater(input_text){
+   if(input_text.length > 0){
+    let capacityValidator = Validation.NumberValidation(input_text);
+    return capacityValidator;
+   }else{
+    return false;
+   }
   }
 
 

@@ -2,9 +2,9 @@ const excel = require('xlsx');
 const eventQuery = require('../queries/eventQueries.js');
 
 
-module.exports = {
+module.exports =class Excel {
 
- excelDropDownRegisterStudent : async () => {
+ static excelDropDownRegisterStudent() {
 
   let fileName = 'D:/projects/openelective/open_elective/public/excel/StudentDetail_Demo1.xlsx';
 
@@ -13,7 +13,7 @@ module.exports = {
   //let worksheet1 = excelFile.Sheets[excelFile.SheetNames[2]];
 
   let session = [];
-  let dataForSession = await eventQuery.getacadSession();
+  let dataForSession = eventQuery.getacadSession();
   session =  dataForSession.rows;
 
   console.log('Acad Session:::::: ', session);
@@ -45,6 +45,15 @@ module.exports = {
  
     excel.writeFile(excelFile,fileName);
 
+ }
+
+ static readExcelFile(file){
+
+  let excelFile = excel.read(file.buffer,{type:'buffer'});
+  let excelSheets = excelFile.Sheets[excelFile.SheetNames[0]];
+  let excelJson = excel.utils.sheet_to_json(excelSheets);
+
+   return excelJson;
  }
 
 }

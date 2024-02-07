@@ -1,9 +1,7 @@
 const query = require('../queries/user.js');
 const eventQuery = require('../queries/eventQueries.js');
 const validation = require('../controller/validation.js');
-const user = require('./user.js');
 const excelController = require('../controller/excel.js');
-let excel = require('xlsx');
 
 let controller = {
 
@@ -86,7 +84,8 @@ let controller = {
       }
 
       }else{
-       return res.json({status:'error',redirectTo:'/elective/loginPage'})
+        res.clearCookie('jwtauth');
+       return res.json({status:'error',redirectTo:'/elective/loginPage'});
       }
 
       }else{
@@ -95,7 +94,7 @@ let controller = {
 
       } else{
         res.clearCookie('jwtauth');
-        return res.redirect("/elective/loginPage#sessionTimeout");
+        return res.json({status:'error',redirectTo:'/elective/loginPage'});
       }
   
       }catch(error){
@@ -138,7 +137,6 @@ let controller = {
         let getmodules = await query.getModules(username);
         let campus = await eventQuery.getCampus();
         let acadSession = await eventQuery.getacadSession() ;
-        excelController.excelDropDownRegisterStudent;
 
         return res.render('registerStudent',{module:getmodules,campus:campus.rows,acadSession:acadSession.rows});
 
@@ -170,16 +168,13 @@ let controller = {
       console.log('File found ' , file); 
       if(file != undefined){
       
-        let excelFile = excel.read(file.buffer ,{type:'buffer'});
-        let sheet = excelFile.Sheets[excelFile.SheetNames[0]];
-        let getData = excel.utils.sheet_to_json(sheet);
-        let arrLength = getData.length;
         let studentArray = [];
         let emptyStudentArray = [];
 
+        let getData = excelController.readExcelFile(file);
+        let arrLength = getData.length;
         if(arrLength > 0) {
-
-      
+     
         getData.forEach( async data => {
         let studentUname = data.Username;
         let studentFirstName = data.FirstName;
@@ -215,6 +210,7 @@ let controller = {
          }
 
          }else{
+          res.clearCookie('jwtauth');
           return res.json({status:'error',redirectTo :'/elective/loginPage' });
          }
          }
@@ -230,7 +226,7 @@ let controller = {
       }else{
 
         res.clearCookie('jwtauth');
-        return res.redirect("/elective/loginPage#sessionTimeout");
+        return res.json({status:'error',redirectTo :'/elective/loginPage' });
 
       }
       }catch(err){
@@ -286,6 +282,7 @@ let controller = {
       }
 
       }else{
+        res.clearCookie('jwtauth');
         return res.json({status:'error',redirectTo : '/elective/loginPage'});
       }
 

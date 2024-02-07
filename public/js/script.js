@@ -115,6 +115,18 @@
         return true;
       }
 
+      function NumberValidation(inputText){
+        for(let i=0; i < inputText.length; i++){
+        let chars= inputText.charAt(i);  
+        if(chars >=0  && chars <= 9){
+        console.log(chars) 
+        }else{
+        return false;
+        }
+        }
+        return true;
+      }
+      
       function cancelButtonRedirect(redirectPage){
         window.location.href= `${redirectPage}`;
       }

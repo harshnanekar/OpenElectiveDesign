@@ -165,11 +165,9 @@ document.getElementById('excelOption').addEventListener('change', () => {
              <h4 id="excel">Excel Format:</h4>
              <p>Username | Firstname | Lastname | Acad Session | Acad Year | Campus | Roll No.</p>
              </div>`;
-
-   Promise.all(excelSubmitForm(),cancelButton())
-   .then( () => {
-    console.log("Functions runned successfully");
-   });   
+ 
+  excelSubmitForm();
+  cancelButton();  
 });
 
 document.getElementById("manualOption").addEventListener("change", () => {
@@ -227,10 +225,8 @@ document.getElementById("manualOption").addEventListener("change", () => {
   <button type="submit" id="submitbtn" class="btn btn-danger mt-4">Register Student</button>
 </div>`;
  
-Promise.all(acadYearfun(),validatePerformer())
-.then(() => {
-  console.log('Functions runned successfully');
-});
+ acadYearfun();
+ validatePerformer();
 
 });
 
@@ -250,21 +246,16 @@ Promise.all(acadYearfun(),validatePerformer())
              <p>Username | Firstname | Lastname | Acad Session | Acad Year | Campus | Roll No.</p>
              </div>`;
              
-    Promise.all(excelSubmitForm(),cancelButton())
-    .then( () => {
-     console.log("Functions runned successfully");
-     });      
+    excelSubmitForm();
+    cancelButton(); 
     }
 
-    
-
-     
-     function acadYearfun(){
+    function acadYearfun(){
      
      let acadYear = document.querySelector('#inputAcadYear');
      dynamicYear(acadYear);
 
-     }
+    }
 
      async function excelSubmitForm(){
 
@@ -293,56 +284,56 @@ Promise.all(acadYearfun(),validatePerformer())
         } 
       });
 
-       }else{
-       fileError.innerHTML = `<span id="errorMessageName">File Format Should Be In Excel Only !!</span>
+      }else{
+      fileError.innerHTML = `<span id="errorMessageName">File Format Should Be In Excel Only !!</span>
                               <button class="fa fa-close" id="closeBt" style="font-size:24px" ></button>`;
 
-       let closeBt = document.getElementById('closeBt');             
-       closeBt.style.visibility = 'visible';
-       fileError.style.visibility = 'visible';
+      let closeBt = document.getElementById('closeBt');             
+      closeBt.style.visibility = 'visible';
+      fileError.style.visibility = 'visible';
 
-       await closeButton();
-       }
-       });
-       }
+      await closeButton();
+      }
+      });
+      }
 
-         function validatePerformer(){
-        document.querySelector('#submitbtn').addEventListener('click', () => {
+      function validatePerformer(){
+      document.querySelector('#submitbtn').addEventListener('click', () => {
      
-        let fname =  document.getElementById('inputFname').value;
-        let lname =  document.getElementById('inputLname').value;
-        let rollNo =  document.getElementById('inputrollNo').value;
-        let campus =  document.getElementById('inputCampus').value;
-        let studUsername =  document.getElementById('inputUname').value;
-        let acadYear =  document.getElementById('inputAcadYear').value;
-        let acadSession =  document.getElementById('inputAcadSession').value;
+      let fname =  document.getElementById('inputFname').value;
+      let lname =  document.getElementById('inputLname').value;
+      let rollNo =  document.getElementById('inputrollNo').value;
+      let campus =  document.getElementById('inputCampus').value;
+      let studUsername =  document.getElementById('inputUname').value;
+      let acadYear =  document.getElementById('inputAcadYear').value;
+      let acadSession =  document.getElementById('inputAcadSession').value;
 
-        let fnameVal =  fnameValidation(fname);
-        let lnameVal =  lnameValidation(lname);
-        let rollNoVal =  rollNoValidation(rollNo);
-        let campusVal =  campusValidation(campus);
-        let unameVal =  unameValidation(studUsername);
-        let yearVal =  acadYearValidation(acadYear);
-        let sessionVal =  acadSessionValidation(acadSession);
+      let fnameVal =  fnameValidation(fname);
+      let lnameVal =  lnameValidation(lname);
+      let rollNoVal =  rollNoValidation(rollNo);
+      let campusVal =  campusValidation(campus);
+      let unameVal =  unameValidation(studUsername);
+      let yearVal =  acadYearValidation(acadYear);
+      let sessionVal =  acadSessionValidation(acadSession);
 
         if(fnameVal && lnameVal && rollNoVal && campusVal && unameVal && yearVal && sessionVal){
 
-            let obj = {fname,lname,rollNo,campus,studUsername,acadYear,acadSession};
-            registerStudentManually('/elective/registerStudentManually','POST',obj)
-            .then(responseData => {
-                console.log('response----- ' , responseData.status);
-                if(responseData.status === 'error'){
-                  window.location.href = responseData.redirectTo;
-                }else{
-                manualMessage(responseData);
-                }
-            });
+        let obj = {fname,lname,rollNo,campus,studUsername,acadYear,acadSession};
+        registerStudentManually('/elective/registerStudentManually','POST',obj)
+        .then(responseData => {
+          console.log('response----- ' , responseData.status);
+        if(responseData.status === 'error'){
+          window.location.href = responseData.redirectTo;
+        }else{
+        manualMessage(responseData);
         }
-      });
-     }
+        });
+        }
+        });
+        }
 
         //FirstName Validation
-         function fnameValidation(fname){
+        function fnameValidation(fname){
 
         let inputFname = document.getElementById('fnameError');
          
@@ -423,7 +414,7 @@ Promise.all(acadYearfun(),validatePerformer())
         inputrollNo.innerText = '*Required';
         return false;
         }
-      }
+       }
 
         //Campus Validation
          function campusValidation(campus){
