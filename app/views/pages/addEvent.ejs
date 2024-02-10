@@ -14,7 +14,7 @@
           position: relative;
           top:10px;
         }
-        #eventMessage{
+        #commonDisplayMessage{
 
          height: 50px;
          border-radius: 22px;
@@ -28,7 +28,7 @@
          visibility: hidden;
 
          }
-         #eventMessageName{
+         #eventMessage{
           margin-left:20px;
           margin-top:3px;
          
@@ -82,7 +82,9 @@
     <%- include('header.ejs')  %>
 
       <div id="mains">
-      <div id="eventMessage" >
+      <div id="commonDisplayMessage" >
+      <span id="showMessage"></span>
+      <button class="fa fa-close closeBtn" id="close" style="font-size:24px" ></button>  
       </div>
 
       <div class="eventNewDiv">
@@ -127,7 +129,7 @@
                 <input type="datetime-local" name="end_date" class="form-control  " id="end_date">
               </div>
             </div>
-            <button type="submit" id="formSubmit" class="btn btn-danger signin ">Add Event</button>
+            <button type="submit" id="formSubmit" class="btn btn-danger signin submitBtn">Add Event</button>
             </div>        
           </div>
  </div>
@@ -164,9 +166,19 @@
       if(response.message === 'error'){
         window.location.href = '/elective/loginPage';
       }else{
-        eventMessage(response);
-      }      
-      });
+
+        if(response.status === 'success'){
+       window.location.href = response.redirectTo;
+       }else{
+        let element = document.getElementById('commonDisplayMessage');
+        let showMessage= document.getElementById('showMessage');
+        let htmlPage = response.message;
+        showMessage.innerText = htmlPage;   
+        
+        element.style.visibility = "visible" ;
+       }
+       }      
+       });
 
     });
 
@@ -202,27 +214,6 @@
      });      
     }
 
-    async function eventMessage(response){
-      if(response.status === 'success'){
-       window.location.href = response.redirectTo;
-      }else{
-        let element = document.getElementById('eventMessage');
-        let htmlPage = `<span id ='eventMessageName'>${response.message}</span>
-                        <button class="fa fa-close" id="close" style="font-size:24px" ></button> `;
-
-                        element.innerHTML = htmlPage;
-                        element.style.visibility = "visible" ;
-      }
-      await closeBtnFun();
-    }
-
-    function closeBtnFun(){
-    document.getElementById('close')?.addEventListener('click',() => {
-     let message = document.getElementById('eventMessage') ;
-     message.style.visibility = "hidden" ;
-     
-    });
-   }
 
   
 

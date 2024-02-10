@@ -5,7 +5,7 @@ const a = class data{
     static async authenticateLogin(username){
         console.log('Query executed ' + username);
         
-        let datas = await pgPool.query('SELECT username,password FROM user_info WHERE username = $1', [username]);
+        let datas = await pgPool.query('SELECT username,password FROM user_info WHERE username = $1 and active=true', [username]);
         if(datas.rowCount > 0){
             return datas.rows;
         }
@@ -24,7 +24,7 @@ const a = class data{
     }
 
     static async getUserRole(username){
-        let query = await pgPool.query(`select ro.role_name from user_info u inner join user_roles r on u.id = r.user_lid inner join roles ro on ro.role_id = r.role_lid where username = $1 `,[username]);
+        let query = await pgPool.query(`select ro.role_name from user_info u inner join user_roles r on u.id = r.user_lid inner join roles ro on ro.role_id = r.role_lid where username = $1 and u.active=true and r.active=true and ro.active=true `,[username]);
         
         if(query.rowCount > 0){
             return query.rows;

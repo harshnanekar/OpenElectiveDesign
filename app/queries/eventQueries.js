@@ -56,12 +56,12 @@ const query = class EventQuery{
   }
 
   static async getAllCampus(){
-    let querie = await pgPool.query(`select campus_name from campus`);
+    let querie = await pgPool.query(`select campus_name from campus where active=true`);
     return querie.rows;
   }
 
   static async getAllSessions(){
-    let querie = await pgPool.query(`select current_session from session_master`);
+    let querie = await pgPool.query(`select current_session from session_master where active=true`);
     return querie.rows;
   }
 

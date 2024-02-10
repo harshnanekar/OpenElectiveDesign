@@ -66,9 +66,9 @@ module.exports = {
           res.cookie("jwtauth",token,{signed:true,maxAge:24 * 60 * 60 * 1000,path:'/',httponly:true});
           return res.json({status:'success',redirectTo : '/elective/dashboard'});
 
-        } else {
-          console.log("Unauthenticated");
-          return res.json({status:'error',redirectTo:'/elective/loginPage',message:'Invalid Password!!'});
+        }else {
+        console.log("Unauthenticated");
+        return res.json({status:'error',redirectTo:'/elective/loginPage',message:'Invalid Password!!'});
        
         }
         } else {
@@ -77,7 +77,7 @@ module.exports = {
         }
         } catch (err) {
         console.log(err.message);
-        return res.redirect("/elective/error");
+        return res.json({status:'Error',redirectTo:'/elective/error'});
         }
         },
 

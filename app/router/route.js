@@ -33,6 +33,9 @@ apiRouter.post('/insertprogramManually',middleware.verifyRequest,programControll
 apiRouter.post('/insertCourseViaExcel',middleware.verifyRequest,multer().single('courseDetails'),courseController.insertCourseViaExcel);
 apiRouter.post('/insertCourseManually',middleware.verifyRequest,courseController.insertCourseManually);
 apiRouter.post('/allocatePrograms',middleware.verifyRequest,courseController.allocatePrograms);
+apiRouter.post('/commonDelete',middleware.verifyRequest,courseController.commonCourseDelete);
+apiRouter.post('/getAllCoursePrograms',middleware.verifyRequest,courseController.getAllCoursePrograms);
+apiRouter.post('/editCourse',middleware.verifyRequest,courseController.editCourse);
 
 
 module.exports = apiRouter;

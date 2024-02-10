@@ -20,7 +20,7 @@
       button{
         margin-top:10px;
       }
-      #uploadMessage{
+      #commonDisplayMessage{
         height: 50px;
         border-radius:22px;
         justify-content:center;
@@ -51,7 +51,10 @@
     <%- include('sidebar.ejs') %>
     <%- include('header.ejs')  %>
     <div id="main">
-        <div id="uploadMessage"></div>
+        <div id="commonDisplayMessage">
+        <span id="showMessage"></span>
+        <button class="fa fa-close closeBtn" id="closeBt" style="font-size:24px" ></button>   
+        </div>
         <div id="programList">
         <table id="programTable">
         <tr>
@@ -75,22 +78,18 @@ allCheckedPrograms();
 function allCheckedPrograms(){
  let selectedPrograms = document.querySelectorAll('input');   
  let checkboxClass = document.querySelectorAll('.checkProgram');
- let buttonAttr = document.getElementById('submitbtn');
 
  if(!selectedPrograms[0].checked){
 
- buttonAttr.setAttribute('disabled','disabled');   
  selectedPrograms[0].addEventListener('change',() => {   
 
  for(let i=0;i<checkboxClass.length;i++){
   if(selectedPrograms[i].checked){
   
   checkboxClass[i].setAttribute('checked','checked');
-  buttonAttr.removeAttribute('disabled');
-  
+
   }else{
   checkboxClass[i].removeAttribute('checked');
-  buttonAttr.setAttribute('disabled','disabled');   
   } 
  }
  }); 
@@ -125,7 +124,23 @@ function allCheckedPrograms(){
   if(response.status === 'error'){
    window.location.href= `${response.redirectTo}`;
   }else{
-  displayMessage(response); 
+  
+    let uploadMessage = document.getElementById('commonDisplayMessage');
+    let showMessage =document.getElementById('showMessage');
+    let dispMessage = response.message;
+                
+       showMessage.innerText = dispMessage;   
+      let message = document.getElementById('errorMessageName');
+                                
+      let closeBt = document.querySelector('.closeBtn');    
+      uploadMessage.style.visibility = 'visible';
+
+      if(response.status === 'success'){
+        closeBt.style.color ='green';
+        closeBt.style.left = '39%';   
+        showMessage.style.color = 'green';                        
+        uploadMessage.style.boxShadow = '0px 0px 6px 1px green';        
+      }
   }
  });
 
@@ -158,35 +173,6 @@ function allCheckedPrograms(){
  });
  }
 
- function displayMessage(response){
-    let uploadMessage = document.getElementById('uploadMessage');
-      uploadMessage.innerHTML = `<span id="errorMessageName">${response.message}</span>
-                                 <button class="fa fa-close" id="closeBt" style="font-size:24px" ></button>`;
-                     
-      let message = document.getElementById('errorMessageName');
-                                
-      let closeBt = document.getElementById('closeBt');    
-      uploadMessage.style.visibility = 'visible';
-
-      if(response.status === 'success'){
-        closeBt.style.color ='green';
-        closeBt.style.left = '39%';   
-        message.style.color = 'green';                        
-        uploadMessage.style.boxShadow = '0px 0px 6px 1px green';        
-      }
-
-    closeButton();
-}
- 
-function closeButton(){
-
-document.getElementById('closeBt').addEventListener('click', () => {
-
-let messageDisplay = document.getElementById('uploadMessage');
-messageDisplay.style.visibility='hidden'; 
-
-});
-}
 
 
 

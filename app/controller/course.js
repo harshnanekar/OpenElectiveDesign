@@ -3,6 +3,8 @@ const query = require('../queries/eventQueries.js')
 const excel = require('../controller/excel.js');
 const courseQuery = require('../queries/courseQuery.js');
 const validation = require('../controller/validation.js');
+const programQuery = require('../queries/programQueries.js');
+const Validation = require('../controller/validation.js');
 
 module.exports = {
 
@@ -131,6 +133,8 @@ getAllCourses:async (req,res) => {
 
  if(courseData.rowCount > 0){
   return res.json({courseData : courseData.rows});
+ }else{
+  return res.json({courseData :[]});
  } 
 
  }else{
@@ -161,9 +165,10 @@ insertCourseManually :async (req,res) => {
  let campusValidation = validation.campusValidation(campus);
  
  if(subjectValidation && departmentValidation && batchValidation && batchCapacityValidation && campusValidation){
+ let radioYesNoValue = (radioTypeValue === 'Yes') ? 'Y' : 'N';   
  
  if(role === 'Role_Admin'){
- let insertCourse = await courseQuery.insertCourse(subjectName,department,batches,batchCapacity,campus,radioTypeValue,username);
+ let insertCourse = await courseQuery.insertCourse(subjectName,department,batches,batchCapacity,campus,radioYesNoValue,username);
  let subjectArrayId = insertCourse.rows;
 
  let courseArray = subjectArrayId.map(arr => ({
@@ -171,7 +176,7 @@ insertCourseManually :async (req,res) => {
     username: username
  }));
  
- if(radioTypeValue === 'Yes'){
+ if(radioYesNoValue === 'Y'){
 
  let insertCoursePrograms = courseQuery.subjectProgram(courseArray);
  
@@ -245,8 +250,111 @@ allocatePrograms:async (req,res) => {
     
     }catch(error){
       return res.json({status : 'error',redirectTo :'/elective/error'})
+    }  
+    },
+
+    commonCourseDelete: (req,res) => {  
+    try{
+    
+    let username = req.session.modules;
+    let role = req.session.userRole;
+
+    if(username != undefined){
+     
+    let {courseArray} = req.body;
+    if(role === 'Role_Admin'){
+     
+    courseArray.forEach(async course => {
+    await courseQuery.deleteCourseMapping(course);     
+    await courseQuery.deleteCourse(course);   
+    });
+    
+    return res.json({status:'success',message:'Course deleted Successfully !!'})
+
+    }else{
+    res.clearCookie('jwtauth');
+    return res.json({status:'error',redirectTo :'/elective/loginPage' });   
+    }
+
+    }else{
+    res.clearCookie('jwtauth');
+    return res.json({status:'error',redirectTo :'/elective/loginPage' });
+    }    
+
+    }catch(error){
+    return res.json({status : 'error',redirectTo :'/elective/error'});
+    }     
+    },
+    
+getAllCoursePrograms: async (req,res) => {
+    try{
+    
+    let username = req.session.modules;
+    if(username != undefined){
+
+    let {subId} = req.body;
+    let coursePrograms =await courseQuery.getAllCourseProgram(subId);
+
+    if(coursePrograms.rowCount > 0){
+    return res.json({coursePrograms : coursePrograms.rows});
+    }else{  
+    let allPrograms = await programQuery.getAllProgramsList(username);    
+    return res.json({coursePrograms:allPrograms.rows});
     }
     
-    
+
+    }else{
+    res.clearCookie('jwtauth');
+    return res.json({status:'error',redirectTo :'/elective/loginPage' });    
+    }    
+
+    }catch(error){
+    console.log("programs error " ,error)    
+    return res.json({status : 'error',redirectTo :'/elective/error'})
     }
+
+},
+
+editCourse: (req,res) =>{
+   
+   try{
+
+   let username = req.session.modules;
+   let role =req.session.userRole;
+
+   if(username != undefined){
+   
+    console.log('function called')
+   let {subName,deptName,batch,capacity,campus,programs} = req.body;
+
+   let departmentValidation = Validation.departmentValidator(deptName);
+   let capacityValidation = Validation.batchCapacityValidater(capacity);
+   let campusValidation = Validation.campusValidation(campus);
+   let batchValidation = Validation.batchValidater(batch);
+
+   if(subName != undefined && departmentValidation && batchValidation && capacityValidation && campusValidation && programs.length > 0 ){
+   
+   if(role === 'Role_Admin'){
+   
+    
+
+   }else{
+    res.clearCookie('jwtauth');
+    return res.json({status:'error',redirectTo :'/elective/loginPage' }); 
+   }
+
+   }else{
+   return res.json({message:'Invalid Inputs !!'})
+   } 
+
+   }else{
+    res.clearCookie('jwtauth');
+    return res.json({status:'error',redirectTo :'/elective/loginPage' }); 
+   }
+
+   }catch(error){
+    return res.json({status : 'error',redirectTo :'/elective/error'})
+   } 
+
+}
 }

@@ -1,184 +1,253 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Course</title>
-    <link rel="stylesheet" href="../css/style.css">
-    <%- include ('../partials/partial') %>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Course</title>
+  <link rel="stylesheet" href="../css/style.css">
+
+  <%- include ('../partials/partial') %>
 
     <style>
-     body{
-        background-color:whitesmoke;
-        padding:0;
-        margin:0;  
-      }  
-       #uploadOptions{
-         background-color: white;
-         width:1450px;
-         padding:20px;   
-         position:relative;
-         top: 40px;
-         font-size:18px;
-         border-radius: 10px;
-         left:20px;
-        }
-        #uploadViaExcel{
-          margin-bottom: 20px;       
-        }
-        #uploadMessage{
-         height: 50px;
-         border-radius:22px;
-         justify-content:center;
-         display:flex;
-         align-items:center;
-         color: red;
-         box-shadow:0px 0px 6px 1px red;
-         width:93%;
-         font-weight:bold;
-         margin-left:20px;
-         visibility:hidden; 
-        }
-        #uploadFormat{
-         position:relative;
-         top:100px;  
-         background-color: white;
-         padding:30px;
-         border-radius:10px;
-         left:20px;
-         width:93%;
-        }
-        #fileName{
-          margin-top: 20px;
-          margin-bottom: 10px;
-        }
-        #excelHeading{
-          margin-top:20px;
-          margin-bottom:20px;
-        }
-        #excelCourseSubmit , #excelCancel{
-          margin-top:20px;
-          margin-bottom:20px;
-        }
-        #closeBt{
-          color:red;
-          background-color: whitesmoke;
-          border:0;
-          position: relative; 
-          left:38%;    
-        }
-        #closeBt:focus{
-         outline:none;
-        }
-        #viewAllCourse{
-          margin-top: 150px;
-          text-align: center;
-          margin-left: 20px;
-        }
-        tr:nth-child(odd){
-          background-color:  #e6f7ff; 
-        }
-        tr:nth-child(even){
-          background-color:  white;
-        }
-        th{
-          background-color: #e6f7ff;
-        }
-        span{
-          color:red;
-        }
+      body {
+        background-color: whitesmoke;
+        padding: 0;
+        margin: 0;
+      }
+
+      #uploadOptions {
+        background-color: white;
+        width: 1450px;
+        padding: 20px;
+        position: relative;
+        top: 40px;
+        font-size: 18px;
+        border-radius: 10px;
+        left: 20px;
+      }
+
+      #uploadViaExcel {
+        margin-bottom: 20px;
+      }
+
+      #commonDisplayMessage {
+        height: 50px;
+        border-radius: 22px;
+        justify-content: center;
+        display: flex;
+        align-items: center;
+        color: red;
+        box-shadow: 0px 0px 6px 1px red;
+        width: 93%;
+        font-weight: bold;
+        margin-left: 20px;
+        visibility: hidden;
+      }
+
+      #uploadFormat {
+        position: relative;
+        top: 100px;
+        background-color: white;
+        padding: 30px;
+        border-radius: 10px;
+        left: 20px;
+        width: 93%;
+      }
+
+      #fileName {
+        margin-top: 20px;
+        margin-bottom: 10px;
+      }
+
+      #excelHeading {
+        margin-top: 20px;
+        margin-bottom: 20px;
+      }
+
+      #excelCourseSubmit,
+      #excelCancel {
+        margin-top: 20px;
+        margin-bottom: 20px;
+      }
+
+      #closeBt {
+        color: red;
+        background-color: whitesmoke;
+        border: 0;
+        position: relative;
+        left: 38%;
+      }
+
+      #closeBt:focus {
+        outline: none;
+      }
+
+      #viewAllCourse {
+        margin-top: 150px;
+        text-align: center;
+        margin-left: 20px;
+      }
+
+      tr:nth-child(odd) {
+        background-color: #e6f7ff;
+      }
+
+      tr:nth-child(even) {
+        background-color: white;
+      }
+
+      th {
+        background-color: #e6f7ff;
+      }
+
+      span {
+        color: red;
+      }
+    
     </style>
 </head>
+
 <body>
-    <%- include('sidebar.ejs') %>
-    <%- include('header.ejs')  %>
-    <div id="main">
-       
-    <div id="uploadMessage"></div>  
-     
-    <div id= "uploadOptions" >
-    <h3>Upload Course</h3>
-    <hr/>
-    <input type="radio" name="uploadCourse" id="uploadViaExcel" checked /> Upload Via Excel</br>
-    <input type="radio" name="uploadCourse" id="uploadViaManually" /> Upload Via Manually</br>
-    </div>
-        
-    <div id="uploadFormat">
-   
-    </div>
-    <div id="viewAllCourse">
+  <%- include('sidebar.ejs') %>
+    <%- include('header.ejs') %>
+      <div id="main">
 
-    </div>
+        <div id="commonDisplayMessage">
+          <span id="showMessage"></span>
+          <button class="fa fa-close closeBtn" id="closeBt" style="font-size:24px"></button>
+        </div>
 
-    </div> 
+        <div id="uploadOptions">
+          <h3>Upload Course</h3>
+          <hr />
+          <input type="radio" name="uploadCourse" id="uploadViaExcel" checked /> Upload Via Excel</br>
+          <input type="radio" name="uploadCourse" id="uploadViaManually" /> Upload Via Manually</br>
+        </div>
+
+        <div id="uploadFormat">
+
+        </div>
+        <div id="viewAllCourse">
+
+        </div>
+
+        <div>
+          <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+            aria-labelledby="exampleModalCenterTitle" data-backdrop="false" style="background-color: rgba(0, 0, 0, 0.3);" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLongTitle">Edit Course</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div id="getModal" class="modal-body">
+                  
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-danger closeModal" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary editModal">Edit</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 </body>
 <%- include ('../partials/partial2') %>
-<script src= "../js/script.js" ></script>
-<script>
+  <script src="../js/script.js"></script>
 
-defaultCourseDisplay();
-showAllCourses();
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 
-function showAllCourses(){
-  getAllCourses('/elective/getAllCourses','GET')
-  .then(response => {
-    console.log("Response::::: " , response);
-    if(response.status === 'error'){
-    window.location.href = `${response.redirectTo}`;    
-    }else{
-    displayAllCourse(response);
+
+  <script>
+
+    defaultCourseDisplay();
+    showAllCourses();
+
+
+    function showAllCourses() {
+      getRequest('/elective/getAllCourses', 'GET')
+        .then(response => {
+          console.log("Response::::: ", response);
+          if (response.status === 'error') {
+            window.location.href = `${response.redirectTo}`;
+          } else {
+            displayAllCourse(response);
+          }
+
+        })
     }
-  })
-}
 
-function defaultCourseDisplay(){
+    function getRequest(url, method) {
+      return new Promise((resolve, reject) => {
 
-let excelPage = document.getElementById('uploadFormat');
+        const requestDetails = {
+          method: method,
+          headers: {
+            'Accept': 'application/json'
+          },
+        }
+        fetch(url, requestDetails)
+          .then(response => {
+            if (response.ok) {
+              return response.json();
+            }
+            throw new Error('Error in fetching response');
+          })
+          .then(data => {
+            resolve(data);
+          })
+          .catch(error => {
+            reject(error);
+          })
 
-let excel = `<div id="heading"><h2>Upload Course file(Excel):</h2></div>
+      });
+    }
+
+    function defaultCourseDisplay() {
+
+      let excelPage = document.getElementById('uploadFormat');
+
+      let excel = `<div id="heading"><h2>Upload Course file(Excel):</h2></div>
              <div>
              <input type="file" id='fileName' name = "CourseDetails" /></br>
-             <button type="submit" class="btn btn-primary" id='excelCourseSubmit' >Upload</button>&nbsp;<button id='excelCancel' type="submit" class="btn btn-danger" >Cancel</button>
+             <button type="submit" class="btn btn-primary excelDataSubmit" id='excelCourseSubmit' >Upload</button>&nbsp;<button id='excelCancel' type="submit" class="btn btn-danger excelDataCancel" >Cancel</button>
              </div>
              </div>
              <div id='displayNote'><a style="text-decoration:none;font-size:20px;" class="text-danger" href="/excel/Course_Excel.xlsx" id="downloadExcel"  >Download Sample Template</a></br>
              <h4 id="excelHeading">Excel Format:</h4>
              <p>Subject Name | Department Name | Campus(Optional) | No. Of Batches | Max Capacity Per Batch | Open To All Programs</p>
              </div>`;
-  
-excelPage.innerHTML = excel;             
-  
-excelDataSubmit();
-cancelButton();
-}
 
-document.getElementById('uploadViaExcel').addEventListener('change',() => {
+      excelPage.innerHTML = excel;
 
-let excelPage = document.getElementById('uploadFormat');
+    }
 
-let excel = `<div id="heading"><h2>Upload Course file(Excel):</h2></div>
+    document.getElementById('uploadViaExcel').addEventListener('change', () => {
+
+      let excelPage = document.getElementById('uploadFormat');
+
+      let excel = `<div id="heading"><h2>Upload Course file(Excel):</h2></div>
              <div>
              <input type="file" id='fileName' name = "CourseDetails" /></br>
-             <button type="submit" class="btn btn-primary" id='excelCourseSubmit' >Upload</button>&nbsp;<button id='excelCancel' type="submit" class="btn btn-danger" >Cancel</button>
+             <button type="submit" class="btn btn-primary excelDataSubmit" id='excelCourseSubmit' >Upload</button>&nbsp;<button id='excelCancel' type="submit" class="btn btn-danger excelDataCancel" >Cancel</button>
              </div>
              </div>
              <div id='displayNote'><a style="text-decoration:none;font-size:20px;" class="text-danger" href="/excel/Course_Excel.xlsx" id="downloadExcel"  >Download Sample Template</a></br>
              <h4 id="excelHeading">Excel Format:</h4>
              <p>Subject Name | Department Name | Campus(Optional) | No. Of Batches | Max Capacity Per Batch | Open To All Programs</p>
              </div>`;
-  
-excelPage.innerHTML = excel;  
 
-excelDataSubmit();
-cancelButton();
+      excelPage.innerHTML = excel;
+    });
 
-});
+    document.getElementById('uploadViaManually').addEventListener('change', () => {
 
-document.getElementById('uploadViaManually').addEventListener('change',() => {
+      let manually = document.getElementById('uploadFormat');
 
-let manually = document.getElementById('uploadFormat');
-
-let manualPage = `<div>
+      let manualPage = `<div>
      <div class="form-row">
      <div class="form-group col-md-6">
       <label for="inputSubname">Course Name</label>&ensp;&ensp;<span id="SubnameError"></span>
@@ -223,149 +292,303 @@ let manualPage = `<div>
     </label>
     </div>
     </div>
-    <button type="submit" id="submitbtn" class="btn btn-danger mt-4">Add</button>
+    <button type="submit" id="submitbtn" class="btn btn-danger mt-4 btnSubmit">Add</button>
     </div>`;
 
-     manually.innerHTML =manualPage;
+      manually.innerHTML = manualPage;
 
-   validatePerformer();
-});
+    });
 
-function excelDataSubmit(){
+    document.addEventListener('click', function (e) {
 
-document.getElementById('excelCourseSubmit').addEventListener('click', () => {
+      //Common Delete
+      if (e.target.classList.contains('deleteBtn')) {
+        let courseArray = [];
 
-let excelFile =document.querySelector('#fileName');
-let file = excelFile.files[0];
+        let checkInputs = document.querySelectorAll('.checkCourses');
 
-let fileName = file.name;
-let getFileExtension = fileName.substring(fileName.lastIndexOf('.'),fileName.length);
+        Array.from(checkInputs).forEach(element => {
+          console.log("Check input : ", element.checked);
+          if (element.checked) {
+            console.log("Check input value: ", element.value);
+            courseArray.push(element.value);
+          }
+        });
 
-let validateFile = fileError(getFileExtension);
-console.log('file extension::: ' , validateFile);
+        let obj = { courseArray };
+        courseFetchApi('/elective/commonDelete', 'POST', obj)
+          .then(async response => {
 
-if(validateFile){
+            if (response.status === 'error') {
+              window.location.href = `${response.redirectTo}`;
+            } else {
+              alert(response.message);
+              let subjectRows = document.querySelectorAll('.subjectRow');
+              for (let i = 0; i < subjectRows.length; i++) {
+                let value = subjectRows[i].getAttribute('data-subId');
+                for (let j = 0; j < courseArray.length; j++) {
+                  if (value == courseArray[j]) {
+                    subjectRows[i].remove();
+                  }
+                }
+              }
 
-let formData =new FormData();
-formData.append('courseDetails',file);
+              let totalRows = document.querySelector('.totalRows');
+              let rows = subjectRows.length - courseArray.length;
+              totalRows.innerText = `${rows} Records Found`;
 
-insertCourseViaExcel('/elective/insertCourseViaExcel','POST',formData)
-.then(response => {
-if(response.status === 'error'){
-  window.location.href = `${response.redirectTo}`;
-}else{
-  showAllCourses();
-  displayMessage(response);
-}
-});
+              if (rows == 0) {
+                let tableData = document.querySelector('#viewAllCourse');
+                let data = `<h5 class="totalRows" style="float:left;padding-bottom:10px;">${rows} Records Found</h5>
+         <table class="table table-bordered table-responsive-lg ">
+         <tr>
+         <th>Sr No.</th>
+         <th>Select</th>
+         <th>Subject Name</th>
+         <th>Campus</th>
+         <th>Actions</th>
+         </tr>
+         <tr>
+         <td colspan="5px">---- No Data Available ---- </td>
+         <tr>
+          </table>`;
+                tableData.innerHTML = data;
+              }
+            }
+          })
+      }
 
-}else{
-let message = document.getElementById('uploadMessage');
-let messageDisplay = `<span>File Must Be In Excel Format Only !!</span>
-<button class="fa fa-close" id="closeBt" style="font-size:24px" ></button>`;
+      if (e.target.classList.contains('excelDataCancel')) {
+        cancelButtonRedirect('/elective/loginPage');
+      }
 
-message.innerHTML= messageDisplay ;
-message.style.visibility='visible';
+      //Manual Submit
+      if (e.target.classList.contains('btnSubmit')) {
 
-closeButton();    
-}
-});   
+        let subjectName = document.getElementById('inputSubname').value;
+        let department = document.getElementById('deptName').value;
+        let batches = document.getElementById('inputbatch').value;
+        let batchCapacity = document.getElementById('inputCapacity').value;
+        let campus = document.getElementById('inputCampus').value;
+        let radioTypeYes = document.getElementById('radioTypeYes');
+        let radioTypeNo = document.getElementById('radioTypeNo');
 
-}
+        let subjectValidate = subjectValidater(subjectName);
+        let departmentValidate = departmentValidater(department);
+        let batchesValidate = batchesValidator(batches);
+        let batchCapacityValidate = batchCapacityValidator(batchCapacity);
+        let campusValidate = campusValidator(campus);
 
-function insertCourseViaExcel(url,method,obj){
+        let radioTypeValue;
 
-return new Promise((resolve,reject) => { 
+        if (radioTypeYes.checked) {
+          radioTypeValue = 'Yes';
+        }
+        if (radioTypeNo.checked) {
+          radioTypeValue = 'No';
+        }
 
-const requestDetails = {
-method:method,
-body:obj,    
-}   
+        if (subjectValidate && departmentValidate && batchesValidate && batchCapacityValidate && campusValidate) {
+          let obj = { subjectName, department, batches, batchCapacity, campus, radioTypeValue };
+          courseFetchApi('/elective/insertCourseManually', 'POST', obj)
+            .then(response => {
+              if (response.status === 'error') {
+                window.location.href = `${response.redirectTo}`;
+              } else {
+                showAllCourses();
+                displayManualMessage(response);
+              }
+            });
+        }
+      }
 
-fetch(url,requestDetails)
+      //Excel Submit
+      if (e.target.classList.contains('excelDataSubmit')) {
+        let excelFile = document.querySelector('#fileName');
+        let file = excelFile.files[0];
 
-.then(response => {
-if(response.ok){
-return response.json();
-}
-throw new Error('Error in getting response');    
-})
-.then(data => {
-  resolve(data);
-})
-.catch(error => {
-  reject(error);  
-})
+        let fileName = file.name;
+        let getFileExtension = fileName.substring(fileName.lastIndexOf('.'), fileName.length);
 
-});
+        let validateFile = fileError(getFileExtension);
+        console.log('file extension::: ', validateFile);
 
-}
+        if (validateFile) {
 
-function displayMessage(response){
+          let formData = new FormData();
+          formData.append('courseDetails', file);
 
-let messageDisplay = document.querySelector('#uploadMessage');
-messageDisplay.innerHTML = `<span id="errorMessageName">${response.message}</span>
-                          <button class="fa fa-close" id="closeBt" style="font-size:24px" ></button>`;
+          insertCourseViaExcel('/elective/insertCourseViaExcel', 'POST', formData)
+            .then(async response => {
+              if (response.status === 'error') {
+                window.location.href = `${response.redirectTo}`;
+              } else {
+                await showAllCourses();
+                await displayMessage(response);
+              }
+            });
 
-let errorMessage = document.getElementById('errorMessageName');
-let closeBt = document.getElementById('closeBt');
-messageDisplay.style.visibility = 'visible';
+        } else {
+          let message = document.getElementById('commonDisplayMessage');
+          let messageDisplay = `File Must Be In Excel Format Only !!`;
+          let showMessage = document.getElementById('showMessage');
 
-if(response.status === 'success'){
-  closeBt.style.color ='green';
-  closeBt.style.left = '39%';   
-  errorMessage.style.color = 'green';                        
-  messageDisplay.style.boxShadow = '0px 0px 6px 1px green';  
-} 
+          showMessage.innerText = messageDisplay;
+          message.style.visibility = 'visible';
+        }
+      }
 
-closeButton();
-}
+      if (e.target.classList.contains('editCourse')) {
+        console.log("clicked >>>>>>>>");
 
-function closeButton(){
+        let tr = e.target.closest('tr');
+        let subId = e.target.closest('tr').dataset.subid;
 
-document.getElementById('closeBt').addEventListener('click', () => {
-let messageDisplay = document.getElementById('uploadMessage');
-messageDisplay.style.visibility='hidden'; 
+        let subName = tr.querySelector('.subjectName').textContent;
+        let campus = tr.querySelector('.campus').textContent;
+        let batches = tr.querySelector('.batches').textContent;
+        let capacity = tr.querySelector('.capacity').textContent;
+        let dept = tr.querySelector('.dept').textContent;
 
-});
-}
-
-function getAllCourses(url,method){
-
-return new Promise((resolve,reject) => { 
-
-const requestDetails = {
-  method : method,
-  headers:{
-    'Accept': 'application/json'
-  },
-}  
-fetch(url,requestDetails)
-.then(response => {
-  if(response.ok){
-    return response.json();
-  }
-  throw new Error('Error in fetching response');
-})
-.then(data => {
-  resolve(data);
-})
-.catch(error => {
-  reject(error);
-})
-
-}); 
-}
-
-async function displayAllCourse(response){
-
-let tableInput = document.getElementById('viewAllCourse');
-
-let allCourses = await response.courseData;
-let programTab = '<a href="#" ><img src="/images/plus-button.png"  data-toggle="tooltip" title = "Add Program" width="2%"/></a>';
+        console.log('button called ', subId, batches,campus);
 
 
-let data =`<h5 style="float:left;padding-bottom:10px;">${allCourses.length} Records Found</h5>
+let modalBody = `<div class="form-row">
+    <div class="form-group col-md-6">
+        <label for="inputSubname">Course Name</label>&ensp;&ensp;<span id="SubnameError"></span>
+        <input type="text" value="${subName}" class="form-control" id="inputSubname" placeholder="Name of Subject">
+    </div>
+    <div class="form-group col-md-6">
+        <label for="deptName">Department Name</label>&ensp;&ensp;<span id="deptError"></span>
+        <input type="text" value="${dept}" class="form-control" id="deptName" placeholder="Department Name">
+    </div>
+</div>
+<div class="form-row">
+    <div class="form-group col-md-6">
+        <label for="inputbatch">Enter No. of Batches</label>&ensp;&ensp;<span id="batchError"></span>
+        <input type="text" value="${batches}" class="form-control" id="inputbatch" placeholder="No. of Batches">
+    </div>
+    <div class="form-group col-md-6">
+        <label for="inputCapacity">Enter Maximum Capacity Per Batch</label>&ensp;&ensp;<span id="capacityError"></span>
+        <input type="text" value="${capacity}" class="form-control" id="inputCapacity" placeholder="Maximum Capacity Per Batch">
+    </div>
+</div>
+<div class="form-group">
+    <label for="inputCampus">Campus</label>&ensp;&ensp;<span id="campusError"></span>
+    <select id="inputCampus" class="form-control">
+        <option selected>Select Campus</option>
+        <% campus.forEach(data => { %>
+          <option value="<%= data.campus_name %>" <% if (data.campus_name === campus) { %> selected <% } %>><%= data.campus_name %></option>        <% }); %>
+      </select>
+      </select>
+      <label style="margin-top:10px;" for="coursePrograms">Programs</label></br>
+      <select  id="coursePrograms" multiple></select>
+    </div>`;
+
+      let mbody = document.getElementById('getModal');
+      mbody.innerHTML = modalBody;
+      
+      let campusName = $(e.target).closest('tr').find('.campus').data('campusname');
+       $('#inputCampus').val(campusName).trigger('change');
+
+        let obj = {subId};
+        courseFetchApi('/elective/getAllCoursePrograms','POST',obj)
+        .then(response => {
+        if(response.status === 'error'){
+          window.location.href= `${response.redirectTo}`;
+        }else{
+          
+          let courseProgram = document.getElementById('coursePrograms');
+          let programs =response.coursePrograms;
+
+          Array.from(programs).forEach(course => {
+          let option = `<option>${course.program_name}</option>`;
+          courseProgram.insertAdjacentHTML('beforeEnd',option);
+          })
+
+
+        }
+        })
+      }
+
+      if(e.target.classList.contains('editModal')){
+     
+      let modalForm = (e.target).closest('div');
+      let subName = $(e.target).closest('div').prev().find('#inputSubname').val();
+      let deptName = $(e.target).closest('div').prev().find('#deptName').val();
+      let batch = $(e.target).closest('div').prev().find('#inputbatch').val();
+      let capacity = $(e.target).closest('div').prev().find('#inputCapacity').val();
+      let campus = $(e.target).closest('div').prev().find('#inputCampus').val();
+      let programs = $(e.target).closest('div').prev().find('#coursePrograms').val();
+     
+      let obj ={subName,deptName,batch,capacity,campus,programs};
+      
+      courseFetchApi('/elective/editCourse','POST',obj)
+      .then(response => {
+
+      })
+
+      }
+    })
+
+
+    function insertCourseViaExcel(url, method, obj) {
+
+      return new Promise((resolve, reject) => {
+
+        const requestDetails = {
+          method: method,
+          body: obj,
+        }
+
+        fetch(url, requestDetails)
+
+          .then(response => {
+            if (response.ok) {
+              return response.json();
+            }
+            throw new Error('Error in getting response');
+          })
+          .then(data => {
+            resolve(data);
+          })
+          .catch(error => {
+            reject(error);
+          })
+
+      });
+
+    }
+
+    function displayMessage(response) {
+
+      let messageDisplay = document.querySelector('#commonDisplayMessage');
+      let message = response.message;
+
+      let errorMessage = document.getElementById('showMessage');
+      errorMessage.innerText = message;
+
+      let closeBt = document.getElementById('closeBt');
+      messageDisplay.style.visibility = 'visible';
+
+      if (response.status === 'success') {
+        closeBt.style.color = 'green';
+        closeBt.style.left = '39%';
+        errorMessage.style.color = 'green';
+        messageDisplay.style.boxShadow = '0px 0px 6px 1px green';
+      }
+    }
+
+    async function displayAllCourse(response) {
+
+      let tableInput = document.getElementById('viewAllCourse');
+
+      let allCourses = await response.courseData ? response.courseData : [];
+      let programTab = '<a href="#" ><img src="/images/plus-button.png"  data-toggle="tooltip" title = "Add Program" width="2%"/></a>';
+
+      if (allCourses.length > 0) {
+
+        data = `<h5 class="totalRows" style="float:left;padding-bottom:10px;">${allCourses.length} Records Found</h5>
            <table class="table table-bordered table-responsive-lg">
            <tr>
            <th>Sr No.</th>
@@ -376,221 +599,214 @@ let data =`<h5 style="float:left;padding-bottom:10px;">${allCourses.length} Reco
            </tr>
            <tr>
            <td></td>
-           <td><input type="checkbox" /></td>
+           <td><input type="checkbox" class="selectCheckBox" /></td>
            <td></td>
            <td></td>
-           <td><button class="btn btn-outline-success">Delete</button></td>
+           <td><button id="deletebtn" class="btn btn-outline-success deleteBtn">Delete</button></td>
            </tr>
            ${allCourses.map((data, index) => `
-           <tr>
+           <tr id='subjectRow' data-subId=${data.sub_id}>
            <td>${index + 1}</td>
-           <td><input type="checkbox" /></td>
-           <td>${data.subject_name }</td>
-           <td>${data.campus_name }</td>
-           <td>
-           <a href="#" ><img src='/images/delete.png'  data-toggle='tooltip' title = 'Delete' width="1.5%"/></a>&ensp;
-           <a href="#" ><img src='/images/edit.png'  data-toggle='tooltip' title = 'Edit' width="1.5%"/></a>&ensp;
+           <td><input type="checkbox" id="courseNameList" class="checkCourses" value=${data.sub_id} /></td>
+           <td class="subjectName" data-subName=${data.subject_name} >${data.subject_name}</td>
+           <td class="campus" data-campusName=${data.campus_name}>${data.campus_name}</td>
+           <td class="batches" data-batches=${data.batches} hidden>${data.batches}</td>
+           <td class="capacity" data-capacity=${data.max_capacity_per_batch} hidden>${data.max_capacity_per_batch}</td>
+           <td class="dept" data-dept=${data.dept_name} hidden>${data.dept_name}</td>
+           <td colspan="4px">
+           <i style="cursor:pointer;" data-id=${data.sub_id} data-toggle="modal" data-toggle="modal" data-target="#exampleModalCenter" class="fa-solid fa-trash deleteCourse"></i>&ensp;
+           <i style="cursor:pointer;" data-id=${data.sub_id} data-toggle="modal" data-toggle="modal" data-target="#exampleModalCenter" class="fa-solid fa-pen-to-square editCourse"></i></i&ensp;
            </td>
            </tr>`
-           ).join('')}
-           </table>` 
+        ).join('')}
+           </table>`
 
-tableInput.innerHTML = data;
-
-}
-
-function validatePerformer(){
-
- document.getElementById('submitbtn').addEventListener('click',() => {
- 
- let subjectName = document.getElementById('inputSubname').value;
- let department = document.getElementById('deptName').value;
- let batches = document.getElementById('inputbatch').value; 
- let batchCapacity = document.getElementById('inputCapacity').value;
- let campus = document.getElementById('inputCampus').value;
- let radioTypeYes = document.getElementById('radioTypeYes');
- let radioTypeNo = document.getElementById('radioTypeNo');
-  
- let subjectValidate = subjectValidater(subjectName);
- let departmentValidate = departmentValidater(department);
- let batchesValidate = batchesValidator(batches);
- let batchCapacityValidate = batchCapacityValidator(batchCapacity);
- let campusValidate = campusValidator(campus);
-
- let radioTypeValue;
-  
-  if(radioTypeYes.checked){
-   radioTypeValue = 'Yes';
-  }
-  if(radioTypeNo.checked){
-  radioTypeValue = 'No';
-  }
-
-  if(subjectValidate  && departmentValidate && batchesValidate && batchCapacityValidate  && campusValidate ){
-   let obj = {subjectName,department,batches,batchCapacity,campus,radioTypeValue};
-   insertCourseManually('/elective/insertCourseManually','POST',obj)
-   .then(response => {
-    if(response.status === 'error'){
-      window.location.href = `${response.redirectTo}`;
-    }else{
-     showAllCourses();
-     displayManualMessage(response);
+      } else {
+        data = `<h5 class="totalRows" style="float:left;padding-bottom:10px;">${allCourses.length} Records Found</h5>
+           <table class="table table-bordered table-responsive-lg">
+           <tr>
+           <th>Sr No.</th>
+           <th>Select</th>
+           <th>Subject Name</th>
+           <th>Campus</th>
+           <th>Actions</th>
+           </tr>
+           <tr>
+           <td colspan="5px">---------------No Data Available---------------</td>
+           </tr>`
+      }
+      tableInput.innerHTML = data;
     }
-   });
-  }
 
- }); 
-}
+    function subjectValidater(subject) {
+      let subjectError = document.getElementById('SubnameError');
 
-function subjectValidater(subject){
-  let subjectError = document.getElementById('SubnameError');
+      if (subject.length > 0) {
+        subjectError.innerText = '';
+        return true;
+      } else {
+        subjectError.innerText = '*Required';
+        return false;
+      }
+    }
 
-  if(subject.length > 0){
-   subjectError.innerText = '';
-   return true;
-  }else{
-   subjectError.innerText = '*Required';
-   return false;
-  }
-}
+    function departmentValidater(department) {
+      let departMentError = document.getElementById('deptError');
 
-function departmentValidater(department){
-  let departMentError = document.getElementById('deptError');
+      if (department.length > 0) {
 
-  if(department.length > 0){
-  
-  let checkAlphabets = alphabetsValidation(department);
-  if(checkAlphabets){
-   departMentError.innerText = '';
-   return true;
-  }else{
-   departMentError.innerText = '*Invalid Input Field';
-   return false;
-  }
-  }else{
-  departMentError.innerText = '*Required';
-  return false;
-  }
-}
+        let checkAlphabets = alphabetsValidation(department);
+        if (checkAlphabets) {
+          departMentError.innerText = '';
+          return true;
+        } else {
+          departMentError.innerText = '*Invalid Input Field';
+          return false;
+        }
+      } else {
+        departMentError.innerText = '*Required';
+        return false;
+      }
+    }
 
-function batchesValidator(batches){
+    function batchesValidator(batches) {
 
-  let batchError = document.getElementById('batchError');
+      let batchError = document.getElementById('batchError');
 
-  if(batches.length > 0){
+      if (batches.length > 0) {
 
-  let batchValidation = NumberValidation(batches);
-  console.log("batch validation :::: " , batchValidation);
-  
-  if(batchValidation){
-  batchError.innerText = '';
-  return true; 
-  }else{
-  batchError.innerText = '*Invalid Input Field';
-  return false;
-  }
+        let batchValidation = NumberValidation(batches);
+        console.log("batch validation :::: ", batchValidation);
 
-  }else{
-  batchError.innerText = '*Required';
-  return false;
-  }
+        if (batchValidation) {
+          batchError.innerText = '';
+          return true;
+        } else {
+          batchError.innerText = '*Invalid Input Field';
+          return false;
+        }
 
-}
+      } else {
+        batchError.innerText = '*Required';
+        return false;
+      }
 
-function batchCapacityValidator(capacity){
+    }
 
-let batchCapacityError = document.getElementById('capacityError');
+    function batchCapacityValidator(capacity) {
 
-if(capacity.length > 0){
+      let batchCapacityError = document.getElementById('capacityError');
+      if (capacity.length > 0) {
 
-let capacityValidation = NumberValidation(capacity);
+        let capacityValidation = NumberValidation(capacity);
 
-if(capacityValidation){
-batchCapacityError.innerText = '';
-return true;  
-}else{
-batchCapacityError.innerText = '*Invalid Input Field';
-return false;
-}  
+        if (capacityValidation) {
+          batchCapacityError.innerText = '';
+          return true;
+        } else {
+          batchCapacityError.innerText = '*Invalid Input Field';
+          return false;
+        }
 
-}else{
-batchCapacityError.innerText = '*Required';
-return false;
-}
-}
+      } else {
+        batchCapacityError.innerText = '*Required';
+        return false;
+      }
+    }
 
-function campusValidator(campus){
+    function campusValidator(campus) {
 
-let campusValidation = document.querySelectorAll('#inputCampus');
-let campusError = document.getElementById('campusError');
-let campusName = campusValidation[0][0].innerText;
+      let campusValidation = document.querySelectorAll('#inputCampus');
+      let campusError = document.getElementById('campusError');
+      let campusName = campusValidation[0][0].innerText;
 
+      if (campusName != campus) {
+        campusError.innerText = '';
+        return true;
+      } else {
+        campusError.innerText = '*Invalid Input Field';
+        return false;
+      }
 
-if(campusName != campus){
-campusError.innerText = '';  
-return true; 
-}else{
-campusError.innerText = '*Invalid Input Field';
-return false;
-}
+    }
 
-}
+    function courseFetchApi(url, method, obj) {
+      return new Promise((resolve, reject) => {
+        const requestDetails = {
+          method: method,
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: obj ? JSON.stringify(obj) : undefined
+        }
 
-function insertCourseManually(url,method,obj){
-return new Promise((resolve,reject) => {
-  const requestDetails ={
-  method:method,
-  headers:{
-    'Content-Type':'application/json'
-  },
-  body:obj ? JSON.stringify(obj) : undefined
-}
+        fetch(url, requestDetails)
+          .then(response => {
+            if (response.ok) {
+              return response.json();
+            }
+            throw new Error('Error in fetching response');
+          })
+          .then(data => {
+            resolve(data);
+          })
+          .catch(error => {
+            reject(error);
+          })
 
-fetch(url,requestDetails)
-.then(response => {
-  if(response.ok){
-    return response.json();
-  }
-  throw new Error('Error in fetching response');
-})
-.then(data => {
- resolve(data);
-})
-.catch(error => {
- reject(error);
-})
+      });
+    }
 
-});
-}
+    function displayManualMessage(response) {
 
-function displayManualMessage(response){
+      let messageDisplay = document.querySelector('#commonDisplayMessage');
+      let message = response.message;
 
-let messageDisplay = document.querySelector('#uploadMessage');
-messageDisplay.innerHTML = `<span id="errorMessageName">${response.message}</span>
-                          <button class="fa fa-close" id="closeBt" style="font-size:24px" ></button>`;
+      let errorMessage = document.getElementById('showMessage');
+      errorMessage.innerText = message;
 
-let errorMessage = document.getElementById('errorMessageName');
-let closeBt = document.getElementById('closeBt');
-messageDisplay.style.visibility = 'visible';
+      let closeBt = document.getElementById('closeBt');
+      messageDisplay.style.visibility = 'visible';
 
- if(response.status === 'success' && response.radioType === 'Yes'){
-  closeBt.style.color ='green';
-  closeBt.style.left = '39%';   
-  errorMessage.style.color = 'green';                        
-  messageDisplay.style.boxShadow = '0px 0px 6px 1px green'; 
- }else{
-  messageDisplay.style.visibility = 'hidden';
-  window.location.href = `${response.redirectTo}`;
- } 
-}
-
-function cancelButton(){
- document.getElementById('excelCancel').addEventListener('click',() => {
-  cancelButtonRedirect('/elective/loginPage');
- });
-}
+      if (response.status === 'success' && response.radioType === 'Yes') {
+        closeBt.style.color = 'green';
+        closeBt.style.left = '39%';
+        errorMessage.style.color = 'green';
+        messageDisplay.style.boxShadow = '0px 0px 6px 1px green';
+      } else {
+        messageDisplay.style.visibility = 'hidden';
+        window.location.href = `${response.redirectTo}`;
+      }
+    }
 
 
+    document.addEventListener('change', (e) => {
+      if (e.target.classList.contains('selectCheckBox')) {
+        let selectCourse = document.querySelector('.selectCheckBox')
+        let checkInputs = document.querySelectorAll('.checkCourses');
+        let courseArray = [];
 
-</script>
+        console.log('checked');
+
+        if (selectCourse.checked) {
+
+          Array.from(checkInputs).forEach(element => {
+            element.setAttribute('checked', 'checked');
+            let checkedValue = element.value;
+            courseArray.push(checkedValue);
+          })
+
+          let obj = { courseArray };
+
+        } else {
+          let checkInputs = document.querySelectorAll('.checkCourses');
+          Array.from(checkInputs).forEach(element => {
+            element.removeAttribute('checked');
+          })
+        }
+      }
+    });
+
+  </script>
+
 </html>

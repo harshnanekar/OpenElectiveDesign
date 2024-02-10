@@ -49,7 +49,7 @@ font-family: 'Lilita One', sans-serif;
 font-family: 'Open Sans', sans-serif;
 font-family: 'Poppins', sans-serif; 
  }
- #errormessage{
+ #commonDisplayMessage{
    
   justify-content: center;
   display:flex;
@@ -85,12 +85,13 @@ font-family: 'Poppins', sans-serif;
 </head>
 <body>
 
-   <div id="errormessage">
-    
+   <div id="commonDisplayMessage">
+     <span id="showMessage"></span> 
+    <button class="fa fa-close closeBtn" id= "closebutton" style="font-size:24px" ></button>
+   </div>
    </div>
 
     <div class="row maindiv">
-
     <div style="display:flex;" class="col-xs-8 col-sm-8 col-md-8 col-lg-8 col-xl-8 innerdiv">
     
     <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 col-xl-8" >
@@ -119,6 +120,7 @@ font-family: 'Poppins', sans-serif;
    
 </body>
 <%- include ('../partials/partial2') %>
+<script src= "../js/script.js" ></script>
 <script>
 
     //For Enter Button for Login
@@ -132,8 +134,25 @@ font-family: 'Poppins', sans-serif;
 
         validateUser('/elective/login','POST',obj)
         .then(responseData => {
-            loginMessage(responseData);
-        });
+        if(responseData.status === 'Error'){
+         window.location.href=`${responseData.redirectTo}`;
+        }else{
+
+        if(responseData.status === 'success'){
+        window.location.href = responseData.redirectTo;
+        }else{
+        let displayMessage = document.getElementById('errormessage');
+        let showMessage = document.getElementById('showMessage');
+        let message = responseData.message;
+
+        showMessage.innerText = message;
+      
+        displayMessage.style.color = 'red';
+        displayMessage.style.visibility = 'visible';
+
+        } 
+      } 
+      });
       }
     });
 
@@ -145,8 +164,25 @@ font-family: 'Poppins', sans-serif;
 
      validateUser('/elective/login','POST',obj)
      .then(responseData => {
-        loginMessage(responseData); 
-     });
+        if(responseData.status === 'Error'){
+         window.location.href=`${responseData.redirectTo}`;
+        }else{
+
+        if(responseData.status === 'success'){
+        window.location.href = responseData.redirectTo;
+        }else{
+        let displayMessage = document.getElementById('commonDisplayMessage');
+        let showMessage = document.getElementById('showMessage');
+        let message = responseData.message;
+
+        showMessage.innerText = message;
+        
+        displayMessage.style.color = 'red';
+        displayMessage.style.visibility = 'visible';
+
+        }
+        } 
+        });
 
     });
 
@@ -176,59 +212,25 @@ font-family: 'Poppins', sans-serif;
       })
 
     });
-     }
-
-    async function loginMessage(response){
-      if(response.status === 'success'){
-        window.location.href = response.redirectTo;
-      }else{
-        let displayMessage = document.getElementById('errormessage');
-        displayMessage.innerHTML = `<span>${response.message}</span>
-        <button class="fa fa-close" id= "closebutton" style="font-size:24px" ></button>`;
-
-        await closeButton();
-        displayMessage.style.color = 'red';
-        displayMessage.style.visibility = 'visible';
-      }
-     }
+    }
 
     errormessage();
     
     //Displaying Error Message
     async function errormessage(){
-    let displayMessage = document.getElementById('errormessage');
+    let displayMessage = document.getElementById('commonDisplayMessage');
 
     if(window.location.hash === '#sessionTimeout'){
-      displayMessage.innerHTML = `<span>Oops Session Timeout, Please Login Again!!</span>
-      <button class="fa fa-close" id= "closebutton" style="font-size:24px" ></button>`;
+      let message = `Oops Session Timeout, Please Login Again!!`;
+
+      let showMessage = document.getElementById('showMessage');
+        showMessage.innerText = message;
 
       displayMessage.style.color = 'red';
       displayMessage.style.visibility = "visible";
-     closeButton();
+     
     }
-   
-   
-
     }
-
-    //Hiding Error Message
-    function closeButton(){
-
-    document.getElementById('closebutton')?.addEventListener('click',() =>{
-    let displayMessage = document.getElementById('errormessage');
-    let path = window.location.pathname;
-    window.location.href = path
-    displayMessage.style.visibility = "hidden";
-
-    });
-
-    }
-   
-
-
-    
-
-  
 
 </script>
 </html>

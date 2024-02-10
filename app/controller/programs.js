@@ -71,7 +71,6 @@ try{
   let excelData = excelController.readExcelFile(file);
   let programArray = excelData.length;
 
- console.log('programs::::: ', excelData[0].ProgramId);
  
  if(programArray > 0){
 
@@ -80,13 +79,13 @@ try{
 
   excelData.forEach(async prg => {
    
-  let programName = prg.Program;
-  let campusName = prg.Campus;
-  let program_id = new String(prg.ProgramId);
+  let programName = prg.Program ;
+  let campusName = prg.Campus ;
+  let program_id = new String(prg.ProgramId) ;
   
   let program = programName ? programName.trim() : undefined;
-  let campus = campusName ? campusName.trim() : undefined;
-  let programId = program_id ? program_id.trim() : undefined;
+  let campus = campusName ? campusName.trim() :undefined;
+  let programId = program_id ? program_id.trim() :undefined;
 
   let role = req.session.userRole;
  
@@ -133,7 +132,7 @@ try{
 
 }catch(error){
 
- console.log(error.message);
+ console.log("Error in file", error.message);
  return res.json({status:'error',redirectTo:'/elective/error'});  
 
 }    

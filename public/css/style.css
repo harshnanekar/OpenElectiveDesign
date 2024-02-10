@@ -29,7 +29,7 @@ body{
     left:var(--sidebar);
     height:var(--header-height);
     background-color: white;
-    box-shadow: 6px 6px 6px lightgray;
+    box-shadow: 4px 4px 4px lightgray;
     transition: 0.8s;
 }
 #main{

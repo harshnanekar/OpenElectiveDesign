@@ -31,8 +31,7 @@
       #excel{
         margin-top:50px;
       }
-      #fileErrorMessage{
-
+      #commonDisplayMessage{
          height: 50px;
          border-radius:22px;
          justify-content:center;
@@ -43,12 +42,10 @@
          width:100%;
          font-weight:bold;
          visibility:hidden;
-
       }
          #errorMessageName{
           margin-left:20px;
           margin-top:3px;
-         
          }
          #closeBt{
           color:red;
@@ -103,12 +100,7 @@
           margin-top:50px;
           margin-bottom:50px;
           text-align: center;
-        }    
-
-
-        
-        
-      
+        }     
 </style>
 </head>
 <body>
@@ -117,29 +109,30 @@
     <div id = "mains">
 
         <div id="registerSuccess"></div>
-           <div id="fileErrorMessage" >
-          
-           </div>
+          <div id="commonDisplayMessage" >
+          <span id="showMessage"></span>
+          <button class="fa fa-close closeBtn" id="closeBt" style="font-size:24px" ></button>
+        </div>
 
-           <div id="registerOptions">
-           <h3>Register Students</h3>
-           <hr/>
-           <input type="radio" name="option" id="excelOption" checked>  Register via Excel</input></br>
-           <input type="radio" name="option" id="manualOption"> Register via Manually</input>
-           </div>
+        <div id="registerOptions">
+        <h3>Register Students</h3>
+        <hr/>
+        <input type="radio" name="option" id="excelOption" checked>  Register via Excel</input></br>
+        <input type="radio" name="option" id="manualOption"> Register via Manually</input>
+        </div>
 
            
-           <div id="registerFormat">
+        <div id="registerFormat">
         
-           </div>
+        </div>
            
-           <div>
-           <h4 id="nonInsertedMessage">Student's Data Not Inserted Due To Empty Input Fields</h4>
-           <div id="nonInsertedStudents">
+        <div>
+        <h4 id="nonInsertedMessage">Student's Data Not Inserted Due To Empty Input Fields</h4>
+        <div id="nonInsertedStudents">
            
 
-           </div>
-           </div>
+        </div>
+        </div>
            
 </body>
 
@@ -147,8 +140,10 @@
 <script src= "../js/script.js" ></script>
 <script>
  
-document.getElementById('closeBt')?.addEventListener('click',() => {
- let message = document.getElementById('fileErrorMessage') ;
+document.getElementById('closeBt').addEventListener('click',() => {
+ let message = document.getElementById('commonDisplayMessage') ;
+ let closeBt = document.getElementById('closeBt');
+ closeBt.style.visibility = 'hidden';
  message.style.visibility = "hidden" ;
 });
 
@@ -158,16 +153,14 @@ document.getElementById('excelOption').addEventListener('change', () => {
   registerExcelFormat.innerHTML = `<div id="heading"><h2>Upload Student's Details file(Excel):</h2></div>
              <div>
              <input type="file" id="fileName" name = "studentDetails" /></br>
-             <button type="submit" class="btn btn-primary" id='excelSubmit' >Upload</button>&nbsp;<button id='excelCancel' type="submit" class="btn btn-danger" >Cancel</button>
+             <button type="submit" class="btn btn-primary excelDataSubmit" id='excelSubmit' >Upload</button>&nbsp;<button id='excelCancel' type="submit" class="btn btn-danger excelDataCancel" >Cancel</button>
              </div>
              </div>
              <div><a class="downloadFile" href="/excel/StudentDetail_Demo1.xlsx" class="text-danger" >Download Sample Template</a></br>
              <h4 id="excel">Excel Format:</h4>
              <p>Username | Firstname | Lastname | Acad Session | Acad Year | Campus | Roll No.</p>
              </div>`;
- 
-  excelSubmitForm();
-  cancelButton();  
+  
 });
 
 document.getElementById("manualOption").addEventListener("change", () => {
@@ -222,23 +215,22 @@ document.getElementById("manualOption").addEventListener("change", () => {
     </div>
    
   </div>
-  <button type="submit" id="submitbtn" class="btn btn-danger mt-4">Register Student</button>
+  <button type="submit" id="submitbtn" class="btn btn-danger mt-4 btnSubmit">Register Student</button>
 </div>`;
  
  acadYearfun();
- validatePerformer();
 
 });
 
  checkfun();
 
-    function checkfun() {
+  function checkfun() {
  
-    let registerExcelFormat = document.getElementById('registerFormat');
-    registerExcelFormat.innerHTML = `<div id="heading"><h2>Upload Student's Details file(Excel):</h2></div>
+  let registerExcelFormat = document.getElementById('registerFormat');
+  registerExcelFormat.innerHTML = `<div id="heading"><h2>Upload Student's Details file(Excel):</h2></div>
              <div>
              <input type="file" id='fileName' name = "studentDetails" /></br>
-             <button type="submit" class="btn btn-primary" id='excelSubmit' >Upload</button>&nbsp;<button id='excelCancel' type="submit" class="btn btn-danger" >Cancel</button>
+             <button type="submit" class="btn btn-primary excelDataSubmit" id='excelSubmit' >Upload</button>&nbsp;<button id='excelCancel' type="submit" class="btn btn-danger excelDataCancel" >Cancel</button>
              </div>
              </div>
              <div><a class="downloadFile" href="/excel/StudentDetail_Demo1.xlsx" class="text-danger" >Download Sample Template</a></br>
@@ -246,59 +238,59 @@ document.getElementById("manualOption").addEventListener("change", () => {
              <p>Username | Firstname | Lastname | Acad Session | Acad Year | Campus | Roll No.</p>
              </div>`;
              
-    excelSubmitForm();
-    cancelButton(); 
     }
 
-    function acadYearfun(){
+  function acadYearfun(){
      
-     let acadYear = document.querySelector('#inputAcadYear');
-     dynamicYear(acadYear);
+  let acadYear = document.querySelector('#inputAcadYear');
+  dynamicYear(acadYear);
 
-    }
+  }
 
-     async function excelSubmitForm(){
+  document.addEventListener('click',async (e) => {
+  if(e.target.classList.contains('excelDataSubmit')){
 
-     document.getElementById('excelSubmit').addEventListener('click',async () => {
-       let files = document.querySelector('#fileName').value;
-       let fileError = document.getElementById('fileErrorMessage');
-       let fileInput = files.lastIndexOf('.');
-       let fileName = files.substring(fileInput,files.length);
+  let files = document.querySelector('#fileName').value;
+  let fileError = document.getElementById('commonDisplayMessage');
+  let fileInput = files.lastIndexOf('.');
+  let fileName = files.substring(fileInput,files.length);
 
-       console.log('file path--- ' , fileName);
+  console.log('file path--- ' , fileName);
 
-       if(fileName === '.xlsx'){
+  if(fileName === '.xlsx'){
         
-       let fileInput = document.getElementById('fileName');
-       let fileData = fileInput.files[0];
-       const formData = new FormData();
-       formData.append('studentDetails',fileData);
+  let fileInput = document.getElementById('fileName');
+  let fileData = fileInput.files[0];
+  const formData = new FormData();
+  formData.append('studentDetails',fileData);
 
-       registerViaExcel('/elective/uploadStudentData','POST',formData)
-       .then(response => {
-        console.log('Error Response: ',response.nonInserted);
-        if(response.status === 'error'){
-         window.location.href = response.redirectTo;    
-        }else{
-        fileMessage(response);
-        } 
-      });
+  registerViaExcel('/elective/uploadStudentData','POST',formData)
+  .then(response => {
+  console.log('Error Response: ',response.nonInserted);
+  if(response.status === 'error'){
+  window.location.href = response.redirectTo;    
+  }else{
+  fileMessage(response);
+  } 
+  });
 
       }else{
-      fileError.innerHTML = `<span id="errorMessageName">File Format Should Be In Excel Only !!</span>
-                              <button class="fa fa-close" id="closeBt" style="font-size:24px" ></button>`;
+      let message = `File Format Should Be In Excel Only !!`;
+      let showMessage = document.getElementById('showMessage');
+      let closeButton = document.getElementById('closeBt');
+      showMessage.innerText = message;
 
-      let closeBt = document.getElementById('closeBt');             
-      closeBt.style.visibility = 'visible';
+      closeButton.style.visibility = 'visible';
       fileError.style.visibility = 'visible';
-
-      await closeButton();
+      }
       }
       });
-      }
+      
 
-      function validatePerformer(){
-      document.querySelector('#submitbtn').addEventListener('click', () => {
+  
+      document.addEventListener('click', (e) => {
+
+      if(e.target.classList.contains('btnSubmit')){
      
       let fname =  document.getElementById('inputFname').value;
       let lname =  document.getElementById('inputLname').value;
@@ -329,8 +321,10 @@ document.getElementById("manualOption").addEventListener("change", () => {
         }
         });
         }
-        });
+
         }
+        });
+        
 
         //FirstName Validation
         function fnameValidation(fname){
@@ -528,18 +522,6 @@ document.getElementById("manualOption").addEventListener("change", () => {
 
         }
 
-        function closeButton(){
-        document.getElementById('closeBt').addEventListener('click',async () => {
-
-         let fileError = document.querySelector('#fileErrorMessage');
-         fileError.style.visibility = 'hidden';
-
-         let closeBt = document.getElementById('closeBt');             
-         closeBt.style.visibility = 'hidden';
-
-        });
-        }
-
         async function registerViaExcel(url,method,obj){
           
         return new Promise((resolve,reject) => {
@@ -570,15 +552,15 @@ document.getElementById("manualOption").addEventListener("change", () => {
         }
 
         async function fileMessage(response){
-          let fileError = document.getElementById('fileErrorMessage');
-          fileError.innerHTML = `<span id="errorMessageName">${response.message}</span>
-                                 <button class="fa fa-close" id="closeBt" style="font-size:24px" ></button>`;
+          
+          let fileError = document.getElementById('commonDisplayMessage');
                      
-          let errormessage = document.getElementById('errorMessageName');
+          let errormessage = document.getElementById('showMessage');
+          errormessage.innerText = response.message;
                                 
           let closeBt = document.getElementById('closeBt');    
-          closeBt.style.visibility = 'visible';
           fileError.style.visibility = 'visible';
+          closeBt.style.visibility = 'visible';
 
           if(response.status === 'success'){
           closeBt.style.color ='green';
@@ -624,23 +606,20 @@ document.getElementById("manualOption").addEventListener("change", () => {
         let nonInsertedStudents = document.querySelector('#nonInsertedStudents');
         nonInsertedStudents.innerHTML = nonInsertedData;
 
+         }     
+         } 
          }
-          
-         }
-         closeButton();
-          
-        }
 
          function manualMessage(response) {
-          let fileMessage = document.getElementById('fileErrorMessage');
-          fileMessage.innerHTML = `<span id="errorMessageName">${response.message}</span>
-                                 <button class="fa fa-close" id="closeBt" style="font-size:24px" ></button>`;
-                     
-          let message = document.getElementById('errorMessageName');
-                                
+          let fileMessage = document.getElementById('commonDisplayMessage');
+  
+          let message = document.getElementById('showMessage');
+          message.innerText =response.message;                      
+
           let closeBt = document.getElementById('closeBt');    
-          closeBt.style.visibility = 'visible';
           fileMessage.style.visibility = 'visible';
+          closeBt.style.visibility = 'visible';
+
 
           if(response.status === 'success'){
             closeBt.style.color ='green';
@@ -649,15 +628,15 @@ document.getElementById("manualOption").addEventListener("change", () => {
             fileMessage.style.boxShadow = '0px 0px 6px 1px green';        
           }
 
-           closeButton();
+         }
 
-        }
-
-        function cancelButton(){
-        document.getElementById('excelCancel').addEventListener('click',() => {
+        
+        document.addEventListener('click',(e) => {
+          if(e.target.classList.contains('excelDataCancel')){
           cancelButtonRedirect('/elective/dashboard');
+          }
         })
-       }
+       
 
 </script>
 </html>

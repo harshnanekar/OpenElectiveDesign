@@ -25,7 +25,7 @@
         #uploadViaExcel{
           margin-bottom: 20px;       
         }
-        #uploadMessage{
+        #commonDisplayMessage{
          height: 50px;
          border-radius:22px;
          justify-content:center;
@@ -102,7 +102,10 @@
     <%- include('header.ejs')  %>
     <div id="mains">
 
-     <div id="uploadMessage"></div>  
+     <div id="commonDisplayMessage">
+      <span id="showMessage"></span>
+      <button class="fa fa-close closeBtn" id="closeBt" style="font-size:24px" ></button>`
+     </div>  
      
      <div id= "uploadOptions" >
      <h3>Upload Programs</h3>
@@ -136,7 +139,7 @@
     let excelFormat = `<div id="heading"><h2>Upload Program's file(Excel):</h2></div>
              <div>
              <input type="file" id='fileName' name = "programDetails" /></br>
-             <button type="submit" class="btn btn-primary" id='excelProgramSubmit' >Upload</button>&nbsp;<button id='excelCancel' type="submit" class="btn btn-danger" >Cancel</button>
+             <button type="submit" class="btn btn-primary excelDataSubmit" id='excelProgramSubmit' >Upload</button>&nbsp;<button id='excelCancel' type="submit" class="btn btn-danger excelDataCancel" >Cancel</button>
              </div>
              </div>
              <div id='displayNote'><a style="text-decoration:none;font-size:20px;" class="text-danger" href="/excel/Program_Excel.xlsx" id="downloadExcel"  >Download Sample Template</a></br>
@@ -144,9 +147,7 @@
              <p>Program Name | Campus | Program Id</p>
              </div>`;
         upload.innerHTML = excelFormat;
-   
-      excelDataSubmit();
-      cancelButton();
+  
     }
 
     document.getElementById('uploadViaExcel').addEventListener('change', () => {
@@ -157,7 +158,7 @@
     let excelFormat =`<div id="heading"><h2>Upload Program's file(Excel):</h2></div>
               <div>
               <input type="file" id='fileName' name = "programDetails" /></br>
-              <button type="submit" class="btn btn-primary" id='excelProgramSubmit' >Upload</button>&nbsp;<button id='excelCancel' type="submit" class="btn btn-danger" >Cancel</button>
+              <button type="submit" class="btn btn-primary" id='excelProgramSubmit' >Upload</button>&nbsp;<button id='excelCancel' type="submit" class="btn btn-danger excelDataCancel" >Cancel</button>
               </div>
               </div>
               <div id='displayNote'><a style="text-decoration:none;font-size:20px;" class="text-danger" href="/excel/Program_Excel.xlsx" id="downloadExcel"  >Download Sample Template</a></br>
@@ -166,10 +167,6 @@
               </div>`;
         upload.innerHTML = excelFormat;
 
-     
-     excelDataSubmit();
-      cancelButton();
-    
     });
 
     document.getElementById('uploadViaManually').addEventListener('change', () => {
@@ -197,18 +194,17 @@
       <input type="text" class="form-control" id="inputProgramId" placeholder="Program Id">
       </div>
       </div>
-      <button type="submit" id="submitbtn" class="btn btn-danger mt-4">Add Program</button>
+      <button type="submit" id="submitbtn" class="btn btn-danger mt-4 btnSubmit">Add Program</button>
       </div>`
 
     upload.innerHTML = manualData;
 
-    validatePerformer();
-
     });
 
-    async function excelDataSubmit(){
     
-     document.getElementById('excelProgramSubmit').addEventListener('click',async () => {
+     document.addEventListener('click',async (e) => {
+     if(e.target.classList.contains('excelDataSubmit')){ 
+     
      let fileInput = document.querySelector('#fileName').value;
      let filePath = fileInput.substring(fileInput.lastIndexOf('.'),fileInput.length);
 
@@ -233,18 +229,16 @@
      });
 
      }else{
-      let messageDisplay = document.getElementById('uploadMessage');
-      let message = `<span>File Must Be In Excel Format Only !!</span>
-      <button class="fa fa-close" id="closeBt" style="font-size:24px" ></button>`;
+      let messageDisplay = document.getElementById('commonDisplayMessage');
+      let showMessage = document.getElementById('showMessage');
+      let message = `File Must Be In Excel Format Only !!`;
 
-      messageDisplay.innerHTML= message ;
+      showMessage.innerText = message ;
       messageDisplay.style.visibility='visible';
-
-      await closeButton();
      }
-
+     }
      });   
-    }
+    
 
     async function sendExcelData(url,method,obj){
     
@@ -275,23 +269,20 @@
     }
 
     async function messageDisplay(response){
-      let messageDisplay = document.getElementById('uploadMessage');
+      let messageDisplay = document.getElementById('commonDisplayMessage');
+      let showMessage = document.getElementById('showMessage');
 
       console.log("Table for non-insereted " ,response.nonInsertedPrograms); 
-      
+      let message = response.message;
 
-      let message = `<span>Programs Uploaded Successfully !!</span>
-      <button class="fa fa-close" id="closeBt" style="font-size:24px" ></button>`;
-
-      messageDisplay.innerHTML= message ;
+      showMessage.innerText = message;
       messageDisplay.style.visibility='visible';
 
       if(response.status === 'success'){
 
-     
-      let closeButton = document.querySelector('#closeBt'); 
+      let closeButton = document.querySelector('.closeBtn'); 
 
-      messageDisplay.style.color = 'green';
+      showMessage.style.color = 'green';
       messageDisplay.style.boxShadow = '0px 0px 6px 1px green';
       closeButton.style.color = 'green';
 
@@ -327,13 +318,13 @@
       }
       
       }
-      await closeButton();
-
 
     }
 
-    function validatePerformer(){
-    document.getElementById('submitbtn').addEventListener('click', () => {
+  
+    document.addEventListener('click', (e) => {
+
+      if(e.target.classList.contains('btnSubmit')){
       
       let program = document.getElementById('inputProgramName').value;
       let campus = document.getElementById('inputCampus').value;
@@ -358,9 +349,9 @@
        }
       });
       }
-
-    })
     }
+    })
+    
 
 
     function campusValidator(campus){
@@ -433,41 +424,31 @@
     }
 
     function manuallyMessage(response){
-      let uploadMessage = document.getElementById('uploadMessage');
-      uploadMessage.innerHTML = `<span id="errorMessageName">${response.message}</span>
-                                 <button class="fa fa-close" id="closeBt" style="font-size:24px" ></button>`;
+      let uploadMessage = document.getElementById('commonDisplayMessage');
+      let showMessage = document.getElementById('showMessage');
+      let dispMessage = response.message;
+
+      showMessage.innerText = dispMessage;
                      
       let message = document.getElementById('errorMessageName');
                                 
-      let closeBt = document.getElementById('closeBt');    
+      let closeBt = document.querySelector('.closeBtn');    
       uploadMessage.style.visibility = 'visible';
 
       if(response.status === 'success'){
         closeBt.style.color ='green';
         closeBt.style.left = '39%';   
-        message.style.color = 'green';                        
+        showMessage.style.color = 'green';                        
         uploadMessage.style.boxShadow = '0px 0px 6px 1px green';        
       }
-
-    closeButton();
     }
-
     
-    function closeButton(){
-
-    document.getElementById('closeBt').addEventListener('click', () => {
-
-    let messageDisplay = document.getElementById('uploadMessage');
-    messageDisplay.style.visibility='hidden'; 
-    
-    });
-
-    }
-    function cancelButton(){
-    document.getElementById('excelCancel').addEventListener('click',() => {
+    document.addEventListener('click',(e) => {
+      if(e.target.classList.contains('excelDataCancel')){
       cancelButtonRedirect('/elective/dashboard');
+      }
     });
-    }
+    
 
 
 
