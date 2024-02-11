@@ -4,7 +4,6 @@ const { pgPool } = require("./app/config/database.js");
 const indexRouter = require("./app/router/route.js");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
-const flash = require("connect-flash");
 
 pgPool.connect();
 
@@ -27,12 +26,9 @@ app.use(
     secret: "cvekg-cvekvgwk-vwvgw-vwgv-cwhv",
     resave: false,
     saveUninitialized: true,
-    cookie: { maxAge: 360000 },
+    cookie: { maxAge: 24 * 60 * 60 * 1000 },
   })
 );
-
-app.use(flash());
-
 
 app.use("/elective", indexRouter);
 

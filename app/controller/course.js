@@ -315,7 +315,7 @@ getAllCoursePrograms: async (req,res) => {
 
 },
 
-editCourse: (req,res) =>{
+editCourse: async (req,res) =>{
    
    try{
 
@@ -325,19 +325,66 @@ editCourse: (req,res) =>{
    if(username != undefined){
    
     console.log('function called')
-   let {subName,deptName,batch,capacity,campus,programs} = req.body;
+   let {subjectId,subName,deptName,batch,capacity,campus,programs} = req.body;
 
    let departmentValidation = Validation.departmentValidator(deptName);
    let capacityValidation = Validation.batchCapacityValidater(capacity);
    let campusValidation = Validation.campusValidation(campus);
    let batchValidation = Validation.batchValidater(batch);
 
+   console.log('subid>>>>> ' , subjectId)
    if(subName != undefined && departmentValidation && batchValidation && capacityValidation && campusValidation && programs.length > 0 ){
    
    if(role === 'Role_Admin'){
-   
-    
 
+   let insertCourse = await courseQuery.updateCourse(subName, deptName, batch, capacity, campus, username, subjectId)
+   let checkPrograms = await courseQuery.getAllCourseProgram(subjectId);
+   let upsertPrograms;
+   let programArray = [];
+   let placeholders;
+   let val;
+
+   console.log("course count " , checkPrograms)
+
+   if (checkPrograms.rowCount > 0) {
+    for (let i = 0;i < programs.length ;i++) {
+
+      let checkCourseWithProgram = await courseQuery.checkCourseWithProgram(subjectId,programs[i]);
+      let getPrgId = await courseQuery.getProgramId(programs[i],username);
+      let programId = await getPrgId.rows[0].program_id;
+      programArray.push(programId);  
+
+      if(checkCourseWithProgram.rowCount > 0){
+        val = true;
+      }else{
+        upsertPrograms = await courseQuery.allocateCoursePrograms(subjectId,programId,username);
+      }
+        
+    }
+
+    placeholders = programArray.map((id, index) => `$${index + 2},`).join('');
+    placeholders = placeholders.substring(0, placeholders.length - 1);
+
+    upsertPrograms= (val === true) ? courseQuery.deleteCourseProgram(subjectId,programArray,placeholders) : undefined;
+  
+   } else {
+
+    for (let i = 0;i < programs.length ;i++) {
+      let getPrgId = await courseQuery.getProgramId(programs[i],username);
+      let programId = getPrgId.rows[0].program_id;
+
+      console.log("prg id " , programId)
+      upsertPrograms = await courseQuery.allocateCoursePrograms(subjectId,programId,username);
+    }
+   }
+
+   if(insertCourse.rowCount > 0 && upsertPrograms.rowCount > 0 || upsertPrograms != undefined){
+    return res.json({status:'success',message:'Course Updated SuccessFully !!'})
+   }else{
+    return res.json({message:'Failed To Upload Course !! '});
+   }
+
+   
    }else{
     res.clearCookie('jwtauth');
     return res.json({status:'error',redirectTo :'/elective/loginPage' }); 
@@ -353,6 +400,7 @@ editCourse: (req,res) =>{
    }
 
    }catch(error){
+    console.log("error in course programs " , error)
     return res.json({status : 'error',redirectTo :'/elective/error'})
    } 
 
