@@ -132,7 +132,6 @@
 
         </div>
 
-        <div>
           <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
             aria-labelledby="exampleModalCenterTitle" data-backdrop="false" style="background-color: rgba(0, 0, 0, 0.3);" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered setModal modal-lg" role="document">
@@ -148,12 +147,75 @@
                 </div>
                 <div class="modal-footer modalFooter">
                   <button type="button" class="btn btn-danger closeModal" data-dismiss="modal">Close</button>
-                  <button type="button" class="btn btn-primary editModal">Edit</button>
+                  <button type="button" class="btn btn-primary editModal" data-dismiss="modal" >Submit</button>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+
+          <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+            aria-labelledby="exampleModalCenterTitle" data-backdrop="false" style="background-color: rgba(0, 0, 0, 0.3);" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered setModal modal-md" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  </button>
+                </div>
+                <div id="successModal" class="modal-body">
+                  
+                </div>
+                <div class="modal-footer modalFooter">
+                  <button type="button" data-toggle="modal" data-target="#exampleModal" hidden></button>
+                  <button type="button" class="btn btn-danger okModal" data-dismiss="modal">Ok</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal fade" id="deletModal" tabindex="-1" role="dialog"
+            aria-labelledby="exampleModalCenterTitle" data-backdrop="false" style="background-color: rgba(0, 0, 0, 0.3);" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered setModal modal-md" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div id="deleteModal" class="modal-body">
+                  <div>
+                    <h4 id='subjectDelete' style="text-align:center;">Are you sure you want to delete it ?</h4>
+                    </div>
+                </div>
+                <div class="modal-footer modalFooter">
+                  <button type="button" class="btn btn-danger" data-toggle="modal" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary confirmDelete" data-dismiss="modal">Yes</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal fade" id="deleteSuccessModal" tabindex="-1" role="dialog"
+            aria-labelledby="exampleModalCenterTitle" data-backdrop="false" style="background-color: rgba(0, 0, 0, 0.3);" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered setModal modal-md" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  </button>
+                </div>
+                <div id="deleteModal" class="modal-body">
+                  <div>
+                    <h4 id='successModal' style="text-align:center;">Course Deleted Successfully !!</h4>
+                    </div>
+                </div>
+                <div class="modal-footer modalFooter">
+                  <button id='DeletebtnValue' type="button" data-toggle="modal" data-target="#deleteSuccessModal" hidden></button>
+                  <button type="button" class="btn btn-danger SuccessModal" data-toggle="modal" data-dismiss="modal">Ok</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+        
+          
 </body>
 <%- include ('../partials/partial2') %>
   <script src="../js/script.js"></script>
@@ -439,8 +501,7 @@
       }
 
       if (e.target.classList.contains('editCourse')) {
-        console.log("clicked >>>>>>>>");
-
+    
         let tr = e.target.closest('tr');
         let subId = e.target.closest('tr').dataset.subid;
 
@@ -507,7 +568,7 @@ let modalBody = `<div class="form-row">
 
           console.log("courses programs " ,course.program_name)
           courseProgram.insertAdjacentHTML('beforeEnd',option);
-          })
+        })
 
 
         }
@@ -534,32 +595,68 @@ let modalBody = `<div class="form-row">
        }else{
        
        let message = (response.status === 'success') ? response.message : response.message;
-       let modal = document.getElementById('getModal');
-      
-      
-       let modalWidth = document.querySelector('.setModal');
-       modalWidth.classList.remove('modal-lg');
-       modalWidth.classList.add('modal-md');
-
-       let modalHeader = document.getElementById('exampleModalLongTitle');
-       modalHeader.style.visibility = 'hidden';
+       let modal = document.getElementById('successModal');
        
        let successMessage = `<div>
         <h4 style="text-align:center;">${message}</h4>
-        </div>`
-
-       let modalFooter = document.querySelector('.modalFooter');
-       modalFooter.innerHTML = `<button class='btn btn-primary okModal' data-dismiss="modal">Ok</button>`;
+        </div>`;
        
        modal.innerHTML = successMessage; 
 
+       document.querySelector('[data-target="#exampleModal"]').click();
+
        }
       })
-
       }
 
       if(e.target.classList.contains('okModal')){
-       window.location.reload(); 
+       showAllCourses();
+      }
+
+      if(e.target.classList.contains('deleteCourse')){
+        let subId = e.target.closest('tr').dataset.subid;
+
+        let confirmButton = document.querySelector('.confirmDelete');
+        confirmButton.setAttribute('data-id', subId);
+      }
+
+      if(e.target.classList.contains('confirmDelete')){
+        let buttonValue = document.querySelector('.confirmDelete');
+        let subjectId = buttonValue.getAttribute('data-id');
+
+        let obj = {subjectId};
+
+        dynamicFetchApi('/elective/deleteCourse','POST',obj)
+        .then(response => {
+         if(response.status === 'error'){
+          window.location.href=`${response.redirectTo}`;
+         }else{ 
+
+          let courseIds = document.querySelector('#subjectRow');
+
+          let buttonvalue = document.querySelector('#DeletebtnValue');
+          buttonvalue.setAttribute('data-deleteid',subjectId);
+
+          document.querySelector('[data-target="#deleteSuccessModal"]').click(); 
+
+         }
+        })
+      }
+
+      if(e.target.classList.contains('SuccessModal')){
+
+      let courseIds = document.querySelectorAll('#subjectRow');
+      let buttonvalue = document.querySelector('#DeletebtnValue');
+      let subjectId =  buttonvalue.getAttribute('data-deleteid');
+
+          Array.from(courseIds).forEach(course => {
+          let subId = course.getAttribute('data-subId');
+          console.log('course id ' , subId)
+          if(subjectId === subId){
+          course.remove();
+          console.log('query escecuted')
+          }
+        })
       }
     })
 
@@ -646,7 +743,7 @@ let modalBody = `<div class="form-row">
            <td class="capacity" data-capacity=${data.max_capacity_per_batch} hidden>${data.max_capacity_per_batch}</td>
            <td class="dept" data-dept=${data.dept_name} hidden>${data.dept_name}</td>
            <td colspan="4px">
-           <i style="cursor:pointer;" data-id=${data.sub_id} data-toggle="modal" data-toggle="modal" data-target="#exampleModalCenter" class="fa-solid fa-trash deleteCourse"></i>&ensp;
+           <i style="cursor:pointer;" data-id=${data.sub_id} data-toggle="modal" data-toggle="modal" data-target="#deletModal" class="fa-solid fa-trash deleteCourse"></i>&ensp;
            <i style="cursor:pointer;" data-id=${data.sub_id} data-toggle="modal" data-toggle="modal" data-target="#exampleModalCenter" class="fa-solid fa-pen-to-square editCourse"></i></i&ensp;
            </td>
            </tr>`

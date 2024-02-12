@@ -36,6 +36,7 @@ apiRouter.post('/allocatePrograms',middleware.verifyRequest,courseController.all
 apiRouter.post('/commonDelete',middleware.verifyRequest,courseController.commonCourseDelete);
 apiRouter.post('/getAllCoursePrograms',middleware.verifyRequest,courseController.getAllCoursePrograms);
 apiRouter.post('/editCourse',middleware.verifyRequest,courseController.editCourse);
+apiRouter.post('/deleteCourse',middleware.verifyRequest,courseController.deleteCourse);
 
 
 module.exports = apiRouter;

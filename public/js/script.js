@@ -131,6 +131,34 @@
         window.location.href= `${redirectPage}`;
       }
 
+      function dynamicFetchApi(url,method,obj){
+
+      return new Promise((resolve,reject) => {
+
+      const requestDetails = {
+        method:method,
+        headers:{
+          'Content-Type':'application/json'
+        },
+        body:obj ? JSON.stringify(obj) : undefined
+      }  
+      fetch(url,requestDetails)
+      .then(response => {
+        if(response.ok){
+         return response.json();
+        }
+        throw new Error('Error nin fetching response');
+      })
+      .then(data => {
+        resolve(data);
+      })
+      .catch(error => {
+       reject(error); 
+      })
+        
+        })  
+      }
+
    //Hiding Error Message
    document.addEventListener('click',(e) =>{
     if(e.target.classList.contains('closeBtn')){

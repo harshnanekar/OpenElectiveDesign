@@ -332,7 +332,9 @@ editCourse: async (req,res) =>{
    let campusValidation = Validation.campusValidation(campus);
    let batchValidation = Validation.batchValidater(batch);
 
-   console.log('subid>>>>> ' , subjectId)
+   console.log('subid>>>>> ' , subjectId,departmentValidation,capacityValidation,campusValidation,batchValidation);
+
+   console.log('programs >>>>>>> ' ,JSON.stringify(programs));
    if(subName != undefined && departmentValidation && batchValidation && capacityValidation && campusValidation && programs.length > 0 ){
    
    if(role === 'Role_Admin'){
@@ -403,6 +405,43 @@ editCourse: async (req,res) =>{
     console.log("error in course programs " , error)
     return res.json({status : 'error',redirectTo :'/elective/error'})
    } 
+
+},
+
+deleteCourse : async (req,res) => {
+
+try{
+
+  let username = req.session.modules;
+  let role = req.session.userRole ;
+  
+  if(username != undefined){
+
+   if(role === 'Role_Admin'){
+
+   let {subjectId} = req.body; 
+   let deleteCourseProgram = await courseQuery.deleteCourseMapping(subjectId);
+   let deleteCourse = await courseQuery.deleteCourse(subjectId); 
+
+   if(deleteCourseProgram.rowCount > 0 && deleteCourse.rowCount > 0){
+    return res.json({status:'success',message : 'Course Deleted Successfully !!'});
+   }else{
+    return res.json({message:'Failed To Delete Course'});
+   }
+
+   }else{
+    res.clearCookie('jwtauth');
+    return res.json({status:'error',redirectTo :'/elective/loginPage' });
+   } 
+
+  }else{
+    res.clearCookie('jwtauth');
+    return res.json({status:'error',redirectTo :'/elective/loginPage' }); 
+  }
+
+}catch{
+    return res.json({status : 'error',redirectTo :'/elective/error'})  
+}
 
 }
 }
