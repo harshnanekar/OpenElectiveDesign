@@ -40,7 +40,7 @@
         <tbody>
          <% let count=1; %>
          <% eventData.forEach(event => { %>
-            <tr>
+            <tr data-eid=<%= event.id %> >
                <td><%= count %></td>
                <td><%= event.event_name %></td>
                <td><%= event.current_session %></td>
@@ -59,7 +59,7 @@
                <i class="fa-solid fa-file-arrow-down" data-toggle='tooltip' title = 'Download Allocation Report' width="2%" ></i>&ensp;
                <i class="fa-solid fa-book"  data-toggle='tooltip' title = 'Publish' width="20%" ></i>&ensp;
                <i class="fa-solid fa-download" data-toggle='tooltip' title = 'Download Preferences' width="2%" ></i>&ensp;
-               <i class="fa-solid fa-cart-plus" data-toggle='tooltip' title = 'Add Basket' width="2%"></i>
+               <i href="#" class="fa-solid fa-cart-plus addBasket" data-toggle='tooltip' title = 'Add Basket' width="2%"></i>
 
             </td>     
             </tr>
@@ -74,6 +74,27 @@
 <%- include ('../partials/partial2') %>
 <script src= "../js/script.js" ></script>
 <script>
+
+document.addEventListener('click',(e) => {
+
+if(e.target.classList.contains('addBasket')){
+ let eventId = e.target.closest('tr').dataset.eid;
+ console.log('eventid >>> ' , eventId);
+
+ window.location.href = `/elective/addBasketPage/${eventId}`;
+
+}
+
+
+
+
+
+
+})
+
+
+
+
 
 </script>
 </html>
