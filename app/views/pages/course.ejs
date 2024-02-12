@@ -31,19 +31,6 @@
         margin-bottom: 20px;
       }
 
-      #commonDisplayMessage {
-        height: 50px;
-        border-radius: 22px;
-        justify-content: center;
-        display: flex;
-        align-items: center;
-        color: red;
-        box-shadow: 0px 0px 6px 1px red;
-        width: 93%;
-        font-weight: bold;
-        margin-left: 20px;
-        visibility: hidden;
-      }
 
       #uploadFormat {
         position: relative;
@@ -69,18 +56,6 @@
       #excelCancel {
         margin-top: 20px;
         margin-bottom: 20px;
-      }
-
-      #closeBt {
-        color: red;
-        background-color: whitesmoke;
-        border: 0;
-        position: relative;
-        left: 38%;
-      }
-
-      #closeBt:focus {
-        outline: none;
       }
 
       #viewAllCourse {
@@ -113,10 +88,7 @@
     <%- include('header.ejs') %>
       <div id="main">
 
-        <div id="commonDisplayMessage">
-          <span id="showMessage"></span>
-          <button class="fa fa-close closeBtn" id="closeBt" style="font-size:24px"></button>
-        </div>
+        <%- include('messageModal.ejs') %>
 
         <div id="uploadOptions">
           <h3>Upload Course</h3>
@@ -230,7 +202,7 @@
 
 
     function showAllCourses() {
-      getRequest('/elective/getAllCourses', 'GET')
+      dynamicGetFetch('/elective/getAllCourses', 'GET')
         .then(response => {
           console.log("Response::::: ", response);
           if (response.status === 'error') {
@@ -238,34 +210,7 @@
           } else {
             displayAllCourse(response);
           }
-
         })
-    }
-
-    function getRequest(url, method) {
-      return new Promise((resolve, reject) => {
-
-        const requestDetails = {
-          method: method,
-          headers: {
-            'Accept': 'application/json'
-          },
-        }
-        fetch(url, requestDetails)
-          .then(response => {
-            if (response.ok) {
-              return response.json();
-            }
-            throw new Error('Error in fetching response');
-          })
-          .then(data => {
-            resolve(data);
-          })
-          .catch(error => {
-            reject(error);
-          })
-
-      });
     }
 
     function defaultCourseDisplay() {
@@ -378,14 +323,15 @@
         });
 
         let obj = { courseArray };
-        courseFetchApi('/elective/commonDelete', 'POST', obj)
+        dynamicFetchApi('/elective/commonDelete', 'POST', obj)
           .then(async response => {
 
             if (response.status === 'error') {
               window.location.href = `${response.redirectTo}`;
             } else {
               alert(response.message);
-              let subjectRows = document.querySelectorAll('.subjectRow');
+              let subjectRows = document.querySelectorAll('#subjectRow');
+
               for (let i = 0; i < subjectRows.length; i++) {
                 let value = subjectRows[i].getAttribute('data-subId');
                 for (let j = 0; j < courseArray.length; j++) {
@@ -452,13 +398,24 @@
 
         if (subjectValidate && departmentValidate && batchesValidate && batchCapacityValidate && campusValidate) {
           let obj = { subjectName, department, batches, batchCapacity, campus, radioTypeValue };
-          courseFetchApi('/elective/insertCourseManually', 'POST', obj)
+          dynamicFetchApi('/elective/insertCourseManually', 'POST', obj)
             .then(response => {
               if (response.status === 'error') {
                 window.location.href = `${response.redirectTo}`;
               } else {
+
                 showAllCourses();
-                displayManualMessage(response);
+              
+                if(response.radioType === 'Yes'){ 
+
+                let msg = document.getElementById('msgModal');
+                let modalPage = `<div><h4 style="text-align:center;">${response.message}</h4></div>`
+                msg.innerHTML = modalPage;
+                document.querySelector('[data-target="#messageModal"]').click();
+
+                }else{
+                  window.location.href = `${response.redirectTo}`;
+                }
               }
             });
         }
@@ -480,23 +437,27 @@
           let formData = new FormData();
           formData.append('courseDetails', file);
 
-          insertCourseViaExcel('/elective/insertCourseViaExcel', 'POST', formData)
+          dynamicExcelUploadFetch('/elective/insertCourseViaExcel', 'POST', formData)
             .then(async response => {
               if (response.status === 'error') {
                 window.location.href = `${response.redirectTo}`;
               } else {
                 await showAllCourses();
-                await displayMessage(response);
+           
+                  let msg = document.getElementById('msgModal');
+                  let modalPage = `<div><h4 style="text-align:center;">${response.message}</h4></div>`
+                  msg.innerHTML = modalPage;
+                  document.querySelector('[data-target="#messageModal"]').click();
               }
             });
 
-        } else {
-          let message = document.getElementById('commonDisplayMessage');
+         } else {
           let messageDisplay = `File Must Be In Excel Format Only !!`;
-          let showMessage = document.getElementById('showMessage');
-
-          showMessage.innerText = messageDisplay;
-          message.style.visibility = 'visible';
+          
+          let msg = document.getElementById('msgModal');
+          let modalPage = `<div><h4 style="text-align:center;">${messageDisplay}</h4></div>`
+          msg.innerHTML = modalPage;
+          document.querySelector('[data-target="#messageModal"]').click();
         }
       }
 
@@ -554,7 +515,7 @@ let modalBody = `<div class="form-row">
        $('#inputCampus').val(campusName).trigger('change');
 
         let obj = {subId};
-        courseFetchApi('/elective/getAllCoursePrograms','POST',obj)
+        dynamicFetchApi('/elective/getAllCoursePrograms','POST',obj)
         .then(response => {
         if(response.status === 'error'){
           window.location.href= `${response.redirectTo}`;
@@ -588,7 +549,7 @@ let modalBody = `<div class="form-row">
 
       let obj ={subjectId,subName,deptName,batch,capacity,campus,programs};
       
-      courseFetchApi('/elective/editCourse','POST',obj)
+      dynamicFetchApi('/elective/editCourse','POST',obj)
       .then(response => {
        if(response.status === 'error'){
         window.location.href=`${response.redirectTo}`;
@@ -659,54 +620,6 @@ let modalBody = `<div class="form-row">
         })
       }
     })
-
-
-    function insertCourseViaExcel(url, method, obj) {
-
-      return new Promise((resolve, reject) => {
-
-        const requestDetails = {
-          method: method,
-          body: obj,
-        }
-
-        fetch(url, requestDetails)
-
-          .then(response => {
-            if (response.ok) {
-              return response.json();
-            }
-            throw new Error('Error in getting response');
-          })
-          .then(data => {
-            resolve(data);
-          })
-          .catch(error => {
-            reject(error);
-          })
-
-      });
-
-    }
-
-    function displayMessage(response) {
-
-      let messageDisplay = document.querySelector('#commonDisplayMessage');
-      let message = response.message;
-
-      let errorMessage = document.getElementById('showMessage');
-      errorMessage.innerText = message;
-
-      let closeBt = document.getElementById('closeBt');
-      messageDisplay.style.visibility = 'visible';
-
-      if (response.status === 'success') {
-        closeBt.style.color = 'green';
-        closeBt.style.left = '39%';
-        errorMessage.style.color = 'green';
-        messageDisplay.style.boxShadow = '0px 0px 6px 1px green';
-      }
-    }
 
     async function displayAllCourse(response) {
 
@@ -858,56 +771,6 @@ let modalBody = `<div class="form-row">
       }
 
     }
-
-    function courseFetchApi(url, method, obj) {
-      return new Promise((resolve, reject) => {
-        const requestDetails = {
-          method: method,
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: obj ? JSON.stringify(obj) : undefined
-        }
-
-        fetch(url, requestDetails)
-          .then(response => {
-            if (response.ok) {
-              return response.json();
-            }
-            throw new Error('Error in fetching response');
-          })
-          .then(data => {
-            resolve(data);
-          })
-          .catch(error => {
-            reject(error);
-          })
-
-      });
-    }
-
-    function displayManualMessage(response) {
-
-      let messageDisplay = document.querySelector('#commonDisplayMessage');
-      let message = response.message;
-
-      let errorMessage = document.getElementById('showMessage');
-      errorMessage.innerText = message;
-
-      let closeBt = document.getElementById('closeBt');
-      messageDisplay.style.visibility = 'visible';
-
-      if (response.status === 'success' && response.radioType === 'Yes') {
-        closeBt.style.color = 'green';
-        closeBt.style.left = '39%';
-        errorMessage.style.color = 'green';
-        messageDisplay.style.boxShadow = '0px 0px 6px 1px green';
-      } else {
-        messageDisplay.style.visibility = 'hidden';
-        window.location.href = `${response.redirectTo}`;
-      }
-    }
-
 
     document.addEventListener('change', (e) => {
       if (e.target.classList.contains('selectCheckBox')) {

@@ -159,14 +159,60 @@
         })  
       }
 
-   //Hiding Error Message
-   document.addEventListener('click',(e) =>{
-    if(e.target.classList.contains('closeBtn')){
+      function dynamicExcelUploadFetch(url,method,obj){
 
-    let displayMessage = document.getElementById('commonDisplayMessage');
-    displayMessage.style.visibility = "hidden";
+      return new Promise((resolve,reject) => {
+      const requestDetails = {
+        method : method,
+        body: obj ? obj : undefined 
+      }
+  
+      fetch(url,requestDetails)
+      .then(response => {
+        if(response.ok){
+         return response.json();
+        }
+        throw new Error('Error in Response');
+      })
+      .then(data => {
+        resolve(data);
+      })
+      .catch(error => {
+        reject(error);
+      })
+      })  
+     
+      }
 
-    }
-    });
+
+      function dynamicGetFetch(url,method){
+
+      return new Promise((resolve,reject) => {
+
+      const requestDetails ={
+        method:method,
+        headers :{
+          'Accept':'application/json'
+        },
+      }
+
+      fetch(url,requestDetails)
+      .then(response => {
+        if(response.ok){
+         return response.json();
+        }
+        throw new Error('Error in Response');
+      })
+      .then(data => {
+        resolve(data);
+      })
+      .catch(error => {
+        reject(error);
+      })
+      })  
+
+      }
+
+ 
 
 

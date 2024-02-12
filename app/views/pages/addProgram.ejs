@@ -25,20 +25,7 @@
         #uploadViaExcel{
           margin-bottom: 20px;       
         }
-        #commonDisplayMessage{
-         height: 50px;
-         border-radius:22px;
-         justify-content:center;
-         display:flex;
-         align-items:center;
-         color: red;
-         box-shadow:0px 0px 6px 1px red;
-         width:100%;
-         font-weight:bold;
-         margin-left:20px;
-         visibility:hidden; 
-
-        }
+  
         #uploadFormat{
           position:relative;
           top:100px;  
@@ -62,16 +49,6 @@
         select {
           padding-top: 10px;
           padding-bottom: 10px;
-        }
-        #closeBt{
-          color:red;
-          background-color: whitesmoke;
-          border:0;
-          position: relative; 
-          left:38%;     
-        }
-        #closeBt:focus{
-         outline:none;
         }
         #campusError,#ProgramnameError,#ProgramIdError{
          color:red;
@@ -102,11 +79,8 @@
     <%- include('header.ejs')  %>
     <div id="mains">
 
-     <div id="commonDisplayMessage">
-      <span id="showMessage"></span>
-      <button class="fa fa-close closeBtn" id="closeBt" style="font-size:24px" ></button>`
-     </div>  
-     
+     <%- include('messageModal.ejs') %>
+
      <div id= "uploadOptions" >
      <h3>Upload Programs</h3>
      <hr/>
@@ -219,7 +193,7 @@
      const formData = new FormData();
      formData.append("programFile",fileData);
 
-     sendExcelData('/elective/insertProgramsViaExcel','POST',formData)
+     dynamicExcelUploadFetch('/elective/insertProgramsViaExcel','POST',formData)
      .then(response => {
         if(response.status === 'error'){
         window.location.href = `${response.redirectTo}`;
@@ -229,62 +203,27 @@
      });
 
      }else{
-      let messageDisplay = document.getElementById('commonDisplayMessage');
-      let showMessage = document.getElementById('showMessage');
+      
       let message = `File Must Be In Excel Format Only !!`;
 
-      showMessage.innerText = message ;
-      messageDisplay.style.visibility='visible';
+      let msg = document.getElementById('msgModal');
+      let modalPage = `<div><h4 style="text-align:center;">${message}</h4></div>`
+      msg.innerHTML = modalPage;
+      document.querySelector('[data-target="#messageModal"]').click();
+       
      }
      }
      });   
-    
-
-    async function sendExcelData(url,method,obj){
-    
-    return new Promise((resolve,reject) => {    
-    
-    const requestDetails = {
-     method:method,
-     body:obj,   
-    }
-    
-    fetch(url,requestDetails)
-
-    .then(response => {   
-    if(response.ok){
-      return response.json();  
-    }    
-    throw new Error('Error in Getting Response');
-    })
-    .then(data => {
-      resolve(data);
-    })
-    .catch(error => {
-      reject(error);
-    })
-
-    });
-
-    }
 
     async function messageDisplay(response){
-      let messageDisplay = document.getElementById('commonDisplayMessage');
-      let showMessage = document.getElementById('showMessage');
 
-      console.log("Table for non-insereted " ,response.nonInsertedPrograms); 
-      let message = response.message;
-
-      showMessage.innerText = message;
-      messageDisplay.style.visibility='visible';
+      let msg = document.getElementById('msgModal');
+      let modalPage = `<div><h4 style="text-align:center;">${response.message}</h4></div>`
+      msg.innerHTML = modalPage;
+      document.querySelector('[data-target="#messageModal"]').click();
+       
 
       if(response.status === 'success'){
-
-      let closeButton = document.querySelector('.closeBtn'); 
-
-      showMessage.style.color = 'green';
-      messageDisplay.style.boxShadow = '0px 0px 6px 1px green';
-      closeButton.style.color = 'green';
 
       let nonInsertedProgramsArray = await response.nonInsertedPrograms;  
 
@@ -318,7 +257,6 @@
       }
       
       }
-
     }
 
   
@@ -340,12 +278,17 @@
 
        let obj = {program,campus,programId};
 
-      insertProgramManually('/elective/insertprogramManually','POST', obj)
+       dynamicFetchApi('/elective/insertprogramManually','POST', obj)
       .then(responseData => {
        if(responseData.status === 'error'){
         window.location.href= `${responseData.redirectTo}`;  
        }else{
-        manuallyMessage(responseData);
+
+        let msg = document.getElementById('msgModal');
+        let modalPage = `<div><h4 style="text-align:center;">${responseData.message}</h4></div>`
+        msg.innerHTML = modalPage;
+        document.querySelector('[data-target="#messageModal"]').click();
+    
        }
       });
       }
@@ -395,54 +338,6 @@
       }
     }
 
-     function insertProgramManually(url,method,obj){
-     
-     return new Promise((resolve,reject) => { 
-     const requestDetails = {
-      method:method ,
-      headers:{
-        'Content-Type':'application/json'
-      },
-      body: obj ? JSON.stringify(obj) : undefined,
-     } 
-
-     fetch(url,requestDetails)
-     .then(response => {
-      if(response.json){
-        return response.json();
-      }
-      throw new Error('Error in getting response');
-     })
-     .then(data => {
-      resolve(data);
-     })
-     .catch(error => {
-      reject(error);
-     })
-       
-    });
-    }
-
-    function manuallyMessage(response){
-      let uploadMessage = document.getElementById('commonDisplayMessage');
-      let showMessage = document.getElementById('showMessage');
-      let dispMessage = response.message;
-
-      showMessage.innerText = dispMessage;
-                     
-      let message = document.getElementById('errorMessageName');
-                                
-      let closeBt = document.querySelector('.closeBtn');    
-      uploadMessage.style.visibility = 'visible';
-
-      if(response.status === 'success'){
-        closeBt.style.color ='green';
-        closeBt.style.left = '39%';   
-        showMessage.style.color = 'green';                        
-        uploadMessage.style.boxShadow = '0px 0px 6px 1px green';        
-      }
-    }
-    
     document.addEventListener('click',(e) => {
       if(e.target.classList.contains('excelDataCancel')){
       cancelButtonRedirect('/elective/dashboard');

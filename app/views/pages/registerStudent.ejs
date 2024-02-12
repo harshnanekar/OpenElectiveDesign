@@ -31,33 +31,6 @@
       #excel{
         margin-top:50px;
       }
-      #commonDisplayMessage{
-         height: 50px;
-         border-radius:22px;
-         justify-content:center;
-         display:flex;
-         align-items:center;
-         color: red;
-         box-shadow:0px 0px 6px 1px red;
-         width:100%;
-         font-weight:bold;
-         visibility:hidden;
-      }
-         #errorMessageName{
-          margin-left:20px;
-          margin-top:3px;
-         }
-         #closeBt{
-          color:red;
-          background-color: whitesmoke;
-          border:0;
-          position: relative; 
-          left:38%;     
-          visibility:hidden;
-        }
-        #closeBt:focus{
-         outline: none;
-        }
         .downloadFile:hover{
             color:red;
             text-decoration:none;
@@ -109,11 +82,8 @@
     <div id = "mains">
 
         <div id="registerSuccess"></div>
-          <div id="commonDisplayMessage" >
-          <span id="showMessage"></span>
-          <button class="fa fa-close closeBtn" id="closeBt" style="font-size:24px" ></button>
-        </div>
-
+        <%- include('messageModal.ejs') %>
+      
         <div id="registerOptions">
         <h3>Register Students</h3>
         <hr/>
@@ -140,13 +110,6 @@
 <script src= "../js/script.js" ></script>
 <script>
  
-document.getElementById('closeBt').addEventListener('click',() => {
- let message = document.getElementById('commonDisplayMessage') ;
- let closeBt = document.getElementById('closeBt');
- closeBt.style.visibility = 'hidden';
- message.style.visibility = "hidden" ;
-});
-
 document.getElementById('excelOption').addEventListener('change', () => {
 
   let registerExcelFormat = document.getElementById('registerFormat') ;
@@ -257,31 +220,31 @@ document.getElementById("manualOption").addEventListener("change", () => {
 
   console.log('file path--- ' , fileName);
 
-  if(fileName === '.xlsx'){
-        
-  let fileInput = document.getElementById('fileName');
-  let fileData = fileInput.files[0];
-  const formData = new FormData();
-  formData.append('studentDetails',fileData);
+  if (fileName === '.xlsx') {
 
-  registerViaExcel('/elective/uploadStudentData','POST',formData)
-  .then(response => {
-  console.log('Error Response: ',response.nonInserted);
-  if(response.status === 'error'){
-  window.location.href = response.redirectTo;    
-  }else{
-  fileMessage(response);
-  } 
-  });
+      let fileInput = document.getElementById('fileName');
+      let fileData = fileInput.files[0];
+      const formData = new FormData();
+      formData.append('studentDetails', fileData);
+
+      dynamicExcelUploadFetch('/elective/uploadStudentData', 'POST', formData)
+        .then(response => {
+          console.log('Error Response: ', response.nonInserted);
+          if (response.status === 'error') {
+            window.location.href = response.redirectTo;
+          } else {
+            fileMessage(response);
+          }
+        });
 
       }else{
-      let message = `File Format Should Be In Excel Only !!`;
-      let showMessage = document.getElementById('showMessage');
-      let closeButton = document.getElementById('closeBt');
-      showMessage.innerText = message;
 
-      closeButton.style.visibility = 'visible';
-      fileError.style.visibility = 'visible';
+      let message = `File Format Should Be In Excel Only !!`;
+      let msg = document.getElementById('msgModal');
+      let modalPage = `<div><h4 style="text-align:center;">${message}</h4></div>`
+      msg.innerHTML = modalPage;
+      document.querySelector('[data-target="#messageModal"]').click();
+
       }
       }
       });
@@ -311,13 +274,17 @@ document.getElementById("manualOption").addEventListener("change", () => {
         if(fnameVal && lnameVal && rollNoVal && campusVal && unameVal && yearVal && sessionVal){
 
         let obj = {fname,lname,rollNo,campus,studUsername,acadYear,acadSession};
-        registerStudentManually('/elective/registerStudentManually','POST',obj)
+        dynamicFetchApi('/elective/registerStudentManually','POST',obj)
         .then(responseData => {
           console.log('response----- ' , responseData.status);
         if(responseData.status === 'error'){
           window.location.href = responseData.redirectTo;
         }else{
-        manualMessage(responseData);
+       
+        let msg = document.getElementById('msgModal');
+        let modalPage = `<div><h4 style="text-align:center;">${responseData.message}</h4></div>`
+        msg.innerHTML = modalPage;
+        document.querySelector('[data-target="#messageModal"]').click();
         }
         });
         }
@@ -492,90 +459,23 @@ document.getElementById("manualOption").addEventListener("change", () => {
         }
         }
         
-        async function registerStudentManually(url,method,obj){
-
-        return new Promise((resolve,reject) => {   
-
-        let requestDetails = {
-            method : method,
-            headers:{
-                'Content-Type':'application/json'
-            },
-            body:JSON.stringify(obj) ||  undefined,
-        }    
-
-        fetch(url,requestDetails)
-        .then(responseData => {
-            if(responseData.ok){
-                return responseData.json();
-            }
-            throw new Error('Error in Response');
-        })
-        .then(data => {
-            resolve(data);
-        })
-        .catch(error => {
-            reject(error);
-        })
-
-        }); 
-
-        }
-
-        async function registerViaExcel(url,method,obj){
-          
-        return new Promise((resolve,reject) => {
-
-        let  requestDetails = {
-         method : method ,
-         body: obj || undefined,
-        }  
-
-        fetch(url,requestDetails)
-        .then(response => {
-         
-        if(response.ok){
-        return response.json();
-        }
-
-        throw new Error('Error in Response');
-        })
-        .then(data => {
-          resolve(data);
-        })
-        .catch(error => {
-          reject(error);
-        })
-
-        });  
-
-        }
-
         async function fileMessage(response){
           
-          let fileError = document.getElementById('commonDisplayMessage');
-                     
-          let errormessage = document.getElementById('showMessage');
-          errormessage.innerText = response.message;
-                                
-          let closeBt = document.getElementById('closeBt');    
-          fileError.style.visibility = 'visible';
-          closeBt.style.visibility = 'visible';
+        let msg = document.getElementById('msgModal');
+        let modalPage = `<div><h4 style="text-align:center;">${response.message}</h4></div>`
+        msg.innerHTML = modalPage;
+        document.querySelector('[data-target="#messageModal"]').click();
 
           if(response.status === 'success'){
-          closeBt.style.color ='green';
-          closeBt.style.left = '39%';   
-          errormessage.style.color = 'green';                        
-          fileError.style.boxShadow = '0px 0px 6px 1px green';        
-         
+              
           let studArray = await response.nonInserted;
           console.log('Non inserted data: ' , studArray);
 
           if(studArray.length != 0){
 
-          let  iTag = `<i style='font-weight:bold;color:red;'>Empty Field</i>`;
-            
-          let nonInsertedData = `<table class="table table-bordered table-responsive-lg" >
+          let iTag = `<i style='font-weight:bold;color:red;'>Empty Field</i>`;
+
+            let nonInsertedData = `<table class="table table-bordered table-responsive-lg" >
                                  <tr>
                                  <th>Sr No.</th>
                                  <th>Firstname</th>
@@ -589,7 +489,7 @@ document.getElementById("manualOption").addEventListener("change", () => {
                                  ${studArray.map((data, index) => `
                                  <tr>
                                  <td>${index + 1}</td>
-                                 <td>${data.studentFirstName ? data.studentFirstName : iTag }</td>
+                                 <td>${data.studentFirstName ? data.studentFirstName : iTag}</td>
                                  <td>${data.studentLastName ? data.studentLastName : iTag}</td>
                                  <td>${data.studentUname ? data.studentUname : iTag}</td>
                                  <td>${data.campus ? data.campus : iTag}</td>
@@ -597,40 +497,19 @@ document.getElementById("manualOption").addEventListener("change", () => {
                                  <td>${data.acadSession ? data.acadSession : iTag}</td>
                                  <td>${data.rollNo ? data.rollNo : iTag}</td>
                                  </tr>`
-                                 ).join('')}
+            ).join('')}
                                  </table>`;
 
-        let nonInsertedMessage = document.querySelector('#nonInsertedMessage');
-        nonInsertedMessage.style.visibility = 'visible';
+            let nonInsertedMessage = document.querySelector('#nonInsertedMessage');
+            nonInsertedMessage.style.visibility = 'visible';
 
-        let nonInsertedStudents = document.querySelector('#nonInsertedStudents');
-        nonInsertedStudents.innerHTML = nonInsertedData;
+            let nonInsertedStudents = document.querySelector('#nonInsertedStudents');
+            nonInsertedStudents.innerHTML = nonInsertedData;
 
          }     
          } 
          }
 
-         function manualMessage(response) {
-          let fileMessage = document.getElementById('commonDisplayMessage');
-  
-          let message = document.getElementById('showMessage');
-          message.innerText =response.message;                      
-
-          let closeBt = document.getElementById('closeBt');    
-          fileMessage.style.visibility = 'visible';
-          closeBt.style.visibility = 'visible';
-
-
-          if(response.status === 'success'){
-            closeBt.style.color ='green';
-            closeBt.style.left = '39%';   
-            message.style.color = 'green';                        
-            fileMessage.style.boxShadow = '0px 0px 6px 1px green';        
-          }
-
-         }
-
-        
         document.addEventListener('click',(e) => {
           if(e.target.classList.contains('excelDataCancel')){
           cancelButtonRedirect('/elective/dashboard');

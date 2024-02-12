@@ -84,12 +84,12 @@ let subjectArrayId = insertCourseQuery.rows;
   let insertCoursePrograms = courseQuery.subjectProgram(courseArray);
     
   if(insertCoursePrograms != undefined){
-    return res.json({status:'success',message:'Course Uploaded Successfully'});
+    return res.json({status:'success',message:'Course Uploaded Successfully !!'});
   }else{
     return res.json ({message:'Error, Failed To Add Programs !!'})
   }
   }else{
-    return res.json({status:'success',message:'Course Uploaded Successfully'});
+    return res.json({status:'success',message:'Course Uploaded Successfully !!'});
   }
 
 }else{
@@ -232,7 +232,7 @@ allocatePrograms:async (req,res) => {
 
      Promise.all(promises)
      .then(() =>{
-        return res.json({status:'success',message:'Programs Allocated Succesfully'});
+        return res.json({status:'success',message:'Programs Allocated Succesfully !!'});
      })
      .catch(error => {
         return res.json({status : 'error',redirectTo :'/elective/error'}); 
