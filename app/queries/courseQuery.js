@@ -55,23 +55,53 @@ static deleteCourseMapping(courseId){
  return pgPool.query(query); 
 }
 
+static async deleteCourseProgram(subjectId,programs,placeholders){
+ console.log('delete program ' , placeholders,subjectId,JSON.stringify(programs))
+
+ let query ={
+ text : `delete from subject_program_mapping where subject_lid =$1 and program_lid not in (${placeholders})`,
+ values:[subjectId,...programs]  
+ }  
+ return pgPool.query(query);  
+}
+
 static getAllCourseProgram(subId){
  let query= {
   text: `select p.program_name from subject_program_mapping s inner join program_master p on s.program_lid = p.program_id 
-          where s.subject_lid = $1 and s.active = true and p.active =true;`,
+         where s.subject_lid = $1 and s.active = true and p.active =true;`,
   values:[subId]  
  }
  return pgPool.query(query);   
 }
 
-static updateCourse(subName,deptName,batches,capacity,campus,username){
+static updateCourse(subName,deptName,batches,capacity,campus,username,subjectId){
  let query = {
   text: `update subject_master set subject_name= $1,dept_name=$2,batches=$3,max_capacity_per_batch=$4,
-  campus_lid=(select campus_id from campus where campus_name=$5),modifiedby=$6,modified_date=now()`,
-  values:[subName,deptName,batches,capacity,campus,username]
+  campus_lid=(select campus_id from campus where campus_name=$5),modifiedby=$6,modified_date=now()
+  where sub_id=$7`,
+  values:[subName,deptName,batches,capacity,campus,username,subjectId]
  }  
  return pgPool.query(query); 
 }
+
+static async checkCourseWithProgram(subId,program){
+ let query ={
+  text: `select count(*) from subject_program_mapping where subject_lid=$1 and 
+         program_lid in (select program_id from program_master where program_name=$2)`,
+  values:[subId,program]            
+ }
+ return pgPool.query(query);       
+}
+
+static async getProgramId(program,username){
+  let query = {
+   text:`select program_id from program_master where program_name=$1 and active=true and createdby =$2`,
+   values:[program,username]     
+  }    
+  return pgPool.query(query);  
+}
+
+
 
 
 

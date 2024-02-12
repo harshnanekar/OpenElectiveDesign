@@ -141,7 +141,7 @@ font-family: 'Poppins', sans-serif;
         if(responseData.status === 'success'){
         window.location.href = responseData.redirectTo;
         }else{
-        let displayMessage = document.getElementById('errormessage');
+        let displayMessage = document.getElementById('commonDisplayMessage');
         let showMessage = document.getElementById('showMessage');
         let message = responseData.message;
 
@@ -231,6 +231,16 @@ font-family: 'Poppins', sans-serif;
      
     }
     }
+
+    document.getElementById('closebutton').addEventListener('click',() =>{
+
+    let displayMessage = document.getElementById('commonDisplayMessage');
+    let path = window.location.pathname;
+    window.location.href = path
+    displayMessage.style.visibility = "hidden";
+
+  
+    })
 
 </script>
 </html>

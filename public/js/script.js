@@ -131,69 +131,11 @@
         window.location.href= `${redirectPage}`;
       }
 
-   //common Fetch Api
-   function commonGetFetch(url,method){
-    console.log('common fetch called')
-   return new Promise((resolve,reject) => { 
-
-   const requestDetails = {
-    method : method,
-    headers:{
-      'Accept': 'application/json'
-    },
-   }  
-   fetch(url,requestDetails)
-   .then(response => {
-    if(response.ok){
-      return response.json();
-    }
-    throw new Error('Error in fetching response');
-   })
-   .then(data => {
-    resolve(data);
-   })
-   .catch(error => {
-    reject(error);
-   })
-  
-   }); 
-   }
-
-   //common post Fetch Api
-  function commonPostfetch(url,method,obj){
-    return new Promise((resolve,reject) => {
-      const requestDetails ={
-      method:method,
-      headers:{
-        'Content-Type':'application/json'
-      },
-      body:obj ? JSON.stringify(obj) : undefined
-    }
-    
-    fetch(url,requestDetails)
-    .then(response => {
-      if(response.ok){
-        return response.json();
-      }
-      throw new Error('Error in fetching response');
-    })
-    .then(data => {
-     resolve(data);
-    })
-    .catch(error => {
-     reject(error);
-    })
-    
-  });
-  }
-
    //Hiding Error Message
    document.addEventListener('click',(e) =>{
     if(e.target.classList.contains('closeBtn')){
 
     let displayMessage = document.getElementById('commonDisplayMessage');
-    // let path = window.location.pathname;
-    // window.location.href = path
     displayMessage.style.visibility = "hidden";
 
     }

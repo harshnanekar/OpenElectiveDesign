@@ -135,7 +135,7 @@
         <div>
           <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
             aria-labelledby="exampleModalCenterTitle" data-backdrop="false" style="background-color: rgba(0, 0, 0, 0.3);" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-dialog modal-dialog-centered setModal modal-lg" role="document">
               <div class="modal-content">
                 <div class="modal-header">
                   <h5 class="modal-title" id="exampleModalLongTitle">Edit Course</h5>
@@ -146,7 +146,7 @@
                 <div id="getModal" class="modal-body">
                   
                 </div>
-                <div class="modal-footer">
+                <div class="modal-footer modalFooter">
                   <button type="button" class="btn btn-danger closeModal" data-dismiss="modal">Close</button>
                   <button type="button" class="btn btn-primary editModal">Edit</button>
                 </div>
@@ -455,6 +455,7 @@
 
 let modalBody = `<div class="form-row">
     <div class="form-group col-md-6">
+        <input id="inputSubId" value=${subId} hidden />
         <label for="inputSubname">Course Name</label>&ensp;&ensp;<span id="SubnameError"></span>
         <input type="text" value="${subName}" class="form-control" id="inputSubname" placeholder="Name of Subject">
     </div>
@@ -503,6 +504,8 @@ let modalBody = `<div class="form-row">
 
           Array.from(programs).forEach(course => {
           let option = `<option>${course.program_name}</option>`;
+
+          console.log("courses programs " ,course.program_name)
           courseProgram.insertAdjacentHTML('beforeEnd',option);
           })
 
@@ -520,14 +523,43 @@ let modalBody = `<div class="form-row">
       let capacity = $(e.target).closest('div').prev().find('#inputCapacity').val();
       let campus = $(e.target).closest('div').prev().find('#inputCampus').val();
       let programs = $(e.target).closest('div').prev().find('#coursePrograms').val();
-     
-      let obj ={subName,deptName,batch,capacity,campus,programs};
+      let subjectId = $(e.target).closest('div').prev().find('#inputSubId').val();
+
+      let obj ={subjectId,subName,deptName,batch,capacity,campus,programs};
       
       courseFetchApi('/elective/editCourse','POST',obj)
       .then(response => {
+       if(response.status === 'error'){
+        window.location.href=`${response.redirectTo}`;
+       }else{
+       
+       let message = (response.status === 'success') ? response.message : response.message;
+       let modal = document.getElementById('getModal');
+      
+      
+       let modalWidth = document.querySelector('.setModal');
+       modalWidth.classList.remove('modal-lg');
+       modalWidth.classList.add('modal-md');
 
+       let modalHeader = document.getElementById('exampleModalLongTitle');
+       modalHeader.style.visibility = 'hidden';
+       
+       let successMessage = `<div>
+        <h4 style="text-align:center;">${message}</h4>
+        </div>`
+
+       let modalFooter = document.querySelector('.modalFooter');
+       modalFooter.innerHTML = `<button class='btn btn-primary okModal' data-dismiss="modal">Ok</button>`;
+       
+       modal.innerHTML = successMessage; 
+
+       }
       })
 
+      }
+
+      if(e.target.classList.contains('okModal')){
+       window.location.reload(); 
       }
     })
 
