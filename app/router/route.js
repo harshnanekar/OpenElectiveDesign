@@ -4,6 +4,8 @@ const middleware = require('../middleware/request.js');
 const eventController = require('../controller/event.js');
 const programController = require('../controller/programs.js');
 const courseController = require('../controller/course.js');
+const basketController = require('../controller/basket.js');
+
 const multer = require('multer');
 
 //Get Requests
@@ -21,6 +23,7 @@ apiRouter.get('/viewPrograms',middleware.verifyRequest,programController.viewPro
 apiRouter.get('/course',middleware.verifyRequest,courseController.addCourses);
 apiRouter.get('/getAllCourses',middleware.verifyRequest,courseController.getAllCourses);
 apiRouter.get('/programList',middleware.verifyRequest,programController.getAllProgramsList);
+apiRouter.get('/addBasketPage/:id',middleware.verifyRequest,basketController.addBasketPage);
 
 
 //Post Requests
@@ -37,6 +40,7 @@ apiRouter.post('/commonDelete',middleware.verifyRequest,courseController.commonC
 apiRouter.post('/getAllCoursePrograms',middleware.verifyRequest,courseController.getAllCoursePrograms);
 apiRouter.post('/editCourse',middleware.verifyRequest,courseController.editCourse);
 apiRouter.post('/deleteCourse',middleware.verifyRequest,courseController.deleteCourse);
+
 
 
 module.exports = apiRouter;
