@@ -14,9 +14,12 @@ static getBasketForEvent(eventId){
  return pgPool.query(query);
 }
 
-
-
-
-
+static insertBasket(basketdata){
+   let query = {
+    text:`select createbasket($1)`,
+    values:[JSON.stringify(basketdata)]
+   } 
+   return pgPool.query(query);
+}
 
 } 

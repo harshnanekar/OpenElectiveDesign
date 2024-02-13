@@ -23,8 +23,7 @@ apiRouter.get('/viewPrograms',middleware.verifyRequest,programController.viewPro
 apiRouter.get('/course',middleware.verifyRequest,courseController.addCourses);
 apiRouter.get('/getAllCourses',middleware.verifyRequest,courseController.getAllCourses);
 apiRouter.get('/programList',middleware.verifyRequest,programController.getAllProgramsList);
-apiRouter.get('/addBasketPage/:id',middleware.verifyRequest,basketController.addBasketPage);
-
+apiRouter.get('/addBasketPage',middleware.verifyRequest,basketController.addBasketPage);    
 
 //Post Requests
 apiRouter.post('/login',controller.login);
@@ -40,6 +39,7 @@ apiRouter.post('/commonDelete',middleware.verifyRequest,courseController.commonC
 apiRouter.post('/getAllCoursePrograms',middleware.verifyRequest,courseController.getAllCoursePrograms);
 apiRouter.post('/editCourse',middleware.verifyRequest,courseController.editCourse);
 apiRouter.post('/deleteCourse',middleware.verifyRequest,courseController.deleteCourse);
+apiRouter.post('/createBasket',middleware.verifyRequest,basketController.createBasket);
 
 
 
