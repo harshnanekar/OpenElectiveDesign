@@ -42,6 +42,8 @@ apiRouter.post('/deleteCourse',middleware.verifyRequest,courseController.deleteC
 apiRouter.post('/createBasket',middleware.verifyRequest,basketController.createBasket);
 apiRouter.post('/deleteBasket',middleware.verifyRequest,basketController.deleteBasket);
 apiRouter.post('/editBasket',middleware.verifyRequest,basketController.editBasket);
+apiRouter.post('/deleteEvent',middleware.verifyRequest,eventController.deleteEvent);
+
 
 
 module.exports = apiRouter;

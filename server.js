@@ -1,11 +1,12 @@
 const express = require("express");
 const app = express();
-const { pgPool } = require("./app/config/database.js");
+const { pgPool,redisDb } = require("./app/config/database.js");
 const indexRouter = require("./app/router/route.js");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 
 pgPool.connect();
+redisDb.connect();
 
 require("dotenv").config();
 

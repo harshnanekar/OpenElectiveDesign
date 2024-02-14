@@ -1,4 +1,5 @@
 const { Pool } = require('pg');
+const { createClient } = require('redis');
 
 const pgPool = new Pool({
     host: 'localhost',
@@ -8,4 +9,6 @@ const pgPool = new Pool({
     database: 'open_elective',
 });
 
-module.exports = { pgPool } ;
+const redisDb =createClient();
+
+module.exports = { pgPool,redisDb } ;

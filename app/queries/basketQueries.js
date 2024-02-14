@@ -24,7 +24,7 @@ static insertBasket(basketdata){
 
 static deleteBasketEventData(basketId){
   let query = {
-   text:`delete from basket_event where basket_lid=$1`,
+   text:`update basket_event set active=false where basket_lid=$1`,
    values:[basketId] 
   }  
   return pgPool.query(query);
@@ -32,7 +32,7 @@ static deleteBasketEventData(basketId){
 
 static deleteBasketData(basketId){
    let query ={
-    text:`delete from basket where id = $1`,
+    text:`update basket set active=false where id = $1`,
     values:[basketId]
    } 
    return pgPool.query(query);

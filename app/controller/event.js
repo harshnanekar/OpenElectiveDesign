@@ -299,10 +299,49 @@ let controller = {
      
       }catch(error){
       console.log(error.message);
-      return res.json({status:'error',redirectTo:"/elective/error"});;
+      return res.json({status:'error',redirectTo:"/elective/error"});
       }
 
       },
+
+      deleteEvent : async (req,res) => {
+
+        try{
+
+        let username =req.session.modules;
+        let role =req.session.userRole;
+        
+        if(username != undefined){
+
+        let {eventId} = req.body;
+        
+        if(role === 'Role_Admin'){
+
+        let deleteEventId = await eventQuery.deleteEvent(eventId);
+        if(deleteEventId.rowCount > 0){
+
+         return res.json({status:'success',message:'Event Deleted Succesfully !!'})  
+
+        }else{
+          return res.json({message:'Failed To Delete Event !!'})
+        } 
+
+        }else{
+          res.clearCookie('jwtauth');
+          return res.json({status:'error',redirectTo : '/elective/loginPage'});
+        }
+
+        }else{
+          res.clearCookie('jwtauth');
+          return res.json({status:'error',redirectTo : '/elective/loginPage'});  
+        }
+
+        }catch(error){
+          console.log(error)
+          return res.json({status:'error',redirectTo:"/elective/error"});
+        }
+
+      }
 
       }
 

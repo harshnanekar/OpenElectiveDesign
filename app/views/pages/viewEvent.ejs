@@ -25,6 +25,7 @@
     <%- include('sidebar.ejs') %>
     <%- include('header.ejs')  %>
     <div id="main">
+    
         <table id="datatable" class="table table-striped table-bordered bluetable table-responsive">
         <thead>
         <th>Sr.No</th>
@@ -40,7 +41,7 @@
         <tbody>
          <% let count=1; %>
          <% eventData.forEach(event => { %>
-            <tr data-eid=<%= event.id %> >
+            <tr id="eventList" data-eid=<%= event.id %> >
                <td><%= count %></td>
                <td><%= event.event_name %></td>
                <td><%= event.current_session %></td>
@@ -53,7 +54,7 @@
                <% let endate = edate.split('T')[0]; let etime= edate.split('T')[1] ;  let edtime= etime.split('.')[0] ; %>
                <td><%= endate %><%= " " %><%= edtime %></td>
                <td><%= event.is_published %></td>  
-               <td ><i class="fa-solid fa-trash-arrow-up" data-toggle='tooltip' title = 'Delete' width="2%" ></i>&ensp;
+               <td ><i style="cursor:pointer;" class="fa-solid fa-trash-arrow-up deleteModal"  data-toggle='modal' data-toggle='tooltip' data-target="#deletModal" title = 'Delete' width="2%" ></i>&ensp;
                <i class="fa-solid fa-pencil"  data-toggle='tooltip' title = 'Edit' width="2%"></i>&ensp;
                <i class="fa-solid fa-file-export" data-toggle='tooltip' title = 'Allocate Event Users' width="2%" ></i>&ensp;
                <i class="fa-solid fa-file-arrow-down" data-toggle='tooltip' title = 'Download Allocation Report' width="2%" ></i>&ensp;
@@ -68,7 +69,9 @@
         </tbody>
     </table>
 
-
+    <%- include('editModal.ejs') %>
+    <%- include('deleteModal.ejs') %>
+    <%- include('deleteSuccessModal.ejs') %>
     </div>
 </body>
 
@@ -78,13 +81,38 @@
 
 document.addEventListener('click',(e) => {
 
-if(e.target.classList.contains('addBasket')){
- let eventId = e.target.closest('tr').dataset.eid;
- console.log('eventid >>> ' , eventId);
+    if (e.target.classList.contains('deleteModal')) {
+        let eid = e.target.closest('tr').dataset.eid;
 
- ;
+        let deleteModal = document.querySelector('.confirmDelete');
+        deleteModal.setAttribute('data-eventId', eid);
+    }
 
-}
+    if (e.target.classList.contains('confirmDelete')) {
+
+        let eventId = document.querySelector('.confirmDelete').getAttribute('data-eventId');
+        let obj = { eventId };
+
+        dynamicFetchApi('/elective/deleteEvent', 'POST', obj)
+            .then(response => {
+            if(response.status === 'error'){
+             window.location.href= `${response.redirectTo}`;   
+            }else{
+            let eventListId = document.querySelectorAll('#eventList');
+
+            Array.from(eventListId).forEach(event => {
+               let id =event.getAttribute('data-eid');
+               if(eventId === id){
+                event.remove();
+               }
+            })
+
+            let successModal = document.getElementById('successModal');
+            successModal.innerText =response.message;
+
+            document.querySelector('[data-target="#deleteSuccessModal"]').click();             }
+            })
+    }
 
 
 
