@@ -143,51 +143,9 @@
             </div>
           </div>
 
-          <div class="modal fade" id="deletModal" tabindex="-1" role="dialog"
-            aria-labelledby="exampleModalCenterTitle" data-backdrop="false" style="background-color: rgba(0, 0, 0, 0.3);" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered setModal modal-md" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div id="deleteModal" class="modal-body">
-                  <div>
-                    <h4 id='subjectDelete' style="text-align:center;">Are you sure you want to delete it ?</h4>
-                    </div>
-                </div>
-                <div class="modal-footer modalFooter">
-                  <button type="button" class="btn btn-danger" data-toggle="modal" data-dismiss="modal">Close</button>
-                  <button type="button" class="btn btn-primary confirmDelete" data-dismiss="modal">Yes</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="modal fade" id="deleteSuccessModal" tabindex="-1" role="dialog"
-            aria-labelledby="exampleModalCenterTitle" data-backdrop="false" style="background-color: rgba(0, 0, 0, 0.3);" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered setModal modal-md" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  </button>
-                </div>
-                <div id="deleteModal" class="modal-body">
-                  <div>
-                    <h4 id='successModal' style="text-align:center;">Course Deleted Successfully !!</h4>
-                    </div>
-                </div>
-                <div class="modal-footer modalFooter">
-                  <button id='DeletebtnValue' type="button" data-toggle="modal" data-target="#deleteSuccessModal" hidden></button>
-                  <button type="button" class="btn btn-danger SuccessModal" data-toggle="modal" data-dismiss="modal">Ok</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-
-        
-          
+          <%- include('deleteModal.ejs') %>
+          <%- include('deleteSuccessModal.ejs') %>
+                 
 </body>
 <%- include ('../partials/partial2') %>
   <script src="../js/script.js"></script>
@@ -609,6 +567,10 @@ let modalBody = `<div class="form-row">
       let courseIds = document.querySelectorAll('#subjectRow');
       let buttonvalue = document.querySelector('#DeletebtnValue');
       let subjectId =  buttonvalue.getAttribute('data-deleteid');
+      let modalBody = document.getElementById('deleteModal');
+      modalBody.innerHTML = ` <div>
+                    <h4 id='successModal' style="text-align:center;">Course Deleted Successfully !!</h4>
+                    </div>`;
 
           Array.from(courseIds).forEach(course => {
           let subId = course.getAttribute('data-subId');

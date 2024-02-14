@@ -43,7 +43,12 @@
 <body>
     <%- include('sidebar.ejs') %>
         <%- include('header.ejs') %>
+
             <div id="mains">
+                <%- include('messageModal.ejs') %>
+                <%- include('deleteModal.ejs') %>
+                <%- include('deleteSuccessModal.ejs') %>
+
                 <div id='basketForm'>
                     <div class="form-row">
                         <div class="form-group col-md-12">
@@ -72,10 +77,10 @@
                     <button type="submit" id="submitbtn" class="btn btn-danger mt-4 btnSubmit">Add Basket</button>
                 </div></br>
                 <div id="basketData">
-                    <h4>
+                    <h4 id="totalRecord">
                         <%= basket.length %> Record Found
                     </h4>
-                    <table id="basketData" class="table-responsive-lg">
+                    <table class="table table-bordered table-responsive-lg basketData">
                         <tr>
                             <th>Sr.No</th>
                             <th>Basket Name</th>
@@ -99,17 +104,21 @@
                                         <%= data.campus_name %>
                                     </td>
                                     <td>
-                                        <i class="fa-solid fa-trash-arrow-up" data-toggle='tooltip' title='Delete'
+                                        <i class="fa-solid fa-trash-arrow-up" data-toggle='tooltip' data-target="#deletModal" title='Delete Basket'
                                             width="2%"></i>&ensp;
-                                        <i class="fa-solid fa-pencil" data-toggle='tooltip' title='Edit'
+                                        <i class="fa-solid fa-pencil" data-toggle='tooltip' data-target="" title='Edit Basket'
                                             width="2%"></i>&ensp;
-                                        <i class="fa-solid fa-eye" data-toggle='tooltip' title='Edit' width="2%"></i>
+                                        <i class="fa-solid fa-eye" data-toggle='tooltip' title='View Basket' width="2%"></i>
                                     </td>
                                 </tr>
                                 <% }) %>
                     </table>
                 </div>
+
+                
             </div>
+            
+        
             </div>
 
 </body>
@@ -137,25 +146,48 @@
 
                 let obj = { basketName, basketAbbr, campus, eventId };
                 dynamicFetchApi('/elective/createBasket', 'POST', obj)
-                    .then(response => {
+                    .then(async response => {
                         console.log('response:::: ', response.message);
                         if(response.status === 'error'){
                          window.location.href=`${response.redirectTo}`;
                         }else{
-                         
-                        let basketTable =document.getElementById('basketData');
-                        let basketRow = `<tr>
-                            <td>${basketName}</td>
-                            <td>${basketAbbr}</td>
-                            <td>${campus}</td>
-                            <td>
+
+                        let modalBody = document.querySelector('#msgModal');
+                        modalBody.innerHTML = `<div><h4 style="text-align:center;">${response.message}</h4></div>`      
+                        await document.querySelector('[data-target="#messageModal"]').click();   
+
+                         let basketname = `<td>${basketName}</td>`;
+                         let abbr = `<td>${basketAbbr}</td>`;
+                         let campusNm = `<td>${campus}</td>`;
+                         let actions=`<td>
                             <i class="fa-solid fa-trash-arrow-up" data-toggle='tooltip' title='Delete'
                             width="2%"></i>&ensp;
                             <i class="fa-solid fa-pencil" data-toggle='tooltip' title='Edit'
                             width="2%"></i>&ensp;
-                            <i class="fa-solid fa-eye" data-toggle='tooltip' title='Edit' width="2%"></i>    
-                            </td>
-                            </tr>`;                  
+                            <i class="fa-solid fa-eye" data-toggle='tooltip' title='Edit' width="2%"></i>
+                            </td>`    
+                           
+                        let basketSize = '<%= basket.length + 1 %>';
+                        let record = document.getElementById('totalRecord');
+                        record.innerText = basketSize + ' Record Found';
+        
+                        let insert = document.querySelector('.basketData');
+                        let row = insert.insertRow(-1);
+                        let lengthUpd = row.insertCell(0);  
+                        let cell =row.insertCell(1);
+                        let cell1 =row.insertCell(2);
+                        let cell2 =row.insertCell(3);
+                        let cell3 =row.insertCell(4);
+
+                        lengthUpd.innerHTML = basketSize;
+                        cell.innerHTML = basketname;
+                        cell1.innerHTML = abbr;
+                        cell2.innerHTML = campusNm;
+                        cell3.innerHTML = actions;
+                        
+                
+
+                        
                         }
 
                     })
@@ -205,7 +237,6 @@
             return true;
 
         }
-
 
     </script>
 
