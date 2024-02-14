@@ -46,80 +46,80 @@
 
             <div id="mains">
                 <%- include('messageModal.ejs') %>
-                <%- include('deleteModal.ejs') %>
-                <%- include('deleteSuccessModal.ejs') %>
 
-                <div id='basketForm'>
-                    <div class="form-row">
-                        <div class="form-group col-md-12">
-                            <label for="inputBasketName">Basket Name</label>&ensp;&ensp;<span id="BasketError"></span>
-                            <input type="text" class="form-control" id="inputBasketName" placeholder="Basket Name">
+
+                    <div id='basketForm'>
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <label for="inputBasketName">Basket Name</label>&ensp;&ensp;<span
+                                    id="BasketError"></span>
+                                <input type="text" class="form-control" id="inputBasketName" placeholder="Basket Name">
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-12">
-                            <label for="inputBasketName">Basket Abbr</label>&ensp;&ensp;<span
-                                id="BasketAbbrError"></span>
-                            <input type="text" class="form-control" id="inputBasketAbbr" placeholder="Basket Abbr">
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <label for="inputBasketName">Basket Abbr</label>&ensp;&ensp;<span
+                                    id="BasketAbbrError"></span>
+                                <input type="text" class="form-control" id="inputBasketAbbr" placeholder="Basket Abbr">
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-row">
-                        <label for="inputCampus">Campus</label>&ensp;&ensp;<span id="campusError"></span>
-                        <select id="inputCampus" class="form-control">
-                            <option selected>Select Campus</option>
-                            <% campus.forEach(data=> { %>
-                                <option value='<%= data.campus_name %>'>
-                                    <%= data.campus_name %>
-                                </option>
-                                <% }); %>
-                        </select>
-                    </div>
-                    <button type="submit" id="submitbtn" class="btn btn-danger mt-4 btnSubmit">Add Basket</button>
-                </div></br>
-                <div id="basketData">
-                    <h4 id="totalRecord">
-                        <%= basket.length %> Record Found
-                    </h4>
-                    <table class="table table-bordered table-responsive-lg basketData">
-                        <tr>
-                            <th>Sr.No</th>
-                            <th>Basket Name</th>
-                            <th>Basket Abbr</th>
-                            <th>Campus</th>
-                            <th>Actions</th>
-                        </tr>
-                        <% index=1; %>
-                            <% basket.forEach(data=> { %>
-                                <tr>
-                                    <td>
-                                        <%= index++ %>
-                                    </td>
-                                    <td>
-                                        <%= data.basket_name %>
-                                    </td>
-                                    <td>
-                                        <%= data.basket_abbr %>
-                                    </td>
-                                    <td>
+                        <div class="form-row">
+                            <label for="inputCampus">Campus</label>&ensp;&ensp;<span id="campusError"></span>
+                            <select id="inputCampus" class="form-control">
+                                <option selected>Select Campus</option>
+                                <% campus.forEach(data=> { %>
+                                    <option value='<%= data.campus_name %>'>
                                         <%= data.campus_name %>
-                                    </td>
-                                    <td>
-                                        <i class="fa-solid fa-trash-arrow-up" data-toggle='tooltip' data-target="#deletModal" title='Delete Basket'
-                                            width="2%"></i>&ensp;
-                                        <i class="fa-solid fa-pencil" data-toggle='tooltip' data-target="" title='Edit Basket'
-                                            width="2%"></i>&ensp;
-                                        <i class="fa-solid fa-eye" data-toggle='tooltip' title='View Basket' width="2%"></i>
-                                    </td>
-                                </tr>
-                                <% }) %>
-                    </table>
-                </div>
+                                    </option>
+                                    <% }); %>
+                            </select>
+                        </div>
+                        <button type="submit" id="submitbtn" class="btn btn-danger mt-4 btnSubmit">Add Basket</button>
+                    </div></br>
+                    <div id="basketData">
+                        <h4 id="totalRecord">
+                            <%= basket.length %> Record Found
+                        </h4>
+                        <table class="table table-bordered table-responsive-lg basketData">
+                            <tr>
+                                <th>Sr.No</th>
+                                <th>Basket Name</th>
+                                <th>Basket Abbr</th>
+                                <th>Campus</th>
+                                <th>Actions</th>
+                            </tr>
+                            <% index=1; %>
+                                <% basket.forEach(data=> { %>
+                                    <tr id="basketRow" data-basketId="<%= data.id %>">
+                                        <td>
+                                            <%= index ++ %>
+                                        </td>
+                                        <td id="inputBasketName">
+                                            <%= data.basket_name %>
+                                        </td>
+                                        <td id="inputBasketAbbr">
+                                            <%= data.basket_abbr %>
+                                        </td>
+                                        <td id="inputCampus">
+                                            <%= data.campus_name %>
+                                        </td>
+                                        <td>
+                                            <i class="fa-solid fa-trash-arrow-up deleteIcon" data-toggle='modal'
+                                                data-toggle='tooltip' data-target="#deletModal" title='Delete Basket'
+                                                width="2%" style="cursor:pointer;"></i>&ensp;
+                                            <i class="fa-solid fa-pencil editIcon" id="editIcon" data-toggle='modal'
+                                                data-toggle='tooltip' data-target="#exampleModalCenter"
+                                                title='Edit Basket' width="2%"></i>&ensp;
+                                        </td>
+                                    </tr>
+                                    <% }) %>
+                        </table>
+                    </div>
+                    <%- include('editModal.ejs') %>
+                        <%- include('deleteModal.ejs') %>
+                            <%- include('deleteSuccessModal.ejs') %>
+            </div>
 
-                
-            </div>
-            
-        
-            </div>
 
 </body>
 
@@ -128,71 +128,167 @@
 
     <script>
 
-        document.getElementById('submitbtn').addEventListener('click', () => {
+        document.addEventListener('click', (e) => {
 
-            let basketName = document.getElementById('inputBasketName').value;
-            let basketAbbr = document.getElementById('inputBasketAbbr').value;
-            let campus = document.getElementById('inputCampus').value;
+            if (e.target.classList.contains('btnSubmit')) {
 
-            let basketValidation = basketValidator(basketName);
-            let basketAbbrValidation = basketAbbrValidator(basketAbbr);
-            let campusValidation = campusValidator(campus);
+                let basketName = document.getElementById('inputBasketName').value;
+                let basketAbbr = document.getElementById('inputBasketAbbr').value;
+                let campus = document.getElementById('inputCampus').value;
 
-            if (basketValidation && basketAbbrValidation && campusValidation) {
+                let basketValidation = basketValidator(basketName);
+                let basketAbbrValidation = basketAbbrValidator(basketAbbr);
+                let campusValidation = campusValidator(campus);
 
-                let urlValue = window.location.search;
-                let fetchValue = new URLSearchParams(urlValue);
-                let eventId = fetchValue.get('id');
+                if (basketValidation && basketAbbrValidation && campusValidation) {
 
-                let obj = { basketName, basketAbbr, campus, eventId };
-                dynamicFetchApi('/elective/createBasket', 'POST', obj)
-                    .then(async response => {
-                        console.log('response:::: ', response.message);
-                        if(response.status === 'error'){
-                         window.location.href=`${response.redirectTo}`;
-                        }else{
+                    let urlValue = window.location.search;
+                    let fetchValue = new URLSearchParams(urlValue);
+                    let eventId = fetchValue.get('id');
 
-                        let modalBody = document.querySelector('#msgModal');
-                        modalBody.innerHTML = `<div><h4 style="text-align:center;">${response.message}</h4></div>`      
-                        await document.querySelector('[data-target="#messageModal"]').click();   
+                    let obj = { basketName, basketAbbr, campus, eventId };
+                    dynamicFetchApi('/elective/createBasket', 'POST', obj)
+                        .then(async response => {
+                            console.log('response:::: ', response.message);
+                            if (response.status === 'error') {
+                                window.location.href = `${response.redirectTo}`;
+                            } else {
 
-                         let basketname = `<td>${basketName}</td>`;
-                         let abbr = `<td>${basketAbbr}</td>`;
-                         let campusNm = `<td>${campus}</td>`;
-                         let actions=`<td>
+                                let modalBody = document.querySelector('#msgModal');
+                                modalBody.innerHTML = `<div><h4 style="text-align:center;">${response.message}</h4></div>`
+                                await document.querySelector('[data-target="#messageModal"]').click();
+
+                                let basketname = `<td>${basketName}</td>`;
+                                let abbr = `<td>${basketAbbr}</td>`;
+                                let campusNm = `<td>${campus}</td>`;
+                                let actions = `<td>
                             <i class="fa-solid fa-trash-arrow-up" data-toggle='tooltip' title='Delete'
                             width="2%"></i>&ensp;
                             <i class="fa-solid fa-pencil" data-toggle='tooltip' title='Edit'
                             width="2%"></i>&ensp;
                             <i class="fa-solid fa-eye" data-toggle='tooltip' title='Edit' width="2%"></i>
-                            </td>`    
-                           
-                        let basketSize = '<%= basket.length + 1 %>';
-                        let record = document.getElementById('totalRecord');
-                        record.innerText = basketSize + ' Record Found';
-        
-                        let insert = document.querySelector('.basketData');
-                        let row = insert.insertRow(-1);
-                        let lengthUpd = row.insertCell(0);  
-                        let cell =row.insertCell(1);
-                        let cell1 =row.insertCell(2);
-                        let cell2 =row.insertCell(3);
-                        let cell3 =row.insertCell(4);
+                            </td>`
 
-                        lengthUpd.innerHTML = basketSize;
-                        cell.innerHTML = basketname;
-                        cell1.innerHTML = abbr;
-                        cell2.innerHTML = campusNm;
-                        cell3.innerHTML = actions;
-                        
-                
+                                let basketSize = '<%= (basket.length + 1) %>';
+                                let record = document.getElementById('totalRecord');
+                                record.innerText = basketSize + ' Record Found';
 
-                        
+                                let insert = document.querySelector('.basketData');
+                                let row = insert.insertRow(-1);
+                                let lengthUpd = row.insertCell(0);
+                                let cell = row.insertCell(1);
+                                let cell1 = row.insertCell(2);
+                                let cell2 = row.insertCell(3);
+                                let cell3 = row.insertCell(4);
+
+
+                                lengthUpd.innerHTML = basketSize;
+                                cell.innerHTML = basketname;
+                                cell1.innerHTML = abbr;
+                                cell2.innerHTML = campusNm;
+                                cell3.innerHTML = actions;
+
+                            }
+
+                        })
+                }
+            }
+
+            if (e.target.classList.contains('deleteIcon')) {
+                let bid = e.target.closest('tr').getAttribute('data-basketId');
+
+                let confirmButton = document.querySelector('.confirmDelete');
+                confirmButton.setAttribute('data-bid', bid);
+            }
+
+            if (e.target.classList.contains('confirmDelete')) {
+                let confirmButton = document.querySelector('.confirmDelete');
+                let basketId = confirmButton.getAttribute('data-bid');
+
+                let obj = { basketId };
+                dynamicFetchApi('/elective/deleteBasket', 'POST', obj)
+                    .then(response => {
+                        if (response.status === 'error') {
+                            window.location.href = `${response.redirectTo}`;
+                        } else {
+
+                            let deleteModal = document.querySelector('#successModal');
+                            deleteModal.innerText = response.message;
+
+                            let basketRows = document.querySelectorAll('#basketRow');
+
+                            Array.from(basketRows).forEach(row => {
+                                let bsId = row.getAttribute('data-basketId');
+                                if (basketId == bsId) {
+                                    row.remove();
+                                }
+
+                            });
+
+                            let basketLength = document.querySelector('#totalRecord');
+                            let basketSize = basketRows.length - 1;
+                            basketLength.innerText = `${basketSize} Record Found`;
+
+                            document.querySelector('[data-target="#deleteSuccessModal"]').click();
+
                         }
-
                     })
             }
 
+            if (e.target.classList.contains('editIcon')) {
+                let tr = e.target.closest('tr');
+                let basketData = e.target.closest('tr').getAttribute('data-basketId');
+                let bsName = tr.querySelector('#inputBasketName').textContent;
+                let bsAbbr = tr.querySelector('#inputBasketAbbr').textContent;
+                let bsCampus =tr.querySelector('#inputCampus').textContent;
+
+                
+
+                let modal = document.getElementById('getModal');
+                let modalBody = `<div id='basketEditForm'>
+                    <div class="form-row">
+                        <div class="form-group col-md-12">
+                            <label for="nameInput">Basket Name</label>&ensp;&ensp;
+                            <input value=${basketData} id ="bskId" hidden />
+                            <input type="text" class="form-control" id="inputBasket" value=${bsName} >
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-12">
+                            <label for="abbrInput">Basket Abbr</label>&ensp;&ensp;
+                            <input type="text" class="form-control" id="inputBasketAbbr" value=${bsAbbr} >
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <label for="campusInput">Campus</label>&ensp;&ensp;
+                        <select id="campusInput" class="form-control">
+                            <option selected>Select Campus</option>
+                            <% campus.forEach(data=> { %>
+                                <option value='<%= data.campus_name %>'>
+                                    <%= data.campus_name %>
+                                </option>
+                                <% }); %>
+                        </select>
+                    </div>`;
+
+                modal.innerHTML = modalBody;
+               
+            }
+            if(e.target.classList.contains('editModal')){
+             
+             let basket_id = $(e.target.closest('div')).prev().find('#bskId').val();
+             let basketName = $(e.target.closest('div')).prev().find('#inputBasket').val();
+             let basket_abbr = $(e.target.closest('div')).prev().find('#inputBasketAbbr').val();
+             let campus = $(e.target.closest('div')).prev().find('#campusInput').val();
+
+             let obj = {basket_id,basketName,basket_abbr,campus};
+
+             dynamicFetchApi('/elective/editBasket','POST',obj)
+             .then(response => {
+              console.log(response.message);
+             })
+             
+            }
 
         })
 
@@ -237,6 +333,8 @@
             return true;
 
         }
+
+
 
     </script>
 

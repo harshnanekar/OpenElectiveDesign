@@ -104,27 +104,6 @@
 
         </div>
 
-          <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
-            aria-labelledby="exampleModalCenterTitle" data-backdrop="false" style="background-color: rgba(0, 0, 0, 0.3);" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered setModal modal-lg" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLongTitle">Edit Course</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div id="getModal" class="modal-body">
-                  
-                </div>
-                <div class="modal-footer modalFooter">
-                  <button type="button" class="btn btn-danger closeModal" data-dismiss="modal">Close</button>
-                  <button type="button" class="btn btn-primary editModal" data-dismiss="modal" >Submit</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
           <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
             aria-labelledby="exampleModalCenterTitle" data-backdrop="false" style="background-color: rgba(0, 0, 0, 0.3);" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered setModal modal-md" role="document">
@@ -143,6 +122,7 @@
             </div>
           </div>
 
+          <%- include('editModal.ejs') %>
           <%- include('deleteModal.ejs') %>
           <%- include('deleteSuccessModal.ejs') %>
                  
@@ -469,7 +449,7 @@ let modalBody = `<div class="form-row">
       let mbody = document.getElementById('getModal');
       mbody.innerHTML = modalBody;
       
-      let campusName = $(e.target).closest('tr').find('.campus').data('campusname');
+      let campusName = $(e.target).closest('tr').find('.campus').data('campusName');
        $('#inputCampus').val(campusName).trigger('change');
 
         let obj = {subId};
@@ -568,6 +548,8 @@ let modalBody = `<div class="form-row">
       let buttonvalue = document.querySelector('#DeletebtnValue');
       let subjectId =  buttonvalue.getAttribute('data-deleteid');
       let modalBody = document.getElementById('deleteModal');
+      let totalRows = document.querySelector('.totalRows');
+
       modalBody.innerHTML = ` <div>
                     <h4 id='successModal' style="text-align:center;">Course Deleted Successfully !!</h4>
                     </div>`;
@@ -580,6 +562,11 @@ let modalBody = `<div class="form-row">
           console.log('query escecuted')
           }
         })
+
+     
+        let tlength = courseIds.length - 1 ;
+        totalRows.innerText = `${tlength} Record Found`;
+
       }
     })
 
@@ -618,8 +605,8 @@ let modalBody = `<div class="form-row">
            <td class="capacity" data-capacity=${data.max_capacity_per_batch} hidden>${data.max_capacity_per_batch}</td>
            <td class="dept" data-dept=${data.dept_name} hidden>${data.dept_name}</td>
            <td colspan="4px">
-           <i style="cursor:pointer;" data-id=${data.sub_id} data-toggle="modal" data-toggle="modal" data-target="#deletModal" class="fa-solid fa-trash deleteCourse"></i>&ensp;
-           <i style="cursor:pointer;" data-id=${data.sub_id} data-toggle="modal" data-toggle="modal" data-target="#exampleModalCenter" class="fa-solid fa-pen-to-square editCourse"></i></i&ensp;
+           <i style="cursor:pointer;" data-id=${data.sub_id} data-toggle="modal" data-toggle='tooltip' data-target="#deletModal" class="fa-solid fa-trash deleteCourse"></i>&ensp;
+           <i style="cursor:pointer;" data-id=${data.sub_id} data-toggle="modal" data-toggle='tooltip' data-target="#exampleModalCenter" class="fa-solid fa-pen-to-square editCourse"></i></i&ensp;
            </td>
            </tr>`
         ).join('')}

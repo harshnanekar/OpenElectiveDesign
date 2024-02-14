@@ -93,4 +93,82 @@ module.exports = {
       return res.json({ status: "error", redirectTo: "/elective/error" });
     }
   },
+
+  deleteBasket: async (req,res) => {
+  
+   try{
+
+   let username = req.session.modules;
+   let role =req.session.userRole;
+   
+   if(username != undefined){
+
+    let {basketId} = req.body;
+
+   if(role === 'Role_Admin'){
+    let deleteBasketEvent = await basket.deleteBasketEventData(basketId);
+    let deleteBasket = await basket.deleteBasketData(basketId);
+
+    if(deleteBasketEvent.rowCount > 0  && deleteBasket.rowCount > 0){
+    return res.json({status:'success',message:'Basket Deleted Successfully !!'})
+    }else{
+    return res.json({message:'Failed To Delete Basket !!'})   
+    }
+
+   }else{
+    res.clearCookie("jwtauth");
+    return res.json({ status: "error", redirectTo: "/elective/loginPage" });
+   } 
+    
+   }else{
+    res.clearCookie("jwtauth");
+    return res.json({ status: "error", redirectTo: "/elective/loginPage" });
+   }
+
+   }catch(error) {
+    return res.json({ status: "error", redirectTo: "/elective/error" });
+   }
+  },
+
+  editBasket: async (req,res) => {
+
+  try{
+
+  let username = req.session.modules;
+  let role = req.session.userRole;
+  
+  if(username != undefined){
+
+  let {basket_id,basketName,basket_abbr,campus} = req.body;  
+  let campusValidation = validation.campusValidation(campus);
+
+  if(basketName != undefined && basket_abbr != undefined && campusValidation){
+
+  if(role === 'Role_Admin'){
+
+  let basketData = await basket.insertBasket({basket_id,basketName,basket_abbr,campus,username});
+  if(basketData.rowCount > 0){
+  return res.json({status:'success',message:'Basket Edited Successfully !!'});
+  }else{
+  return res.json({message:'Failed To Edit Basket'});
+  } 
+
+  }else{
+    res.clearCookie("jwtauth");
+    return res.json({ status: "error", redirectTo: "/elective/loginPage" });  
+  }  
+
+  }else{
+    return res.json({message:'Invalid Inputs !!'});
+  }
+
+  }else{
+    res.clearCookie("jwtauth");
+    return res.json({ status: "error", redirectTo: "/elective/loginPage" });  
+  }
+
+  }catch(error){
+
+  }
+  }
 };

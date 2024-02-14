@@ -40,7 +40,8 @@ apiRouter.post('/getAllCoursePrograms',middleware.verifyRequest,courseController
 apiRouter.post('/editCourse',middleware.verifyRequest,courseController.editCourse);
 apiRouter.post('/deleteCourse',middleware.verifyRequest,courseController.deleteCourse);
 apiRouter.post('/createBasket',middleware.verifyRequest,basketController.createBasket);
-
+apiRouter.post('/deleteBasket',middleware.verifyRequest,basketController.deleteBasket);
+apiRouter.post('/editBasket',middleware.verifyRequest,basketController.editBasket);
 
 
 module.exports = apiRouter;
