@@ -23,7 +23,9 @@ apiRouter.get('/viewPrograms',middleware.verifyRequest,programController.viewPro
 apiRouter.get('/course',middleware.verifyRequest,courseController.addCourses);
 apiRouter.get('/getAllCourses',middleware.verifyRequest,courseController.getAllCourses);
 apiRouter.get('/programList',middleware.verifyRequest,programController.getAllProgramsList);
-apiRouter.get('/addBasketPage',middleware.verifyRequest,basketController.addBasketPage);    
+apiRouter.get('/addBasketPage',middleware.verifyRequest,basketController.addBasketPage);
+apiRouter.get('/basketCourseConfig',middleware.verifyRequest,basketController.basketCourseConfig);
+
 
 //Post Requests
 apiRouter.post('/login',controller.login);

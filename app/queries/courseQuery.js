@@ -101,7 +101,13 @@ static async getProgramId(program,username){
   return pgPool.query(query);  
 }
 
-
+static getAllCourses(username){
+ let query = {
+  text:`select sub_id,subject_name from subject_master where createdby=$1 and active = true`,     
+  values:[username]
+ }      
+ return pgPool.query(query);
+}
 
 
 

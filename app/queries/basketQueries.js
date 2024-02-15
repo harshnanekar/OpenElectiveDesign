@@ -38,4 +38,21 @@ static deleteBasketData(basketId){
    return pgPool.query(query);
 }
 
+static getAllBaskets(username){
+  let query = {
+    text : `select id,basket_name from basket where createdby = $1 and active=true`,
+    values:[username]
+  }
+  return pgPool.query(query);  
+}
+
+static displayAllBaskets(){
+  let query ={
+    text:`select b.basket_name,c.campus_name,s.current_session,be.basket_elective_no,be.no_of_comp_sub from basket_event be inner join basket b on be.basket_lid = b.id 
+    inner join event_master e on be.event_lid=e.id inner join campus c on e.campus_lid = c.campus_id inner join session_master s on e.session_lid = s.sem_id where 
+    be.active = true and b.active=true and e.active=true and c.active=true and s.active=true`,
+  }  
+  return pgPool.query(query);
+}
+
 } 

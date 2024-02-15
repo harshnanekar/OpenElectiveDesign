@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basket Course</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <%- include ('../partials/partial') %>
+    <style>
+     body{
+        background-color: whitesmoke;
+     }   
+     #basketConfig{
+        background-color: white;
+        margin-top:20px;
+        padding:20px;
+     }
+    </style>
+</head>
+<body>
+    <%- include('sidebar.ejs') %>
+    <%- include('header.ejs')  %> 
+    <div id="mains">
+        <%- include('messageModal.ejs') %>
+        <div id='basketConfig' class="container">
+            <div class="form-group ">
+
+                <label for="inputBasket">Select Basket's</label>&ensp;&ensp;<span id="basketError"></span>
+                <select id="inputBasket" class="form-control basketInput">
+                  <option selected>Select Basket</option>
+                  <% baskets.forEach(data => { %>
+                  <option data-basketId="<%= data.id %>" class="basketOption" value='<%= data.basket_name %>'><%= data.basket_name %></option>
+                  <% }); %>
+                </select>
+              </div>
+              <div class="form-group ">
+                <label for="inputCourse">Select Course's</label>&ensp;&ensp;<span id="courseError"></span>
+                <select id="inputCourse" class="form-control" multiple>
+                 
+                </select>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-12">
+                    <label for="compulsorySub">Select Compulsory Subjects</label>&ensp;&ensp;<span
+                        id="compError"></span></br>
+                    <input  type="text" class="form-control" id="compulsorySub" placeholder="Compulsory Subjects">
+                </div>
+            </div>
+            <button type="submit" id="submitbtn" class="btn btn-danger mt-4 btnSubmit">Add</button>
+        </div>
+    </br>
+
+    <div>   
+    <h5><%= dispBasket.length %> Record Found</h5> 
+    
+    <table class="table table-bordered table-responsive-lg basketData" style="text-align: center;">
+        <tr>
+            <th>Sr.No</th>
+            <th>Basket Name</th>
+            <th>Semester</th>
+            <th>Campus</th>
+            <th>Compulsory Subjects</th>
+            <th>Actions</th>
+        </tr>
+        <% index = 1; %>
+        <% dispBasket.forEach(data => { %>
+        <tr>
+            <td><%= index %></td>
+            <td><%= data.basket_name %></td>
+            <td><%= data.current_session %></td>
+            <td><%= data.campus_name %></td>
+            <td><%= data.no_of_comp_subj %></td>
+            <td>
+            <i class="fa-solid fa-trash-arrow-up deleteIcon" data-toggle='modal'
+            data-toggle='tooltip' data-target="#deletModal" title='Delete Basket'
+             width="2%" style="cursor:pointer;"></i>  
+            </td>
+        </tr>
+        <% index++ %>
+        <% }); %> 
+    </table> 
+    
+    <%- include('deleteModal.ejs') %>
+    <%- include('deleteSuccessModal.ejs') %>
+    </div>
+
+
+
+
+    </div>
+</body>
+<%- include ('../partials/partial2') %>
+<script src= "../js/script.js" ></script>
+<script>
+
+document.addEventListener('change',function(e){
+console.log('clicked')
+});
+
+
+
+</script>
+</html>

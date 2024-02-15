@@ -63,17 +63,6 @@
                                 <input type="text" class="form-control" id="inputBasketAbbr" placeholder="Basket Abbr">
                             </div>
                         </div>
-                        <div class="form-row">
-                            <label for="inputCampus">Campus</label>&ensp;&ensp;<span id="campusError"></span>
-                            <select id="inputCampus" class="form-control">
-                                <option selected>Select Campus</option>
-                                <% campus.forEach(data=> { %>
-                                    <option value='<%= data.campus_name %>'>
-                                        <%= data.campus_name %>
-                                    </option>
-                                    <% }); %>
-                            </select>
-                        </div>
                         <button type="submit" id="submitbtn" class="btn btn-danger mt-4 btnSubmit">Add Basket</button>
                     </div></br>
                     <div id="basketData">
@@ -85,7 +74,6 @@
                                 <th>Sr.No</th>
                                 <th>Basket Name</th>
                                 <th>Basket Abbr</th>
-                                <th>Campus</th>
                                 <th>Actions</th>
                             </tr>
                             <% index=1; %>
@@ -99,9 +87,6 @@
                                         </td>
                                         <td id="inputBasketAbbr">
                                             <%= data.basket_abbr %>
-                                        </td>
-                                        <td id="inputCampus">
-                                            <%= data.campus_name %>
                                         </td>
                                         <td>
                                             <i class="fa-solid fa-trash-arrow-up deleteIcon" data-toggle='modal'
@@ -135,19 +120,17 @@
 
                 let basketName = document.getElementById('inputBasketName').value;
                 let basketAbbr = document.getElementById('inputBasketAbbr').value;
-                let campus = document.getElementById('inputCampus').value;
 
                 let basketValidation = basketValidator(basketName);
                 let basketAbbrValidation = basketAbbrValidator(basketAbbr);
-                let campusValidation = campusValidator(campus);
-
-                if (basketValidation && basketAbbrValidation && campusValidation) {
+              
+                if (basketValidation && basketAbbrValidation) {
 
                     let urlValue = window.location.search;
                     let fetchValue = new URLSearchParams(urlValue);
                     let eventId = fetchValue.get('id');
 
-                    let obj = { basketName, basketAbbr, campus, eventId };
+                    let obj = { basketName, basketAbbr, eventId };
                     dynamicFetchApi('/elective/createBasket', 'POST', obj)
                         .then(async response => {
                             console.log('response:::: ', response.message);
@@ -162,7 +145,6 @@
                                 let bsLid = response.basketLid;
                                 let basketname = `<td>${basketName}</td>`;
                                 let abbr = `<td>${basketAbbr}</td>`;
-                                let campusNm = `<td>${campus}</td>`;
                                 let actions = `<td>
                             <i class="fa-solid fa-trash-arrow-up" data-toggle='modal' data-toggle='tooltip' data-target='#deletModal' title='Delete'
                             width="2%"></i>&ensp;
@@ -181,14 +163,13 @@
                                 let cell = row.insertCell(1);
                                 let cell1 = row.insertCell(2);
                                 let cell2 = row.insertCell(3);
-                                let cell3 = row.insertCell(4);
+                               
 
 
                                 lengthUpd.innerHTML = basketSize;
                                 cell.innerHTML = basketname;
                                 cell1.innerHTML = abbr;
-                                cell2.innerHTML = campusNm;
-                                cell3.innerHTML = actions;
+                                cell2.innerHTML = actions;
 
                                 let modal = document.getElementById('getModal');
                                 let modalBodie = `<div id='basketEditForm'>
@@ -205,23 +186,10 @@
                             <input value="${basketAbbr}" type="text" class="form-control" id="inputBasketAbbr" />
                         </div>
                     </div>
-                    <div class="form-row">
-                        <label for="campusInput">Campus</label>&ensp;&ensp;
-                        <select id="campusInput" class="form-control">
-                            <option selected>Select Campus</option>
-                            <% campus.forEach(data=> { %>
-                                <option value='<%= data.campus_name %>'/>
-                                    <%= data.campus_name %>
-                                </option>
-                                <% }); %>
-                        </select>
-                    </div>`;
+                    `;
 
                                 modal.innerHTML = modalBodie;
 
-                                let cmp = document.getElementById('campusInput');
-                                cmp.value = campus;  
-                                console.log(cmp)
                             }
 
                         })
@@ -274,12 +242,11 @@
                 let basketDataId = e.target.closest('tr').getAttribute('data-basketId');
                 let bsNameData = tr.querySelector('#inputBasketName').textContent;
                 let bsAbbrData = tr.querySelector('#inputBasketAbbr').textContent;
-                let bsCampusData = tr.querySelector('#inputCampus').textContent;
-
+              
                 let basketData = basketDataId.trim();
                 let bsName = bsNameData.trim();
                 let bsAbbr = bsAbbrData.trim();
-                let bsCampus = bsCampusData.trim();
+            
 
                 console.log(bsName)
 
@@ -298,23 +265,10 @@
                             <input value="${bsAbbr}" type="text" class="form-control" id="inputBasketAbbr" />
                         </div>
                     </div>
-                    <div class="form-row">
-                        <label for="campusInputs">Campus</label>&ensp;&ensp;
-                        <select id="campusInput" class="form-control">
-                            <option selected>Select Campus</option>
-                            <% campus.forEach(data=> { %>
-                                <option value='<%= data.campus_name %>'/>
-                                    <%= data.campus_name %>
-                                </option>
-                                <% }); %>
-                        </select>
-                    </div>`;
+                    `;
   
                 modal.innerHTML = modalBody;
 
-                let cmp = document.getElementById('campusInput');
-                cmp.value = bsCampus;  
-                console.log(cmp)
 
             }
             if (e.target.classList.contains('editModal')) {
@@ -326,9 +280,9 @@
                 let basket_id = $(e.target.closest('div')).prev().find('#bskId').val();
                 let basketName = $(e.target.closest('div')).prev().find('#inputBasket').val();
                 let basket_abbr = $(e.target.closest('div')).prev().find('#inputBasketAbbr').val();
-                let campus = $(e.target.closest('div')).prev().find('#campusInput').val();
+               
 
-                let obj = { basket_id, basketName, basket_abbr, campus, eventId };
+                let obj = { basket_id, basketName, basket_abbr,  eventId };
 
                 dynamicFetchApi('/elective/editBasket', 'POST', obj)
                     .then(response => {
@@ -344,18 +298,17 @@
                             let basketRows = document.querySelectorAll('#basketRow');
                             let basketRowName = document.querySelector('#inputBasketName');
                             let basketRowAbbr = document.querySelector('#inputBasketAbbr');
-                            let basketRowCampus = document.querySelector('#inputCampus');
+                           
 
                             Array.from(basketRows).forEach(row => {
                                 let bskId = row.getAttribute('data-basketId');
                                 let basketRowName = row.querySelector('#inputBasketName');
                                 let basketRowAbbr = row.querySelector('#inputBasketAbbr');
-                                let basketRowCampus = row.querySelector('#inputCampus');
+                             
 
                                 if (basket_id == bskId) {
                                     basketRowName.innerText = basketName;
                                     basketRowAbbr.innerText = basket_abbr;
-                                    basketRowCampus.innerText = campus;
                                 }
                             })
                         }
@@ -390,23 +343,7 @@
 
         }
 
-        function campusValidator(campus) {
-
-            let campusData = document.querySelectorAll('#inputCampus');
-            let campusError = document.getElementById('campusError');
-
-            let campusName = campusData[0][0].innerText;
-
-            if (campusName == campus) {
-                campusError.innerText = '*Invalid Input Field';
-                console.log('Invalid campus');
-                return false;
-            }
-
-            campusError.innerText = '';
-            return true;
-
-        }
+      
 
 
 

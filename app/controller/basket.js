@@ -2,6 +2,7 @@ const basket = require("../queries/basketQueries.js");
 const query = require("../queries/user.js");
 const eventQuery = require("../queries/eventQueries.js");
 const validation = require("../controller/validation.js");
+const courseQuery = require("../queries/courseQuery.js");
 
 module.exports = {
   addBasketPage: async (req, res) => {
@@ -44,15 +45,11 @@ module.exports = {
       let role = req.session.userRole;
 
       if (username != undefined) {
-        let { basketName, basketAbbr, campus, eventId } = req.body;
-        let campusValidation = validation.campusValidation(campus);
-
-        console.log(basketName, basketAbbr, campus);
+        let { basketName, basketAbbr, eventId } = req.body;
 
         if (
           basketName != undefined &&
-          basketAbbr != undefined &&
-          campusValidation
+          basketAbbr != undefined 
         ) {
           if (role === "Role_Admin") {
             let basket_abbr = basketAbbr;
@@ -61,7 +58,6 @@ module.exports = {
               basketName,
               basket_abbr,
               eventId,
-              campus,
               username,
             });
             if (addbasket.rowCount > 0) {
@@ -91,6 +87,7 @@ module.exports = {
         return res.json({ status: "error", redirectTo: "/elective/loginPage" });
       }
     } catch (error) {
+        console.log('create basket ',error)
       return res.json({ status: "error", redirectTo: "/elective/error" });
     }
   },
@@ -127,6 +124,7 @@ module.exports = {
         return res.json({ status: "error", redirectTo: "/elective/loginPage" });
       }
     } catch (error) {
+      console.log(error)  
       return res.json({ status: "error", redirectTo: "/elective/error" });
     }
   },
@@ -137,20 +135,17 @@ module.exports = {
       let role = req.session.userRole;
 
       if (username != undefined) {
-        let { basket_id, basketName, basket_abbr, campus, eventId } = req.body;
-        let campusValidation = validation.campusValidation(campus);
+        let { basket_id, basketName, basket_abbr, eventId } = req.body;
 
         if (
           basketName != undefined &&
-          basket_abbr != undefined &&
-          campusValidation
+          basket_abbr != undefined 
         ) {
           if (role === "Role_Admin") {
             let basketData = await basket.insertBasket({
               basket_id,
               basket_abbr,
               basketName,
-              campus,
               username,
               eventId,
             });
@@ -181,4 +176,28 @@ module.exports = {
       return res.json({ status: "error", redirectTo: "/elective/error" });
     }
   },
+
+  basketCourseConfig: async (req,res) => {
+
+    try{
+
+    let username = req.session.modules;
+    if(username != undefined){
+
+    let getModules = await query.getModules(username);    
+    let getAllCourse = await courseQuery.getAllCourses(username);
+    let getAllBaskets = await basket.getAllBaskets(username);
+    let displayBaskets = await basket.displayAllBaskets();
+
+    return res.render('basketCourseConfig',{module:getModules,course:getAllCourse.rows,baskets:getAllBaskets.rows,dispBasket:displayBaskets.rows});     
+
+    }else{
+    return res.redirect('/elective/loginPage');    
+    }    
+
+    }catch(error){
+     console.log(error);
+     return res.redirect("/elective/error");
+    }
+  }
 };
