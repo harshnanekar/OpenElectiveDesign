@@ -161,14 +161,11 @@ module.exports = {
   }else{
     return res.json({message:'Invalid Inputs !!'});
   }
+  
+}
 
-  }else{
-    res.clearCookie("jwtauth");
-    return res.json({ status: "error", redirectTo: "/elective/loginPage" });  
+}catch(error){
+    
+}
   }
-
-  }catch(error){
-
-  }
-  }
-};
+}
