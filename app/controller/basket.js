@@ -146,7 +146,7 @@ module.exports = {
 
   if(role === 'Role_Admin'){
 
-  let basketData = await basket.insertBasket({basket_id,basketName,basket_abbr,campus,username});
+  let basketData = await basket.insertBasket({basket_id,basketName,-,campus,username});
   if(basketData.rowCount > 0){
   return res.json({status:'success',message:'Basket Edited Successfully !!'});
   }else{
