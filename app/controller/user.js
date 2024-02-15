@@ -83,7 +83,9 @@ module.exports = {
 
 
     errorPage: async function (req,res) {
-     return res.render("500");
+     let username = req.session.modules;
+     let getModules = await query.getModules(username);
+     return res.render("500",{module :getModules});
      },
 
      dashboard: async function(req,res,next){

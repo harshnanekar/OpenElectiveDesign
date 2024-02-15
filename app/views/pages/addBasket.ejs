@@ -92,7 +92,7 @@
                                 <% basket.forEach(data=> { %>
                                     <tr id="basketRow" data-basketId="<%= data.id %>">
                                         <td>
-                                            <%= index ++ %>
+                                            <%= index %>
                                         </td>
                                         <td id="inputBasketName">
                                             <%= data.basket_name %>
@@ -112,6 +112,7 @@
                                                 title='Edit Basket' width="2%"></i>&ensp;
                                         </td>
                                     </tr>
+                                    <% index++; %>
                                     <% }) %>
                         </table>
                     </div>

@@ -43,9 +43,7 @@ const query = class EventQuery{
   }
 
   static async registerStudentExcel (studentData){
-    
-    console.log('studentData BEFORE INSERT::::::::::' , JSON.parse(JSON.stringify(studentData.studentData)));
-  
+      
   let queries ={
     text: `select register_student($1)`,
     values: [JSON.stringify(studentData.studentData)]
@@ -63,6 +61,15 @@ const query = class EventQuery{
   static async getAllSessions(){
     let querie = await pgPool.query(`select current_session from session_master where active=true`);
     return querie.rows;
+  }
+
+  static deleteEvent(eventId){
+   let query ={
+    text :`update event_master set active = false where id = $1`,
+    values : [eventId]
+   } 
+   return pgPool.query(query);
+   
   }
 
 

@@ -41,7 +41,7 @@ static allocateCoursePrograms(subjectId,programId,username){
 
 static deleteCourse(courseId){
 let query={
- text:`delete from subject_master where sub_id = $1`,
+ text:`update subject_master set active=false where sub_id = $1`,
  values:[courseId]   
 }
 return pgPool.query(query);    
@@ -49,7 +49,7 @@ return pgPool.query(query);
 
 static deleteCourseMapping(courseId){
  let query ={
-  text : `delete from subject_program_mapping where subject_lid = $1`,
+  text : `update subject_program_mapping set active=false where subject_lid = $1`,
   values:[courseId]  
  }  
  return pgPool.query(query); 
@@ -59,7 +59,7 @@ static async deleteCourseProgram(subjectId,programs,placeholders){
  console.log('delete program ' , placeholders,subjectId,JSON.stringify(programs))
 
  let query ={
- text : `delete from subject_program_mapping where subject_lid =$1 and program_lid not in (${placeholders})`,
+ text : `update subject_program_mapping set active=false where subject_lid =$1 and program_lid not in (${placeholders})`,
  values:[subjectId,...programs]  
  }  
  return pgPool.query(query);  
@@ -87,7 +87,7 @@ static updateCourse(subName,deptName,batches,capacity,campus,username,subjectId)
 static async checkCourseWithProgram(subId,program){
  let query ={
   text: `select count(*) from subject_program_mapping where subject_lid=$1 and 
-         program_lid in (select program_id from program_master where program_name=$2)`,
+         program_lid in (select program_id from program_master where program_name=$2 and active=true) and active=true `,
   values:[subId,program]            
  }
  return pgPool.query(query);       
