@@ -188,7 +188,7 @@ module.exports = {
     let getAllCourse = await courseQuery.getAllCourses(username);
     let getAllBaskets = await basket.getAllBaskets(username);
     let displayBaskets = await basket.displayAllBaskets();
-
+    
     return res.render('basketCourseConfig',{module:getModules,course:getAllCourse.rows,baskets:getAllBaskets.rows,dispBasket:displayBaskets.rows});     
 
     }else{

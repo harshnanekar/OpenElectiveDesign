@@ -29,7 +29,7 @@
                 <select id="inputBasket" class="form-control basketInput">
                   <option selected>Select Basket</option>
                   <% baskets.forEach(data => { %>
-                  <option data-basketId="<%= data.id %>" class="basketOption" value='<%= data.basket_name %>'><%= data.basket_name %></option>
+                  <option id="bid" class="basketOption" value='<%= data.id %>'><%= data.basket_name %></option>
                   <% }); %>
                 </select>
               </div>
@@ -93,9 +93,7 @@
 <script src= "../js/script.js" ></script>
 <script>
 
-document.addEventListener('change',function(e){
-console.log('clicked')
-});
+
 
 
 
