@@ -260,6 +260,10 @@
           }
         });
 
+        if(courseArray.length == 0){
+          alert('Please select the Input Field !!');
+        }else{
+
         let obj = { courseArray };
         dynamicFetchApi('/elective/commonDelete', 'POST', obj)
           .then(async response => {
@@ -302,6 +306,7 @@
               }
             }
           })
+        }
       }
 
       if (e.target.classList.contains('excelDataCancel')) {
@@ -436,7 +441,7 @@ let modalBody = `<div class="form-row">
 </div>
 <div class="form-group">
     <label for="inputCampus">Campus</label>&ensp;&ensp;<span id="campusError"></span>
-    <select id="inputCampus" class="form-control">
+    <select id="campusInput" class="form-control">
         <option selected>Select Campus</option>
         <% campus.forEach(data => { %>
           <option value="<%= data.campus_name %>" <% if (data.campus_name === campus) { %> selected <% } %>><%= data.campus_name %></option>        <% }); %>
@@ -449,8 +454,8 @@ let modalBody = `<div class="form-row">
       let mbody = document.getElementById('getModal');
       mbody.innerHTML = modalBody;
       
-      let campusName = $(e.target).closest('tr').find('.campus').data('campusName');
-       $('#inputCampus').val(campusName).trigger('change');
+      let cmp = document.querySelector('#campusInput');
+      cmp.value = campus;
 
         let obj = {subId};
         dynamicFetchApi('/elective/getAllCoursePrograms','POST',obj)

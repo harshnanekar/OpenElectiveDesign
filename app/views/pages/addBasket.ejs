@@ -113,7 +113,7 @@
                                         </td>
                                     </tr>
                                     <% index++; %>
-                                    <% }) %>
+                                        <% }) %>
                         </table>
                     </div>
                     <%- include('editModal.ejs') %>
@@ -159,17 +159,18 @@
                                 modalBody.innerHTML = `<div><h4 style="text-align:center;">${response.message}</h4></div>`
                                 await document.querySelector('[data-target="#messageModal"]').click();
 
+                                let bsLid = response.basketLid;
                                 let basketname = `<td>${basketName}</td>`;
                                 let abbr = `<td>${basketAbbr}</td>`;
                                 let campusNm = `<td>${campus}</td>`;
                                 let actions = `<td>
-                            <i class="fa-solid fa-trash-arrow-up" data-toggle='tooltip' title='Delete'
+                            <i class="fa-solid fa-trash-arrow-up" data-toggle='modal' data-toggle='tooltip' data-target='#deletModal' title='Delete'
                             width="2%"></i>&ensp;
-                            <i class="fa-solid fa-pencil" data-toggle='tooltip' title='Edit'
+                            <i class="fa-solid fa-pencil" data-toggle='modal' data-toggle='tooltip' data-target='#exampleModalCenter' title='Edit'
                             width="2%"></i>&ensp;
-                            <i class="fa-solid fa-eye" data-toggle='tooltip' title='Edit' width="2%"></i>
                             </td>`
 
+                                console.log('bs ', bsLid)
                                 let basketSize = '<%= (basket.length + 1) %>';
                                 let record = document.getElementById('totalRecord');
                                 record.innerText = basketSize + ' Record Found';
@@ -189,6 +190,38 @@
                                 cell2.innerHTML = campusNm;
                                 cell3.innerHTML = actions;
 
+                                let modal = document.getElementById('getModal');
+                                let modalBodie = `<div id='basketEditForm'>
+                    <div class="form-row">
+                        <div class="form-group col-md-12">
+                            <label for="nameInput">Basket Name</label>&ensp;&ensp;
+                            <input value="${bsLid}" id ="bskId" hidden />
+                            <input value="${basketName}" type="text" class="form-control" id="inputBasket" />
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-12">
+                            <label for="abbrInput">Basket Abbr</label>&ensp;&ensp;
+                            <input value="${basketAbbr}" type="text" class="form-control" id="inputBasketAbbr" />
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <label for="campusInput">Campus</label>&ensp;&ensp;
+                        <select id="campusInput" class="form-control">
+                            <option selected>Select Campus</option>
+                            <% campus.forEach(data=> { %>
+                                <option value='<%= data.campus_name %>'/>
+                                    <%= data.campus_name %>
+                                </option>
+                                <% }); %>
+                        </select>
+                    </div>`;
+
+                                modal.innerHTML = modalBodie;
+
+                                let cmp = document.getElementById('campusInput');
+                                cmp.value = campus;  
+                                console.log(cmp)
                             }
 
                         })
@@ -238,57 +271,97 @@
 
             if (e.target.classList.contains('editIcon')) {
                 let tr = e.target.closest('tr');
-                let basketData = e.target.closest('tr').getAttribute('data-basketId');
-                let bsName = tr.querySelector('#inputBasketName').textContent;
-                let bsAbbr = tr.querySelector('#inputBasketAbbr').textContent;
-                let bsCampus =tr.querySelector('#inputCampus').textContent;
+                let basketDataId = e.target.closest('tr').getAttribute('data-basketId');
+                let bsNameData = tr.querySelector('#inputBasketName').textContent;
+                let bsAbbrData = tr.querySelector('#inputBasketAbbr').textContent;
+                let bsCampusData = tr.querySelector('#inputCampus').textContent;
 
-                
+                let basketData = basketDataId.trim();
+                let bsName = bsNameData.trim();
+                let bsAbbr = bsAbbrData.trim();
+                let bsCampus = bsCampusData.trim();
+
+                console.log(bsName)
 
                 let modal = document.getElementById('getModal');
                 let modalBody = `<div id='basketEditForm'>
                     <div class="form-row">
                         <div class="form-group col-md-12">
                             <label for="nameInput">Basket Name</label>&ensp;&ensp;
-                            <input value=${basketData} id ="bskId" hidden />
-                            <input type="text" class="form-control" id="inputBasket" value=${bsName} >
+                            <input value="${basketData}" id ="bskId" hidden />
+                            <input value="${bsName}" type="text" class="form-control" id="inputBasket" />
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-12">
                             <label for="abbrInput">Basket Abbr</label>&ensp;&ensp;
-                            <input type="text" class="form-control" id="inputBasketAbbr" value=${bsAbbr} >
+                            <input value="${bsAbbr}" type="text" class="form-control" id="inputBasketAbbr" />
                         </div>
                     </div>
                     <div class="form-row">
-                        <label for="campusInput">Campus</label>&ensp;&ensp;
+                        <label for="campusInputs">Campus</label>&ensp;&ensp;
                         <select id="campusInput" class="form-control">
                             <option selected>Select Campus</option>
                             <% campus.forEach(data=> { %>
-                                <option value='<%= data.campus_name %>'>
+                                <option value='<%= data.campus_name %>'/>
                                     <%= data.campus_name %>
                                 </option>
                                 <% }); %>
                         </select>
                     </div>`;
-
+  
                 modal.innerHTML = modalBody;
-               
+
+                let cmp = document.getElementById('campusInput');
+                cmp.value = bsCampus;  
+                console.log(cmp)
+
             }
-            if(e.target.classList.contains('editModal')){
-             
-             let basket_id = $(e.target.closest('div')).prev().find('#bskId').val();
-             let basketName = $(e.target.closest('div')).prev().find('#inputBasket').val();
-             let basket_abbr = $(e.target.closest('div')).prev().find('#inputBasketAbbr').val();
-             let campus = $(e.target.closest('div')).prev().find('#campusInput').val();
+            if (e.target.classList.contains('editModal')) {
 
-             let obj = {basket_id,basketName,basket_abbr,campus};
+                let urlValue = window.location.search;
+                let fetchValue = new URLSearchParams(urlValue);
+                let eventId = fetchValue.get('id');
 
-             dynamicFetchApi('/elective/editBasket','POST',obj)
-             .then(response => {
-              console.log(response.message);
-             })
-             
+                let basket_id = $(e.target.closest('div')).prev().find('#bskId').val();
+                let basketName = $(e.target.closest('div')).prev().find('#inputBasket').val();
+                let basket_abbr = $(e.target.closest('div')).prev().find('#inputBasketAbbr').val();
+                let campus = $(e.target.closest('div')).prev().find('#campusInput').val();
+
+                let obj = { basket_id, basketName, basket_abbr, campus, eventId };
+
+                dynamicFetchApi('/elective/editBasket', 'POST', obj)
+                    .then(response => {
+                        if (response.status === 'error') {
+                            window.location.href = `${response.redirectTo}`;
+                        } else {
+
+                            let modalBody = document.getElementById('successModal');
+                            modalBody.innerText = 'Basket Edited Successfully !!';
+
+                            document.querySelector('[data-target="#deleteSuccessModal"]').click();
+
+                            let basketRows = document.querySelectorAll('#basketRow');
+                            let basketRowName = document.querySelector('#inputBasketName');
+                            let basketRowAbbr = document.querySelector('#inputBasketAbbr');
+                            let basketRowCampus = document.querySelector('#inputCampus');
+
+                            Array.from(basketRows).forEach(row => {
+                                let bskId = row.getAttribute('data-basketId');
+                                let basketRowName = row.querySelector('#inputBasketName');
+                                let basketRowAbbr = row.querySelector('#inputBasketAbbr');
+                                let basketRowCampus = row.querySelector('#inputCampus');
+
+                                if (basket_id == bskId) {
+                                    basketRowName.innerText = basketName;
+                                    basketRowAbbr.innerText = basket_abbr;
+                                    basketRowCampus.innerText = campus;
+                                }
+                            })
+                        }
+
+                    })
+
             }
 
         })

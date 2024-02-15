@@ -56,7 +56,7 @@ module.exports = {
           console.log("Authenticated Successfully " , req.session.userRole);
 
           req.session.modules = querydata[0].username;
-       
+                 
           const user =  querydata[0].username;
           const secretkey = process.env.JWT_SECRETKEY;
 

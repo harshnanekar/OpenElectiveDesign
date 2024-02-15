@@ -262,6 +262,8 @@ allocatePrograms:async (req,res) => {
     if(username != undefined){
      
     let {courseArray} = req.body;
+
+    
     if(role === 'Role_Admin'){
      
     courseArray.forEach(async course => {
