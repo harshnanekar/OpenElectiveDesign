@@ -15,6 +15,9 @@
         margin-top:20px;
         padding:20px;
      }
+     span{
+        color:red;
+     }
     </style>
 </head>
 <body>
@@ -29,14 +32,14 @@
                 <select id="inputBasket" class="form-control basketInput">
                   <option selected>Select Basket</option>
                   <% baskets.forEach(data => { %>
-                  <option id="bid" class="basketOption" value='<%= data.id %>'><%= data.basket_name %></option>
+                  <option  class="basketOption" value='<%= data.id %>'><%= data.basket_name %></option>
                   <% }); %>
                 </select>
               </div>
               <div class="form-group ">
                 <label for="inputCourse">Select Course's</label>&ensp;&ensp;<span id="courseError"></span>
                 <select id="inputCourse" class="form-control" multiple>
-                 
+                <option></option>
                 </select>
               </div>
               <div class="form-row">
@@ -92,6 +95,106 @@
 <%- include ('../partials/partial2') %>
 <script src= "../js/script.js" ></script>
 <script>
+
+    document.addEventListener('change', function (e) {
+        if (e.target.classList.contains('basketInput')) {
+            let basketId = e.target.value;
+            let obj = { basketId };
+
+            dynamicFetchApi('/elective/getBasketSubject', 'POST', obj)
+                .then(response => {
+                    if (response.status === 'error') {
+                        window.location.href = `${response.redirectTo}`;
+                    } else {
+
+                        let course = document.querySelector('#inputCourse');
+                        let coursesData = response.courses;
+
+                        console.log(JSON.stringify(coursesData))
+                        let option ;
+                        Array.from(coursesData).forEach(data => {
+                            option += `<option value="${data.sub_id}">${data.subject_name}</option>`
+
+                        });
+                        course.innerHTML ="";
+                        course.insertAdjacentHTML('beforeEnd', option);
+                    }
+                })
+        }
+    });
+
+            document.addEventListener('click', function (e) {
+
+                if (e.target.classList.contains('btnSubmit')) {
+                    let basketSubjects = document.getElementById('inputCourse');
+
+                    let basketId = document.getElementById('inputBasket').value;
+                    let basketCourses = Array.from(basketSubjects).filter(data => data.selected).map(data => data.value);
+                    let compulsorySub = document.getElementById('compulsorySub').value;
+
+                    let subjectValidation = checkSubjectValidation(compulsorySub, basketCourses.length);
+                    let basketError = document.getElementById('basketError');
+                    let courseError = document.getElementById('courseError');
+                    console.log(basketId, JSON.stringify(basketCourses), compulsorySub);
+
+                    if (basketId != undefined && basketCourses.length > 0 && compulsorySub) {
+
+                        basketError.innerText = '';
+                        courseError.innerText = '';
+
+                        let obj = { basketId, basketCourses, compulsorySub };
+
+                        dynamicFetchApi('/elective/insertBasketCourses', 'POST', obj)
+                            .then(response => {
+                                if (response.status === 'error') {
+                                    window.location.href = `${response.redirectTo}`;
+                                } else {
+                                   
+                                let modalBody = document.getElementById('msgModal');
+                                modalBody.innerHTML = `<div><h4 style="text-align:center;">${response.message}</h4></div>`
+                                    
+                                document.querySelector('[data-target="#messageModal"]').click();
+                                }
+                            })
+
+
+                    } else {
+                        basketError.innerText = '*Required';
+                        courseError.innerText = '*Required';
+                    }
+                }
+            });
+
+    function checkSubjectValidation(compSub, basketLength) {
+            let courseError = document.getElementById('compError');
+
+            if (compSub.length > 0) {
+
+                let numberValidation = NumberValidation(compSub);
+                if (numberValidation) {
+
+                    let sublength = Number.parseInt(compSub);
+                    console.log('basket length ', basketLength, sublength)
+
+                    if (basketLength >= sublength) {
+                        courseError.innerText = '';
+                        return true;
+                    } else {
+                        courseError.innerText = '*Compulsory Subjects must be equal to or less than selected subjects';
+                        return false;
+                    }
+
+                } else {
+                    courseError.innerText = '*Invalid Inputs';
+                    return false;
+                }
+
+            } else {
+                courseError.innerText = '*Required';
+                return false;
+            }
+
+        }
 
 
 

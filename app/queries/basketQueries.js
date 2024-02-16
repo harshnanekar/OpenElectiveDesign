@@ -55,4 +55,31 @@ static displayAllBaskets(){
   return pgPool.query(query);
 }
 
+static getBasketCourses(basketLid){
+ let query = {
+  text:`select sub_id,subject_name from subject_master where sub_id not in (select s.sub_id from basket_event be inner join basket_subject bs on be.basket_lid=bs.basket_lid inner join subject_master s 
+    on s.sub_id=bs.subject_lid where be.event_lid in(select e.id from event_master e inner join basket_event bse on e.id=bse.event_lid where bse.basket_lid =$1 and e.active=true and bse.active=true) 
+    and be.active=true and bs.active=true and s.active=true) and active=true`,
+  values:[basketLid]  
+ }   
+ return pgPool.query(query);
+}
+
+static insertBasketSubject(basketId,courses,username){
+ let query = {
+  text:`insert into basket_subject(basket_lid,subject_lid,created_date,createdby,modified_date,modifiedby,active) values
+  ($1,$2,now(),$3,now(),$4,true)`,
+  values:[basketId,courses,username,username]  
+ }
+ return pgPool.query(query);   
+}
+
+static insertCompulsorySub(basketId,compulsorySub){
+ let query={
+  text:`update basket_event set no_of_comp_sub=$1 where basket_lid=$2`,
+  values:[compulsorySub,basketId]  
+ }   
+ return pgPool.query(query);
+}
+
 } 

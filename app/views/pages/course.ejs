@@ -79,7 +79,6 @@
       span {
         color: red;
       }
-    
     </style>
 </head>
 
@@ -90,29 +89,30 @@
 
         <%- include('messageModal.ejs') %>
 
-        <div id="uploadOptions">
-          <h3>Upload Course</h3>
-          <hr />
-          <input type="radio" name="uploadCourse" id="uploadViaExcel" checked /> Upload Via Excel</br>
-          <input type="radio" name="uploadCourse" id="uploadViaManually" /> Upload Via Manually</br>
-        </div>
+          <div id="uploadOptions">
+            <h3>Upload Course</h3>
+            <hr />
+            <input type="radio" name="uploadCourse" id="uploadViaExcel" checked /> Upload Via Excel</br>
+            <input type="radio" name="uploadCourse" id="uploadViaManually" /> Upload Via Manually</br>
+          </div>
 
-        <div id="uploadFormat">
+          <div id="uploadFormat">
 
-        </div>
-        <div id="viewAllCourse">
+          </div>
+          <div id="viewAllCourse">
 
-        </div>
+          </div>
 
           <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
-            aria-labelledby="exampleModalCenterTitle" data-backdrop="false" style="background-color: rgba(0, 0, 0, 0.3);" aria-hidden="true">
+            aria-labelledby="exampleModalCenterTitle" data-backdrop="false"
+            style="background-color: rgba(0, 0, 0, 0.3);" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered setModal modal-md" role="document">
               <div class="modal-content">
                 <div class="modal-header">
                   </button>
                 </div>
                 <div id="successModal" class="modal-body">
-                  
+
                 </div>
                 <div class="modal-footer modalFooter">
                   <button type="button" data-toggle="modal" data-target="#exampleModal" hidden></button>
@@ -123,14 +123,15 @@
           </div>
 
           <%- include('editModal.ejs') %>
-          <%- include('deleteModal.ejs') %>
-          <%- include('deleteSuccessModal.ejs') %>
-                 
+            <%- include('deleteModal.ejs') %>
+              <%- include('deleteSuccessModal.ejs') %>
+
 </body>
 <%- include ('../partials/partial2') %>
   <script src="../js/script.js"></script>
 
-  <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+    integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 
 
   <script>
@@ -260,36 +261,36 @@
           }
         });
 
-        if(courseArray.length == 0){
+        if (courseArray.length == 0) {
           alert('Please select the Input Field !!');
-        }else{
+        } else {
 
-        let obj = { courseArray };
-        dynamicFetchApi('/elective/commonDelete', 'POST', obj)
-          .then(async response => {
+          let obj = { courseArray };
+          dynamicFetchApi('/elective/commonDelete', 'POST', obj)
+            .then(async response => {
 
-            if (response.status === 'error') {
-              window.location.href = `${response.redirectTo}`;
-            } else {
-              alert(response.message);
-              let subjectRows = document.querySelectorAll('#subjectRow');
+              if (response.status === 'error') {
+                window.location.href = `${response.redirectTo}`;
+              } else {
+                alert(response.message);
+                let subjectRows = document.querySelectorAll('#subjectRow');
 
-              for (let i = 0; i < subjectRows.length; i++) {
-                let value = subjectRows[i].getAttribute('data-subId');
-                for (let j = 0; j < courseArray.length; j++) {
-                  if (value == courseArray[j]) {
-                    subjectRows[i].remove();
+                for (let i = 0; i < subjectRows.length; i++) {
+                  let value = subjectRows[i].getAttribute('data-subId');
+                  for (let j = 0; j < courseArray.length; j++) {
+                    if (value == courseArray[j]) {
+                      subjectRows[i].remove();
+                    }
                   }
                 }
-              }
 
-              let totalRows = document.querySelector('.totalRows');
-              let rows = subjectRows.length - courseArray.length;
-              totalRows.innerText = `${rows} Records Found`;
+                let totalRows = document.querySelector('.totalRows');
+                let rows = subjectRows.length - courseArray.length;
+                totalRows.innerText = `${rows} Records Found`;
 
-              if (rows == 0) {
-                let tableData = document.querySelector('#viewAllCourse');
-                let data = `<h5 class="totalRows" style="float:left;padding-bottom:10px;">${rows} Records Found</h5>
+                if (rows == 0) {
+                  let tableData = document.querySelector('#viewAllCourse');
+                  let data = `<h5 class="totalRows" style="float:left;padding-bottom:10px;">${rows} Records Found</h5>
          <table class="table table-bordered table-responsive-lg ">
          <tr>
          <th>Sr No.</th>
@@ -302,10 +303,10 @@
          <td colspan="5px">---- No Data Available ---- </td>
          <tr>
           </table>`;
-                tableData.innerHTML = data;
+                  tableData.innerHTML = data;
+                }
               }
-            }
-          })
+            })
         }
       }
 
@@ -348,15 +349,15 @@
               } else {
 
                 showAllCourses();
-              
-                if(response.radioType === 'Yes'){ 
 
-                let msg = document.getElementById('msgModal');
-                let modalPage = `<div><h4 style="text-align:center;">${response.message}</h4></div>`
-                msg.innerHTML = modalPage;
-                document.querySelector('[data-target="#messageModal"]').click();
+                if (response.radioType === 'Yes') {
 
-                }else{
+                  let msg = document.getElementById('msgModal');
+                  let modalPage = `<div><h4 style="text-align:center;">${response.message}</h4></div>`
+                  msg.innerHTML = modalPage;
+                  document.querySelector('[data-target="#messageModal"]').click();
+
+                } else {
                   window.location.href = `${response.redirectTo}`;
                 }
               }
@@ -386,17 +387,17 @@
                 window.location.href = `${response.redirectTo}`;
               } else {
                 await showAllCourses();
-           
-                  let msg = document.getElementById('msgModal');
-                  let modalPage = `<div><h4 style="text-align:center;">${response.message}</h4></div>`
-                  msg.innerHTML = modalPage;
-                  document.querySelector('[data-target="#messageModal"]').click();
+
+                let msg = document.getElementById('msgModal');
+                let modalPage = `<div><h4 style="text-align:center;">${response.message}</h4></div>`
+                msg.innerHTML = modalPage;
+                document.querySelector('[data-target="#messageModal"]').click();
               }
             });
 
-         } else {
+        } else {
           let messageDisplay = `File Must Be In Excel Format Only !!`;
-          
+
           let msg = document.getElementById('msgModal');
           let modalPage = `<div><h4 style="text-align:center;">${messageDisplay}</h4></div>`
           msg.innerHTML = modalPage;
@@ -405,7 +406,7 @@
       }
 
       if (e.target.classList.contains('editCourse')) {
-    
+
         let tr = e.target.closest('tr');
         let subId = e.target.closest('tr').dataset.subid;
 
@@ -415,10 +416,10 @@
         let capacity = tr.querySelector('.capacity').textContent;
         let dept = tr.querySelector('.dept').textContent;
 
-        console.log('button called ', subId, batches,campus);
+        console.log('button called ', subId, batches, campus);
 
 
-let modalBody = `<div class="form-row">
+        let modalBody = `<div class="form-row">
     <div class="form-group col-md-6">
         <input id="inputSubId" value=${subId} hidden />
         <label for="inputSubname">Course Name</label>&ensp;&ensp;<span id="SubnameError"></span>
@@ -451,128 +452,128 @@ let modalBody = `<div class="form-row">
       <select  id="coursePrograms" multiple></select>
     </div>`;
 
-      let mbody = document.getElementById('getModal');
-      mbody.innerHTML = modalBody;
-      
-      let cmp = document.querySelector('#campusInput');
-      cmp.value = campus;
+        let mbody = document.getElementById('getModal');
+        mbody.innerHTML = modalBody;
 
-        let obj = {subId};
-        dynamicFetchApi('/elective/getAllCoursePrograms','POST',obj)
-        .then(response => {
-        if(response.status === 'error'){
-          window.location.href= `${response.redirectTo}`;
-        }else{
-          
-          let courseProgram = document.getElementById('coursePrograms');
-          let programs =response.coursePrograms;
+        let cmp = document.querySelector('#campusInput');
+        cmp.value = campus;
 
-          Array.from(programs).forEach(course => {
-          let option = `<option>${course.program_name}</option>`;
+        let obj = { subId };
+        dynamicFetchApi('/elective/getAllCoursePrograms', 'POST', obj)
+          .then(response => {
+            if (response.status === 'error') {
+              window.location.href = `${response.redirectTo}`;
+            } else {
 
-          console.log("courses programs " ,course.program_name)
-          courseProgram.insertAdjacentHTML('beforeEnd',option);
-        })
+              let courseProgram = document.getElementById('coursePrograms');
+              let programs = response.coursePrograms;
+
+              Array.from(programs).forEach(course => {
+                let option = `<option>${course.program_name}</option>`;
+
+                console.log("courses programs ", course.program_name)
+                courseProgram.insertAdjacentHTML('beforeEnd', option);
+              })
 
 
-        }
-        })
+            }
+          })
       }
 
-      if(e.target.classList.contains('editModal')){
-     
-      let modalForm = (e.target).closest('div');
-      let subName = $(e.target).closest('div').prev().find('#inputSubname').val();
-      let deptName = $(e.target).closest('div').prev().find('#deptName').val();
-      let batch = $(e.target).closest('div').prev().find('#inputbatch').val();
-      let capacity = $(e.target).closest('div').prev().find('#inputCapacity').val();
-      let campus = $(e.target).closest('div').prev().find('#inputCampus').val();
-      let programs = $(e.target).closest('div').prev().find('#coursePrograms').val();
-      let subjectId = $(e.target).closest('div').prev().find('#inputSubId').val();
+      if (e.target.classList.contains('editModal')) {
 
-      let obj ={subjectId,subName,deptName,batch,capacity,campus,programs};
-      
-      dynamicFetchApi('/elective/editCourse','POST',obj)
-      .then(response => {
-       if(response.status === 'error'){
-        window.location.href=`${response.redirectTo}`;
-       }else{
-       
-       let message = (response.status === 'success') ? response.message : response.message;
-       let modal = document.getElementById('successModal');
-       
-       let successMessage = `<div>
+        let modalForm = (e.target).closest('div');
+        let subName = $(e.target).closest('div').prev().find('#inputSubname').val();
+        let deptName = $(e.target).closest('div').prev().find('#deptName').val();
+        let batch = $(e.target).closest('div').prev().find('#inputbatch').val();
+        let capacity = $(e.target).closest('div').prev().find('#inputCapacity').val();
+        let campus = $(e.target).closest('div').prev().find('#inputCampus').val();
+        let programs = $(e.target).closest('div').prev().find('#coursePrograms').val();
+        let subjectId = $(e.target).closest('div').prev().find('#inputSubId').val();
+
+        let obj = { subjectId, subName, deptName, batch, capacity, campus, programs };
+
+        dynamicFetchApi('/elective/editCourse', 'POST', obj)
+          .then(response => {
+            if (response.status === 'error') {
+              window.location.href = `${response.redirectTo}`;
+            } else {
+
+              let message = (response.status === 'success') ? response.message : response.message;
+              let modal = document.getElementById('successModal');
+
+              let successMessage = `<div>
         <h4 style="text-align:center;">${message}</h4>
         </div>`;
-       
-       modal.innerHTML = successMessage; 
 
-       document.querySelector('[data-target="#exampleModal"]').click();
+              modal.innerHTML = successMessage;
 
-       }
-      })
+              document.querySelector('[data-target="#exampleModal"]').click();
+
+            }
+          })
       }
 
-      if(e.target.classList.contains('okModal')){
-       showAllCourses();
+      if (e.target.classList.contains('okModal')) {
+        showAllCourses();
       }
 
-      if(e.target.classList.contains('deleteCourse')){
+      if (e.target.classList.contains('deleteCourse')) {
         let subId = e.target.closest('tr').dataset.subid;
 
         let confirmButton = document.querySelector('.confirmDelete');
         confirmButton.setAttribute('data-id', subId);
       }
 
-      if(e.target.classList.contains('confirmDelete')){
+      if (e.target.classList.contains('confirmDelete')) {
         let buttonValue = document.querySelector('.confirmDelete');
         let subjectId = buttonValue.getAttribute('data-id');
 
-        let obj = {subjectId};
+        let obj = { subjectId };
 
-        dynamicFetchApi('/elective/deleteCourse','POST',obj)
-        .then(response => {
-         if(response.status === 'error'){
-          window.location.href=`${response.redirectTo}`;
-         }else{ 
+        dynamicFetchApi('/elective/deleteCourse', 'POST', obj)
+          .then(response => {
+            if (response.status === 'error') {
+              window.location.href = `${response.redirectTo}`;
+            } else {
 
-          let courseIds = document.querySelector('#subjectRow');
+              let courseIds = document.querySelector('#subjectRow');
 
-          let buttonvalue = document.querySelector('#DeletebtnValue');
-          buttonvalue.setAttribute('data-deleteid',subjectId);
+              let buttonvalue = document.querySelector('#DeletebtnValue');
+              buttonvalue.setAttribute('data-deleteid', subjectId);
 
-          let successModal =document.getElementById('successModal');
-          successModal.innerText = response.message;
+              let successModal = document.getElementById('successModal');
+              successModal.innerText = response.message;
 
-          document.querySelector('[data-target="#deleteSuccessModal"]').click(); 
+              document.querySelector('[data-target="#deleteSuccessModal"]').click();
 
-         }
-        })
+            }
+          })
       }
 
-      if(e.target.classList.contains('SuccessModal')){
+      if (e.target.classList.contains('SuccessModal')) {
 
-      let courseIds = document.querySelectorAll('#subjectRow');
-      let buttonvalue = document.querySelector('#DeletebtnValue');
-      let subjectId =  buttonvalue.getAttribute('data-deleteid');
-      let modalBody = document.getElementById('successModal');
-      let totalRows = document.querySelector('.totalRows');
+        let courseIds = document.querySelectorAll('#subjectRow');
+        let buttonvalue = document.querySelector('#DeletebtnValue');
+        let subjectId = buttonvalue.getAttribute('data-deleteid');
+        let modalBody = document.getElementById('successModal');
+        let totalRows = document.querySelector('.totalRows');
 
-      modalBody.innerHTML = ` <div>
+        modalBody.innerHTML = ` <div>
                     <h4 id='successModal' style="text-align:center;">Course Deleted Successfully !!</h4>
                     </div>`;
 
-          Array.from(courseIds).forEach(course => {
+        Array.from(courseIds).forEach(course => {
           let subId = course.getAttribute('data-subId');
-          console.log('course id ' , subId)
-          if(subjectId === subId){
-          course.remove();
-          console.log('query escecuted')
+          console.log('course id ', subId)
+          if (subjectId === subId) {
+            course.remove();
+            console.log('query escecuted')
           }
         })
 
-     
-        let tlength = courseIds.length - 1 ;
+
+        let tlength = courseIds.length - 1;
         totalRows.innerText = `${tlength} Record Found`;
 
       }
