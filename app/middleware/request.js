@@ -1,52 +1,53 @@
-const jwt = require('jsonwebtoken');
-const controller = require('../controller/user.js');
+const jwt = require("jsonwebtoken");
+const controller = require("../controller/user.js");
 
 module.exports = {
-
- verifyLogin : (cookietoken,res) =>{
-    
+  verifyLogin: (cookietoken, res) => {
     let secretkey = process.env.JWT_SECRETKEY;
-      
-    console.log(cookietoken," cookietoken");
-    if(cookietoken == undefined){
-       res.clearCookie('jwtauth');
-       return "invalid";
-    }else{
-        try {
-            let verified = jwt.verify(cookietoken, secretkey);
-            console.log("jwt verifier--- " , verified);
-            return verified;
 
-        }catch (error) {
-            res.clearCookie('jwtauth');
-            return res.redirect('/elective/loginPage');
-        }
+    console.log(cookietoken, " cookietoken");
+    if (cookietoken == undefined) {
+      res.clearCookie("jwtauth");
+      return "invalid";
+    } else {
+      try {
+        let verified = jwt.verify(cookietoken, secretkey);
+        console.log("jwt verifier--- ", verified);
+        return verified;
+      } catch (error) {
+        res.clearCookie("jwtauth");
+        return res.redirect("/elective/loginPage");
+      }
     }
-},
+  },
 
- verifyRequest : (req,res,next) => {
+  verifyRequest: (req, res, next) => {
+    try {
+      let token = process.env.JWT_SECRETKEY;
+      let cookietoken = req.signedCookies.jwtauth || undefined;
 
-    try{
+      console.log("request cookie", cookietoken);
 
-   let token = process.env.JWT_SECRETKEY;
-   let cookietoken = req.signedCookies.jwtauth || undefined;
+      let verified = jwt.verify(cookietoken, token);
 
-   console.log("request cookie" , cookietoken);
-   
-   let verified = jwt.verify(cookietoken,token);
-
-   if(verified){
-     next();
-   }else{
-      return res.redirect('/elective/loginPage');
-   }
-
-    }catch(error){
-        res.clearCookie('jwtauth');
-       return res.redirect('/elective/loginPage');
+      if (verified) {
+        next();
+      } else {
+        return res.redirect("/elective/loginPage");
+      }
+    } catch (error) {
+      res.clearCookie("jwtauth");
+      return res.redirect("/elective/loginPage");
     }
- 
+  },
 
- }
+  verifySession : (req,res) => {
+    let username = (req.session.modules != undefined ) ? req.session.modules : undefined;
+    return username;
+  },
 
+  verifySessionRole : (req,res) => {
+    let role = (req.session.userRole != undefined) ? req.session.userRole : undefined;
+    return role;
+  }
 };
