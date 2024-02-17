@@ -1,9 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/style.css">
+    
     <title>View Event</title>
     <%- include ('../partials/partial') %>
     <style>
@@ -61,7 +59,7 @@
                <i class="fa-solid fa-book"  data-toggle='tooltip' title = 'Publish' width="20%" ></i>&ensp;
                <i class="fa-solid fa-download" data-toggle='tooltip' title = 'Download Preferences' width="2%" ></i>&ensp;
                <a style="text-decoration: none;color:black" href="/elective/addBasketPage?id=<%= event.id %>"><i class="fa-solid fa-cart-plus addBasket" data-toggle='tooltip' title = 'Add Basket' width="2%"></i></a>
-
+               <a style="text-decoration:none;color:black;" href="/elective/basketCourseConfig?id=<%= event.id %>" ><i class="fa-solid fa-book-bible" data-toggle='tooltip' width="2%" title="Add Basket Courses"></i></a>
             </td>     
             </tr>
            <% count++ %>

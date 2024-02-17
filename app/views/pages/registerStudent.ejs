@@ -1,119 +1,131 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet"  href="../css/style.css">
-    <title>Document</title>
 
-    <%- include ('../partials/partial') %>
+<head>
+  <title>Register Student</title>
+
+  <%- include ('../partials/partial') %>
     <style>
-      body{
+      body {
         background-color: whitesmoke;
       }
-      input[type="file"]{
-      margin-top:20px;
-      margin-bottom:30px;
+
+      input[type="file"] {
+        margin-top: 20px;
+        margin-bottom: 30px;
       }
-      #heading{
-        margin-top:10px;
+
+      #heading {
+        margin-top: 10px;
       }
-      #mains{
-        margin-left:20px;
+
+      #mains {
+        margin-left: 20px;
       }
-      .downloadFile{
+
+      .downloadFile {
         text-decoration: none;
-        font-size:20px;
+        font-size: 20px;
         position: relative;
-        top:20px;
-        color:red;
+        top: 20px;
+        color: red;
       }
-      #excel{
-        margin-top:50px;
+
+      #excel {
+        margin-top: 50px;
       }
-        .downloadFile:hover{
-            color:red;
-            text-decoration:none;
-        
-        }
-        #registerOptions{
-           
-            background-color: white;
-            padding:20px;
-            border-radius:10px;
-            font-size:18px;
-            position:relative;
-            top:40px;
-            width:1450px;
 
-        }
-        #excelOption{
-            margin-bottom:20px;
-        }
-        #registerFormat{
-            margin-top:100px;
-            padding:30px;
-            border-radius:20px;
-            width:100%;
-            background-color: white;
-        }
-        span{
-            color:red;
-        }
-        #nonInsertedStudents{
-          margin-top:20px;
-          background-color: white; 
-        }
+      .downloadFile:hover {
+        color: red;
+        text-decoration: none;
 
-        th,td{
-          text-align:center;
-        }
-        #nonInsertedMessage{
-          visibility:hidden;
-          margin-top:50px;
-          margin-bottom:50px;
-          text-align: center;
-        }     
-</style>
+      }
+
+      #registerOptions {
+
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        font-size: 18px;
+        position: relative;
+        top: 40px;
+        width: 1450px;
+
+      }
+
+      #excelOption {
+        margin-bottom: 20px;
+      }
+
+      #registerFormat {
+        margin-top: 100px;
+        padding: 30px;
+        border-radius: 20px;
+        width: 100%;
+        background-color: white;
+      }
+
+      span {
+        color: red;
+      }
+
+      #nonInsertedStudents {
+        margin-top: 20px;
+        background-color: white;
+      }
+
+      th,
+      td {
+        text-align: center;
+      }
+
+      #nonInsertedMessage {
+        visibility: hidden;
+        margin-top: 50px;
+        margin-bottom: 50px;
+        text-align: center;
+      }
+    </style>
 </head>
+
 <body>
-    <%- include('sidebar.ejs') %>
-    <%- include('header.ejs')  %>
-    <div id = "mains">
+  <%- include('sidebar.ejs') %>
+    <%- include('header.ejs') %>
+      <div id="mains">
 
         <div id="registerSuccess"></div>
         <%- include('messageModal.ejs') %>
-      
-        <div id="registerOptions">
-        <h3>Register Students</h3>
-        <hr/>
-        <input type="radio" name="option" id="excelOption" checked>  Register via Excel</input></br>
-        <input type="radio" name="option" id="manualOption"> Register via Manually</input>
-        </div>
 
-           
-        <div id="registerFormat">
-        
-        </div>
-           
-        <div>
-        <h4 id="nonInsertedMessage">Student's Data Not Inserted Due To Empty Input Fields</h4>
-        <div id="nonInsertedStudents">
-           
+          <div id="registerOptions">
+            <h3>Register Students</h3>
+            <hr />
+            <input type="radio" name="option" id="excelOption" checked> Register via Excel</input></br>
+            <input type="radio" name="option" id="manualOption"> Register via Manually</input>
+          </div>
 
-        </div>
-        </div>
-           
+
+          <div id="registerFormat">
+
+          </div>
+
+          <div>
+            <h4 id="nonInsertedMessage">Student's Data Not Inserted Due To Empty Input Fields</h4>
+            <div id="nonInsertedStudents">
+
+
+            </div>
+          </div>
+
 </body>
 
 <%- include ('../partials/partial2') %>
-<script src= "../js/script.js" ></script>
-<script>
- 
-document.getElementById('excelOption').addEventListener('change', () => {
+  <script src="../js/script.js"></script>
+  <script>
 
-  let registerExcelFormat = document.getElementById('registerFormat') ;
-  registerExcelFormat.innerHTML = `<div id="heading"><h2>Upload Student's Details file(Excel):</h2></div>
+    document.getElementById('excelOption').addEventListener('change', () => {
+
+      let registerExcelFormat = document.getElementById('registerFormat');
+      registerExcelFormat.innerHTML = `<div id="heading"><h2>Upload Student's Details file(Excel):</h2></div>
              <div>
              <input type="file" id="fileName" name = "studentDetails" /></br>
              <button type="submit" class="btn btn-primary excelDataSubmit" id='excelSubmit' >Upload</button>&nbsp;<button id='excelCancel' type="submit" class="btn btn-danger excelDataCancel" >Cancel</button>
@@ -123,14 +135,14 @@ document.getElementById('excelOption').addEventListener('change', () => {
              <h4 id="excel">Excel Format:</h4>
              <p>Username | Firstname | Lastname | Acad Session | Acad Year | Campus | Roll No.</p>
              </div>`;
-  
-});
 
-document.getElementById("manualOption").addEventListener("change", () => {
+    });
+
+    document.getElementById("manualOption").addEventListener("change", () => {
 
 
-    let registerManually = document.getElementById('registerFormat');
-    registerManually.innerHTML = `<div>
+      let registerManually = document.getElementById('registerFormat');
+      registerManually.innerHTML = `<div>
     <div class="form-row">
     <div class="form-group col-md-6">
       <label for="inputFname">Firstname</label>&ensp;&ensp;<span id="fnameError"></span>
@@ -180,17 +192,17 @@ document.getElementById("manualOption").addEventListener("change", () => {
   </div>
   <button type="submit" id="submitbtn" class="btn btn-danger mt-4 btnSubmit">Register Student</button>
 </div>`;
- 
- acadYearfun();
 
-});
+      acadYearfun();
 
- checkfun();
+    });
 
-  function checkfun() {
- 
-  let registerExcelFormat = document.getElementById('registerFormat');
-  registerExcelFormat.innerHTML = `<div id="heading"><h2>Upload Student's Details file(Excel):</h2></div>
+    checkfun();
+
+    function checkfun() {
+
+      let registerExcelFormat = document.getElementById('registerFormat');
+      registerExcelFormat.innerHTML = `<div id="heading"><h2>Upload Student's Details file(Excel):</h2></div>
              <div>
              <input type="file" id='fileName' name = "studentDetails" /></br>
              <button type="submit" class="btn btn-primary excelDataSubmit" id='excelSubmit' >Upload</button>&nbsp;<button id='excelCancel' type="submit" class="btn btn-danger excelDataCancel" >Cancel</button>
@@ -200,282 +212,282 @@ document.getElementById("manualOption").addEventListener("change", () => {
              <h4 id="excel">Excel Format:</h4>
              <p>Username | Firstname | Lastname | Acad Session | Acad Year | Campus | Roll No.</p>
              </div>`;
-             
+
     }
 
-  function acadYearfun(){
-     
-  let acadYear = document.querySelector('#inputAcadYear');
-  dynamicYear(acadYear);
+    function acadYearfun() {
 
-  }
+      let acadYear = document.querySelector('#inputAcadYear');
+      dynamicYear(acadYear);
 
-  document.addEventListener('click',async (e) => {
-  if(e.target.classList.contains('excelDataSubmit')){
+    }
 
-  let files = document.querySelector('#fileName').value;
-  let fileError = document.getElementById('commonDisplayMessage');
-  let fileInput = files.lastIndexOf('.');
-  let fileName = files.substring(fileInput,files.length);
+    document.addEventListener('click', async (e) => {
+      if (e.target.classList.contains('excelDataSubmit')) {
 
-  console.log('file path--- ' , fileName);
+        let files = document.querySelector('#fileName').value;
+        let fileError = document.getElementById('commonDisplayMessage');
+        let fileInput = files.lastIndexOf('.');
+        let fileName = files.substring(fileInput, files.length);
 
-  if (fileName === '.xlsx') {
+        console.log('file path--- ', fileName);
 
-      let fileInput = document.getElementById('fileName');
-      let fileData = fileInput.files[0];
-      const formData = new FormData();
-      formData.append('studentDetails', fileData);
+        if (fileName === '.xlsx') {
 
-      dynamicExcelUploadFetch('/elective/uploadStudentData', 'POST', formData)
-        .then(response => {
-          console.log('Error Response: ', response.nonInserted);
-          if (response.status === 'error') {
-            window.location.href = response.redirectTo;
-          } else {
-            fileMessage(response);
-          }
-        });
+          let fileInput = document.getElementById('fileName');
+          let fileData = fileInput.files[0];
+          const formData = new FormData();
+          formData.append('studentDetails', fileData);
 
-      }else{
+          dynamicExcelUploadFetch('/elective/uploadStudentData', 'POST', formData)
+            .then(response => {
+              console.log('Error Response: ', response.nonInserted);
+              if (response.status === 'error') {
+                window.location.href = response.redirectTo;
+              } else {
+                fileMessage(response);
+              }
+            });
 
-      let message = `File Format Should Be In Excel Only !!`;
-      let msg = document.getElementById('msgModal');
-      let modalPage = `<div><h4 style="text-align:center;">${message}</h4></div>`
-      msg.innerHTML = modalPage;
-      document.querySelector('[data-target="#messageModal"]').click();
+        } else {
+
+          let message = `File Format Should Be In Excel Only !!`;
+          let msg = document.getElementById('msgModal');
+          let modalPage = `<div><h4 style="text-align:center;">${message}</h4></div>`
+          msg.innerHTML = modalPage;
+          document.querySelector('[data-target="#messageModal"]').click();
+
+        }
+      }
+    });
+
+
+
+    document.addEventListener('click', (e) => {
+
+      if (e.target.classList.contains('btnSubmit')) {
+
+        let fname = document.getElementById('inputFname').value;
+        let lname = document.getElementById('inputLname').value;
+        let rollNo = document.getElementById('inputrollNo').value;
+        let campus = document.getElementById('inputCampus').value;
+        let studUsername = document.getElementById('inputUname').value;
+        let acadYear = document.getElementById('inputAcadYear').value;
+        let acadSession = document.getElementById('inputAcadSession').value;
+
+        let fnameVal = fnameValidation(fname);
+        let lnameVal = lnameValidation(lname);
+        let rollNoVal = rollNoValidation(rollNo);
+        let campusVal = campusValidation(campus);
+        let unameVal = unameValidation(studUsername);
+        let yearVal = acadYearValidation(acadYear);
+        let sessionVal = acadSessionValidation(acadSession);
+
+        if (fnameVal && lnameVal && rollNoVal && campusVal && unameVal && yearVal && sessionVal) {
+
+          let obj = { fname, lname, rollNo, campus, studUsername, acadYear, acadSession };
+          dynamicFetchApi('/elective/registerStudentManually', 'POST', obj)
+            .then(responseData => {
+              console.log('response----- ', responseData.status);
+              if (responseData.status === 'error') {
+                window.location.href = responseData.redirectTo;
+              } else {
+
+                let msg = document.getElementById('msgModal');
+                let modalPage = `<div><h4 style="text-align:center;">${responseData.message}</h4></div>`
+                msg.innerHTML = modalPage;
+                document.querySelector('[data-target="#messageModal"]').click();
+              }
+            });
+        }
 
       }
+    });
+
+
+    //FirstName Validation
+    function fnameValidation(fname) {
+
+      let inputFname = document.getElementById('fnameError');
+
+      if (fname.length > 0) {
+
+        let inputVal = alphabetsValidation(fname);
+
+        console.log('Validated---- ', inputVal);
+
+        if (inputVal) {
+
+          inputFname.innerText = '';
+          return inputVal;
+
+        } else {
+
+          inputFname.innerText = '*Invalid Input Field';
+          return inputVal;
+
+        }
+      } else {
+
+        inputFname.innerText = '*Required';
+
       }
-      });
-      
+    };
 
-  
-      document.addEventListener('click', (e) => {
+    //LastName Validation
+    function lnameValidation(lname) {
 
-      if(e.target.classList.contains('btnSubmit')){
-     
-      let fname =  document.getElementById('inputFname').value;
-      let lname =  document.getElementById('inputLname').value;
-      let rollNo =  document.getElementById('inputrollNo').value;
-      let campus =  document.getElementById('inputCampus').value;
-      let studUsername =  document.getElementById('inputUname').value;
-      let acadYear =  document.getElementById('inputAcadYear').value;
-      let acadSession =  document.getElementById('inputAcadSession').value;
+      let inputLname = document.getElementById('lnameError');
 
-      let fnameVal =  fnameValidation(fname);
-      let lnameVal =  lnameValidation(lname);
-      let rollNoVal =  rollNoValidation(rollNo);
-      let campusVal =  campusValidation(campus);
-      let unameVal =  unameValidation(studUsername);
-      let yearVal =  acadYearValidation(acadYear);
-      let sessionVal =  acadSessionValidation(acadSession);
+      if (lname.length > 0) {
 
-        if(fnameVal && lnameVal && rollNoVal && campusVal && unameVal && yearVal && sessionVal){
+        let inputVal = alphabetsValidation(lname);
+        console.log('Validated---- ', inputVal);
 
-        let obj = {fname,lname,rollNo,campus,studUsername,acadYear,acadSession};
-        dynamicFetchApi('/elective/registerStudentManually','POST',obj)
-        .then(responseData => {
-          console.log('response----- ' , responseData.status);
-        if(responseData.status === 'error'){
-          window.location.href = responseData.redirectTo;
-        }else{
-       
-        let msg = document.getElementById('msgModal');
-        let modalPage = `<div><h4 style="text-align:center;">${responseData.message}</h4></div>`
-        msg.innerHTML = modalPage;
-        document.querySelector('[data-target="#messageModal"]').click();
-        }
-        });
-        }
+        if (inputVal) {
+
+          inputLname.innerText = '';
+          return inputVal;
+
+        } else {
+
+          console.log("Special Characters present");
+          inputLname.innerText = '*Invalid Input Field';
+          return inputVal;
 
         }
-        });
-        
+      } else {
 
-        //FirstName Validation
-        function fnameValidation(fname){
-
-        let inputFname = document.getElementById('fnameError');
-         
-        if(fname.length > 0){      
-
-        let inputVal =  alphabetsValidation(fname);
-
-        console.log('Validated---- ' , inputVal);
-
-        if(inputVal){
-        
-        inputFname.innerText = '';    
-        return inputVal;    
-          
-        }else{
-
-        inputFname.innerText = '*Invalid Input Field';    
-        return inputVal;
-
-        }
-        }else{
-            
-         inputFname.innerText = '*Required';
-
-        }
-     };
-
-     //LastName Validation
-       function lnameValidation(lname){
-
-        let inputLname = document.getElementById('lnameError');
- 
-        if(lname.length > 0){      
-
-        let inputVal =  alphabetsValidation(lname);
-        console.log('Validated---- ' , inputVal);
-
-        if(inputVal){
-
-        inputLname.innerText = '';    
-        return inputVal;    
-  
-        }else{
-
-        console.log("Special Characters present");    
-        inputLname.innerText = '*Invalid Input Field';    
-        return inputVal;
-
-        }
-        }else{
-    
         inputLname.innerText = '*Required';
 
+      }
+    };
+
+    //RollNo Validation
+    function rollNoValidation(rollNo) {
+
+      let inputrollNo = document.getElementById('rollNoError');
+
+      if (rollNo.length > 0) {
+
+        let rollNoVal = specialCharacterValidation(rollNo);
+
+        if (rollNoVal) {
+
+          inputrollNo.innerText = '';
+          return rollNoVal;
+
+        } else {
+
+          inputrollNo.innerText = '*Invalid Input Field';
+          return rollNoVal;
+
         }
-      };
-
-      //RollNo Validation
-       function rollNoValidation(rollNo){
-      
-        let inputrollNo = document.getElementById('rollNoError');
-    
-        if(rollNo.length > 0){
-        
-        let rollNoVal =  specialCharacterValidation(rollNo); 
-
-        if(rollNoVal){
-         
-        inputrollNo.innerText = ''; 
-        return rollNoVal;
-
-        }else{
-
-        inputrollNo.innerText = '*Invalid Input Field';
-        return rollNoVal;
-
-        }
-        }else{        
+      } else {
         inputrollNo.innerText = '*Required';
         return false;
-        }
-       }
+      }
+    }
 
-        //Campus Validation
-         function campusValidation(campus){
+    //Campus Validation
+    function campusValidation(campus) {
 
-        let campusError = document.querySelector('#campusError');
-        let campusOptions = document.querySelector('#inputCampus');
+      let campusError = document.querySelector('#campusError');
+      let campusOptions = document.querySelector('#inputCampus');
 
-        let campusName = campusOptions[0].innerText;
+      let campusName = campusOptions[0].innerText;
 
-        if(campus == campusName){
-       
+      if (campus == campusName) {
+
         campusError.innerText = '*Required';
         return false;
-        
-        }else{
-         
+
+      } else {
+
         campusError.innerText = '';
         return true;
-        
-        }
-        }
 
-        //Username Validation
-       function unameValidation(username){
+      }
+    }
 
-        let unameError = document.getElementById('unameError');
-        
-        if(username.length > 0){
+    //Username Validation
+    function unameValidation(username) {
+
+      let unameError = document.getElementById('unameError');
+
+      if (username.length > 0) {
 
         unameError.innerText = '';
         return true;
 
-        }else{
+      } else {
 
         unameError.innerText = '*Required';
         return false;
-        
-        }
 
-        }
+      }
 
-        //AcadYear Validation
-       function acadYearValidation(acadYear){
-     
-        let yearError = document.querySelector('#yearError');
-        let yearOptions = document.querySelector('#inputAcadYear');
-        
-        let year = yearOptions[0].innerText;
+    }
 
-        if(acadYear == year){
+    //AcadYear Validation
+    function acadYearValidation(acadYear) {
+
+      let yearError = document.querySelector('#yearError');
+      let yearOptions = document.querySelector('#inputAcadYear');
+
+      let year = yearOptions[0].innerText;
+
+      if (acadYear == year) {
 
         yearError.innerText = '*Required';
         return false;
 
-        }else{
+      } else {
 
         yearError.innerText = '';
         return true;
 
-        }
-        }
+      }
+    }
 
-         //AcadSession Validation
-        function acadSessionValidation(session){
-     
-        let sessionError = document.querySelector('#sessionError');
-        let sessionOptions = document.querySelector('#inputAcadSession');
-     
-        let acadSession = sessionOptions[0].innerText;
+    //AcadSession Validation
+    function acadSessionValidation(session) {
 
-        if(session == acadSession){
+      let sessionError = document.querySelector('#sessionError');
+      let sessionOptions = document.querySelector('#inputAcadSession');
+
+      let acadSession = sessionOptions[0].innerText;
+
+      if (session == acadSession) {
 
         sessionError.innerText = '*Required';
         return false;
 
-        }else{
+      } else {
 
         sessionError.innerText = '';
         return true;
 
-        }
-        }
-        
-        async function fileMessage(response){
-          
-        let msg = document.getElementById('msgModal');
-        let modalPage = `<div><h4 style="text-align:center;">${response.message}</h4></div>`
-        msg.innerHTML = modalPage;
-        document.querySelector('[data-target="#messageModal"]').click();
+      }
+    }
 
-          if(response.status === 'success'){
-              
-          let studArray = await response.nonInserted;
-          console.log('Non inserted data: ' , studArray);
+    async function fileMessage(response) {
 
-          if(studArray.length != 0){
+      let msg = document.getElementById('msgModal');
+      let modalPage = `<div><h4 style="text-align:center;">${response.message}</h4></div>`
+      msg.innerHTML = modalPage;
+      document.querySelector('[data-target="#messageModal"]').click();
+
+      if (response.status === 'success') {
+
+        let studArray = await response.nonInserted;
+        console.log('Non inserted data: ', studArray);
+
+        if (studArray.length != 0) {
 
           let iTag = `<i style='font-weight:bold;color:red;'>Empty Field</i>`;
 
-            let nonInsertedData = `<table class="table table-bordered table-responsive-lg" >
+          let nonInsertedData = `<table class="table table-bordered table-responsive-lg" >
                                  <tr>
                                  <th>Sr No.</th>
                                  <th>Firstname</th>
@@ -497,25 +509,26 @@ document.getElementById("manualOption").addEventListener("change", () => {
                                  <td>${data.acadSession ? data.acadSession : iTag}</td>
                                  <td>${data.rollNo ? data.rollNo : iTag}</td>
                                  </tr>`
-            ).join('')}
+          ).join('')}
                                  </table>`;
 
-            let nonInsertedMessage = document.querySelector('#nonInsertedMessage');
-            nonInsertedMessage.style.visibility = 'visible';
+          let nonInsertedMessage = document.querySelector('#nonInsertedMessage');
+          nonInsertedMessage.style.visibility = 'visible';
 
-            let nonInsertedStudents = document.querySelector('#nonInsertedStudents');
-            nonInsertedStudents.innerHTML = nonInsertedData;
+          let nonInsertedStudents = document.querySelector('#nonInsertedStudents');
+          nonInsertedStudents.innerHTML = nonInsertedData;
 
-         }     
-         } 
-         }
+        }
+      }
+    }
 
-        document.addEventListener('click',(e) => {
-          if(e.target.classList.contains('excelDataCancel')){
-          cancelButtonRedirect('/elective/dashboard');
-          }
-        })
-       
+    document.addEventListener('click', (e) => {
+      if (e.target.classList.contains('excelDataCancel')) {
+        cancelButtonRedirect('/elective/dashboard');
+      }
+    })
 
-</script>
+
+  </script>
+
 </html>

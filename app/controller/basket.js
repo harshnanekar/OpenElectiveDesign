@@ -175,11 +175,12 @@ module.exports = {
   basketCourseConfig: async (req, res) => {
     try {
       let username = req.session.modules;
+      let eventLid = req.query.id;
       if (username != undefined) {
         let getModules = await query.getModules(username);
         let getAllCourse = await courseQuery.getAllCourses(username);
-        let getAllBaskets = await basket.getAllBaskets(username);
-        let displayBaskets = await basket.displayAllBaskets();
+        let getAllBaskets = await basket.getAllBaskets(eventLid,username);
+        let displayBaskets = await basket.displayAllBaskets(eventLid);
 
         return res.render("basketCourseConfig", {
           module: getModules,

@@ -33,4 +33,9 @@ app.use(
 
 app.use("/elective", indexRouter);
 
+app.use("*",function(req, res) { 
+  return res.status(404).render('404');
+ });
+
+
 app.listen(8080);

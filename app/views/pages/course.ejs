@@ -2,11 +2,8 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
   <title>Course</title>
-  <link rel="stylesheet" href="../css/style.css">
-
   <%- include ('../partials/partial') %>
 
     <style>
@@ -543,7 +540,7 @@
               buttonvalue.setAttribute('data-deleteid', subjectId);
 
               let successModal = document.getElementById('successModal');
-              successModal.innerText = response.message;
+              successModal.innerText =response.message;
 
               document.querySelector('[data-target="#deleteSuccessModal"]').click();
 
@@ -553,15 +550,12 @@
 
       if (e.target.classList.contains('SuccessModal')) {
 
+        console.log('modal called')
+
         let courseIds = document.querySelectorAll('#subjectRow');
         let buttonvalue = document.querySelector('#DeletebtnValue');
         let subjectId = buttonvalue.getAttribute('data-deleteid');
-        let modalBody = document.getElementById('successModal');
         let totalRows = document.querySelector('.totalRows');
-
-        modalBody.innerHTML = ` <div>
-                    <h4 id='successModal' style="text-align:center;">Course Deleted Successfully !!</h4>
-                    </div>`;
 
         Array.from(courseIds).forEach(course => {
           let subId = course.getAttribute('data-subId');
