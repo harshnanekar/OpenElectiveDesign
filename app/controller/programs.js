@@ -92,7 +92,6 @@ module.exports = {
                 nonInsertedPrograms
               );
 
-              if (programArray.length > 0) {
                 if (role != undefined && role === "Role_Admin") {
                   let insertProgram = await programQuery.insertPrograms({
                     prgArray: programArray,
@@ -118,7 +117,6 @@ module.exports = {
                     redirectTo: "/elective/loginPage",
                   });
                 }
-              }
             });
           } else {
             return res.json({ message: "File Cannot Be Empty !!" });

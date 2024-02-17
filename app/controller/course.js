@@ -37,7 +37,6 @@ module.exports = {
         let file = req.file;
         if (file != undefined) {
           let excelData = excel.readExcelFile(file);
-          let emptyArray = [];
 
           if (excelData.length > 0) {
             excelData.forEach(async (data) => {
@@ -114,16 +113,6 @@ module.exports = {
                     redirectTo: "/elective/loginPage",
                   });
                 }
-              } else {
-                emptyArray.push({
-                  subjectName,
-                  departMentName,
-                  batchNo,
-                  maxCapacityPerBatch,
-                  campus,
-                  openPrograms,
-                  username,
-                });
               }
             });
           } else {
@@ -506,6 +495,8 @@ module.exports = {
     try {
       let username = req.session.modules;
       let role = req.session.userRole;
+
+      console.log('delete api called')
 
       if (username != undefined) {
         if (role === "Role_Admin") {

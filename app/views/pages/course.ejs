@@ -484,11 +484,12 @@
         let deptName = $(e.target).closest('div').prev().find('#deptName').val();
         let batch = $(e.target).closest('div').prev().find('#inputbatch').val();
         let capacity = $(e.target).closest('div').prev().find('#inputCapacity').val();
-        let campus = $(e.target).closest('div').prev().find('#inputCampus').val();
+        let campus = $(e.target).closest('div').prev().find('#campusInput').val();
         let programs = $(e.target).closest('div').prev().find('#coursePrograms').val();
         let subjectId = $(e.target).closest('div').prev().find('#inputSubId').val();
 
         let obj = { subjectId, subName, deptName, batch, capacity, campus, programs };
+        console.log('edit course object ',obj);
 
         dynamicFetchApi('/elective/editCourse', 'POST', obj)
           .then(response => {
@@ -523,6 +524,8 @@
       }
 
       if (e.target.classList.contains('confirmDelete')) {
+
+        console.log('confirm delete called')
         let buttonValue = document.querySelector('.confirmDelete');
         let subjectId = buttonValue.getAttribute('data-id');
 
@@ -539,7 +542,7 @@
               let buttonvalue = document.querySelector('#DeletebtnValue');
               buttonvalue.setAttribute('data-deleteid', subjectId);
 
-              let successModal = document.getElementById('successModal');
+              let successModal = document.getElementById('deleteSuccess');
               successModal.innerText =response.message;
 
               document.querySelector('[data-target="#deleteSuccessModal"]').click();

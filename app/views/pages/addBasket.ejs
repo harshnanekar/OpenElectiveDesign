@@ -150,20 +150,22 @@
                             </td>`
 
                                 console.log('bs ', bsLid)
-                                let basketSize = '<%= (basket.length + 1) %>';
-                                let record = document.getElementById('totalRecord');
-                                record.innerText = basketSize + ' Record Found';
-
+                                
                                 let insert = document.querySelector('.basketData');
                                 let row = insert.insertRow(-1);
                                 let lengthUpd = row.insertCell(0);
                                 let cell = row.insertCell(1);
                                 let cell1 = row.insertCell(2);
                                 let cell2 = row.insertCell(3);
+                                
+
+                                let basketSize = document.querySelectorAll('.basketData');
+                                let bskSize = (insert.rows.length - 1);
+                                let record = document.getElementById('totalRecord');
+                                record.innerText = bskSize + ' Record Found';
                                
 
-
-                                lengthUpd.innerHTML = basketSize;
+                                lengthUpd.innerHTML = bskSize;
                                 cell.innerHTML = basketname;
                                 cell1.innerHTML = abbr;
                                 cell2.innerHTML = actions;
@@ -185,14 +187,14 @@
                     </div>
                     `;
 
-                                modal.innerHTML = modalBodie;
+                                modal.innerHTML = modalBodie; 
 
                             }
 
                         })
                 }
-            }
-
+            }      
+            
             if (e.target.classList.contains('deleteIcon')) {
                 let bid = e.target.closest('tr').getAttribute('data-basketId');
 
@@ -211,22 +213,22 @@
                             window.location.href = `${response.redirectTo}`;
                         } else {
 
-                            let deleteModal = document.querySelector('#successModal');
+                            let deleteModal = document.querySelector('#deleteSuccess');
                             deleteModal.innerText = response.message;
 
                             let basketRows = document.querySelectorAll('#basketRow');
+                            let bskLength = basketRows.length;
 
                             Array.from(basketRows).forEach(row => {
                                 let bsId = row.getAttribute('data-basketId');
                                 if (basketId == bsId) {
                                     row.remove();
                                 }
-
                             });
 
                             console.log('basket rows ' ,basketRows.length )
                             let basketLength = document.querySelector('#totalRecord');
-                            let basketSize = basketRows.length - 1;
+                            let basketSize = bskLength - 1;
                             basketLength.innerText = `${basketSize} Record Found`;
 
                             document.querySelector('[data-target="#deleteSuccessModal"]').click();

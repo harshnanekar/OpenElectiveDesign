@@ -62,9 +62,10 @@
             <th>Compulsory Subjects</th>
             <th>Actions</th>
         </tr>
+        <tbody>
         <% index = 1; %>
         <% dispBasket.forEach(data => { %>
-        <tr>
+        <tr data-basketId = "<%= data.id %>">
             <td><%= index %></td>
             <td><%= data.basket_name %></td>
             <td><%= data.current_session %></td>
@@ -78,6 +79,7 @@
         </tr>
         <% index++ %>
         <% }); %> 
+    </tbody>
     </table> 
     
     <%- include('deleteModal.ejs') %>
@@ -98,6 +100,14 @@
             let basketId = e.target.value;
             let obj = { basketId };
 
+            let baskets = document.querySelectorAll('#inputBasket');
+            let basketError = document.getElementById('basketError');
+            let defaultBasket = baskets[0][0].innerText;
+
+            if(defaultBasket != basketId){
+
+              basketError.innerText = '';  
+
             dynamicFetchApi('/elective/getBasketSubject', 'POST', obj)
                 .then(response => {
                     if (response.status === 'error') {
@@ -117,6 +127,11 @@
                         course.insertAdjacentHTML('beforeEnd', option);
                     }
                 })
+            }else{
+                let course = document.querySelector('#inputCourse');
+                course.innerHTML = '';
+                basketError.innerText = '*Invalid Input';
+            }
         }
     });
 
@@ -130,18 +145,16 @@
                     let compulsorySub = document.getElementById('compulsorySub').value;
 
                     let subjectValidation = checkSubjectValidation(compulsorySub, basketCourses.length);
-                    let basketError = document.getElementById('basketError');
-                    let courseError = document.getElementById('courseError');
+                    let basketValidation = checkBasketValidation(basketId);
+                    let coursesValidation = checkCoursesValidation(basketCourses);
+
                     console.log(basketId, JSON.stringify(basketCourses), compulsorySub);
 
-                    if (basketId != undefined && basketCourses.length > 0 && compulsorySub) {
-
-                        basketError.innerText = '';
-                        courseError.innerText = '';
+                    if (basketValidation && coursesValidation && compulsorySub) {
 
                         let obj = { basketId, basketCourses, compulsorySub };
-
-                        dynamicFetchApi('/elective/insertBasketCourses', 'POST', obj)
+                        
+                       dynamicFetchApi('/elective/insertBasketCourses', 'POST', obj)
                             .then(response => {
                                 if (response.status === 'error') {
                                     window.location.href = `${response.redirectTo}`;
@@ -154,13 +167,42 @@
                                 }
                             })
 
-
-                    } else {
-                        basketError.innerText = '*Required';
-                        courseError.innerText = '*Required';
                     }
                 }
+
+                if(e.target.classList.contains('deleteIcon')){
+                   let basket = e.target.closest('tr').basketid;
+                   console.log(basket);
+
+                }
             });
+
+            function checkBasketValidation(basketId) {
+                    let basketError = document.getElementById('basketError');
+                    let baskets = document.querySelectorAll('#inputBasket');
+                    let defaultBasket = baskets[0][0].innerText;
+
+                    if (basketId != defaultBasket) {
+                        basketError.innerText = '';
+                        return true;
+                    } else {
+                        basketError.innerText = '*Invalid Inputs';
+                        return false;
+                    }
+
+                }
+
+                function checkCoursesValidation(basketCourses) {
+                    let courseError = document.getElementById('courseError');
+
+                    if (basketCourses.length > 0) {
+                        courseError.innerText = '';
+                        return true;
+                    } else {
+                        courseError.innerText = '*Invalid Inputs';
+                        return false;
+                    }
+                }
 
     function checkSubjectValidation(compSub, basketLength) {
             let courseError = document.getElementById('compError');

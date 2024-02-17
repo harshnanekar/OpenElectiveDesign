@@ -188,14 +188,13 @@ let controller = {
           studentArray.push({studentUname,studentFirstName,studentLastName,acadSession,acadYear,campus,rollNo,username});
           console.log('Array found--- ', studentArray);
         }else{          
-          console.log('Array not found');
+          console.log('Array not found empty');
           emptyStudentArray.push({studentUname,studentFirstName,studentLastName,acadSession,acadYear,campus,rollNo,username});
         }
         });
 
         let user_role =req.session.userRole;
-        if(studentArray.length > 0){
-
+        
          if(user_role !=undefined && user_role === 'Role_Admin'){
 
          let registerStudentCall = await eventQuery.registerStudentExcel({'studentData':studentArray});
@@ -213,7 +212,7 @@ let controller = {
           res.clearCookie('jwtauth');
           return res.json({status:'error',redirectTo :'/elective/loginPage' });
          }
-         }
+         
        }else{
         console.log('Array not found');
         return res.json({message:'File Cannot Be Empty !!'});

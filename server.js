@@ -4,6 +4,7 @@ const { pgPool,redisDb } = require("./app/config/database.js");
 const indexRouter = require("./app/router/route.js");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
+const nocache = require('nocache');
 
 pgPool.connect();
 redisDb.connect();
@@ -30,6 +31,8 @@ app.use(
     cookie: { maxAge: 24 * 60 * 60 * 1000 },
   })
 );
+
+app.use(nocache());
 
 app.use("/elective", indexRouter);
 
