@@ -30,6 +30,7 @@ apiRouter.get('/basketCourseConfig',middleware.verifyRequest,basketController.ba
 //Post Requests
 apiRouter.post('/login',controller.login);
 apiRouter.post('/eventData',middleware.verifyRequest,eventController.eventData);
+apiRouter.post('/editEvent',middleware.verifyRequest,eventController.editEvent);
 apiRouter.post('/uploadStudentData',middleware.verifyRequest,multer().single('studentDetails'),eventController.uploadStudentData);
 apiRouter.post('/registerStudentManually',middleware.verifyRequest,eventController.registerStudentManually);
 apiRouter.post('/insertProgramsViaExcel',middleware.verifyRequest,multer().single('programFile'),programController.insertProgramsViaExcel);
@@ -47,6 +48,7 @@ apiRouter.post('/editBasket',middleware.verifyRequest,basketController.editBaske
 apiRouter.post('/deleteEvent',middleware.verifyRequest,eventController.deleteEvent);
 apiRouter.post('/getBasketSubject',middleware.verifyRequest,basketController.getBasketSubject);
 apiRouter.post('/insertBasketCourses',middleware.verifyRequest,basketController.insertBasketCourses);
+apiRouter.post('/deletEventBasket',middleware.verifyRequest,basketController.deleteEventBasket);
 
 
 

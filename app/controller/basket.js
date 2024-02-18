@@ -3,12 +3,12 @@ const query = require("../queries/user.js");
 const eventQuery = require("../queries/eventQueries.js");
 const validation = require("../controller/validation.js");
 const courseQuery = require("../queries/courseQuery.js");
-const jwtauth = require('../middleware/request.js');
+const jwtauth = require("../middleware/request.js");
 
 module.exports = {
   addBasketPage: async (req, res) => {
     try {
-      let username = req.session.modules;
+      let username = jwtauth.verifySession(req,res);
       if (username != undefined) {
         let eventId = req.query.id;
         console.log("eventId ", eventId);
@@ -42,8 +42,8 @@ module.exports = {
 
   createBasket: async (req, res) => {
     try {
-      let username = req.session.modules;
-      let role = req.session.userRole;
+      let username = jwtauth.verifySession(req,res);
+      let role = jwtauth.verifySessionRole(req,res);
 
       if (username != undefined) {
         let { basketName, basketAbbr, eventId } = req.body;
@@ -92,8 +92,8 @@ module.exports = {
 
   deleteBasket: async (req, res) => {
     try {
-      let username = req.session.modules;
-      let role = req.session.userRole;
+      let username = jwtauth.verifySession(req,res);
+      let role = jwtauth.verifySessionRole(req,res);
 
       if (username != undefined) {
         let { basketId } = req.body;
@@ -129,8 +129,8 @@ module.exports = {
 
   editBasket: async (req, res) => {
     try {
-      let username = req.session.modules;
-      let role = req.session.userRole;
+      let username = jwtauth.verifySession(req,res);
+      let role = jwtauth.verifySessionRole(req,res);
 
       if (username != undefined) {
         let { basket_id, basketName, basket_abbr, eventId } = req.body;
@@ -150,7 +150,7 @@ module.exports = {
                 message: "Basket Edited Successfully !!",
               });
             } else {
-              return res.json({ message: "Failed To Edit Basket" });
+              return res.json({ message: "Failed To Edit Basket !!" });
             }
           } else {
             res.clearCookie("jwtauth");
@@ -174,12 +174,12 @@ module.exports = {
 
   basketCourseConfig: async (req, res) => {
     try {
-      let username = req.session.modules;
+      let username = jwtauth.verifySession(req,res);
       let eventLid = req.query.id;
       if (username != undefined) {
         let getModules = await query.getModules(username);
         let getAllCourse = await courseQuery.getAllCourses(username);
-        let getAllBaskets = await basket.getAllBaskets(eventLid,username);
+        let getAllBaskets = await basket.getAllBaskets(eventLid, username);
         let displayBaskets = await basket.displayAllBaskets(eventLid);
 
         return res.render("basketCourseConfig", {
@@ -224,36 +224,80 @@ module.exports = {
 
       if (username != undefined && role != undefined) {
         let { basketId, basketCourses, compulsorySub } = req.body;
-        console.log(JSON.stringify(basketCourses))
+        console.log(JSON.stringify(basketCourses));
 
         if (
           basketId != undefined &&
           basketCourses.length > 0 &&
           compulsorySub != undefined
         ) {
-          let basketSubject;
-          for (let basketCourse of basketCourses) {
-            basketSubject = await basket.insertBasketSubject(
-              basketId,
-              basketCourse,
-              username
-            );
-          }
+          if (role === "Role_Admin") {
+            let basketSubject;
+            for (let basketCourse of basketCourses) {
+              basketSubject = await basket.insertBasketSubject(
+                basketId,
+                basketCourse,
+                username
+              );
+            }
 
-          let compSub = await basket.insertCompulsorySub(
-            basketId,
-            compulsorySub
-          );
-          if (basketSubject.rowCount > 0 && compSub.rowCount > 0) {
-            return res.json({
-              status: "success",
-              message: "Courses Added Successfully !!",
-            });
+            let compSub = await basket.insertCompulsorySub(
+              basketId,
+              compulsorySub
+            );
+            if (basketSubject.rowCount > 0 && compSub.rowCount > 0) {
+              return res.json({
+                status: "success",
+                message: "Courses Added Successfully !!",
+              });
+            } else {
+              return res.json({ message: " FailedTo Insert Data" });
+            }
           } else {
-            return res.json({ message: " FailedTo Insert Data" });
+            res.clearCookie("jwtauth");
+            return res.json({
+              status: "error",
+              redirectTo: "/elective/loginPage",
+            });
           }
         } else {
           return res.json({ message: "Invalid Inputs !!" });
+        }
+      } else {
+        res.clearCookie("jwtauth");
+        return res.json({ status: "error", redirectTo: "/elective/loginPage" });
+      }
+    } catch (error) {
+      console.log(error);
+      return res.json({ status: "error", redirectTo: "/elective/error" });
+    }
+  },
+
+  deleteEventBasket: async (req, res) => {
+    try {
+      let username = jwtauth.verifySession(req, res);
+      let role = jwtauth.verifySessionRole(req, res);
+
+      if (username != undefined) {
+        let { basketId } = req.body;
+
+        if (role === "Role_Admin") {
+          let deleteBasketId = await basket.deleteBasketData(basketId);
+          if (deleteBasketId.rowCount > 0) {
+            res.json({
+              status: "success",
+              message: "Basket Deleted Successfully !!",
+              basketLid: basketId,
+            });
+          } else {
+            res.json({ message: "Failed To Delete Basket !!" });
+          }
+        } else {
+          res.clearCookie("jwtauth");
+          return res.json({
+            status: "error",
+            redirectTo: "/elective/loginPage",
+          });
         }
       } else {
         res.clearCookie("jwtauth");

@@ -52,6 +52,10 @@
       select {
         margin-bottom: 10px;
       }
+
+      span{
+        color:red;
+      }
     </style>
 </head>
 
@@ -68,14 +72,14 @@
               <div style="margin:0;" id="formdata">
                 <div class="form-row">
                   <div class="form-group col-md-12">
-                    <label for="Event">Event Name</label>
+                    <label for="Event">Event Name</label>&ensp;&ensp;<span id="eventError"></span>
                     <input type="text" class="form-control " id="event" name="eventName" placeholder="Event Name">
                   </div>
                 </div>
                 <div class="form-group">
-                  <label for="Semester">Semester</label>
+                  <label for="Semester">Semester</label>&ensp;&ensp;<span id="sessionError"></span>
                   <select id="session_master" name="semester" class="form-control ">
-                    <option value="Select Semester" selected>Select Acad Session</option>
+                    <option value="Select Acad Session" selected>Select Acad Session</option>
                     <% acadSession.forEach(data=> { %>
                       <option>
                         <%= data.current_session %>
@@ -85,12 +89,12 @@
                 </div>
                 <div class="form-row">
                   <div class="form-group col-md-6">
-                    <label for="acad_year">Acad Year</label>
+                    <label for="acad_year">Acad Year</label>&ensp;&ensp;<span id="yearError"></span>
                     <select id="acad_year" name="acad_year" class="form-control ">
                     </select>
                   </div>
                   <div class="form-group col-md-6">
-                    <label for="campus">Campus</label>
+                    <label for="campus">Campus</label>&ensp;&ensp;<span id="campusError"></span>
                     <select id="campus" name="campus" class="form-control  campusOption">
                       <option selected>Select Campus</option>
                       <% campus.forEach(data=> { %>
@@ -101,11 +105,11 @@
                     </select>
                   </div>
                   <div class="form-group col-md-6">
-                    <label for="Start Date">Start Date</label>
+                    <label for="Start Date">Start Date</label>&ensp;&ensp;<span id="startError"></span>
                     <input type="datetime-local" name="start_date" class="form-control " id="start_date">
                   </div>
                   <div class="form-group col-md-6">
-                    <label for="End Date">End Date</label>
+                    <label for="End Date">End Date</label>&ensp;&ensp;<span id="endError"></span>
                     <input type="datetime-local" name="end_date" class="form-control  " id="end_date">
                   </div>
                 </div>
@@ -113,7 +117,6 @@
               </div>
             </div>
           </div>
-      </div>
       </div>
 </body>
 
@@ -139,6 +142,15 @@
       let start_date = document.getElementById('start_date').value;
       let end_date = document.getElementById('end_date').value;
 
+      let eventValidation = eventValidator(eventName);
+      let sessionValidation = sessionValidator(semester);
+      let yearValidation = yearValidator(acad_year);
+      let campusValidation =campusValidator(campus);
+      let startValidation = startValidator(start_date);
+      let endValidation = endValidator(end_date);
+
+      if(eventValidation && sessionValidation && yearValidation && campusValidation && startValidation && endValidation){
+
       let obj = { eventName, semester, acad_year, campus, start_date, end_date };
       dynamicFetchApi('/elective/eventData', 'POST', obj)
         .then(response => {
@@ -158,8 +170,86 @@
             }
           }
         });
-
+      }
     });
+
+    function eventValidator(eventName) {
+        let eventError = document.getElementById('eventError');
+        if (eventName.length > 0) {
+          eventError.innerText = '';
+          return true;
+        } else {
+          eventError.innerText = '*Required';
+          return false;
+        }
+      }
+
+      function startValidator(start_date){
+        let startError = document.getElementById('startError');
+        if(start_date.length > 0){
+          startError.innerText = '';
+          return true;
+        }else{
+          startError.innerText = '*Required';
+          return false;
+        }
+      }
+
+      function endValidator(end_date){
+        let endError = document.getElementById('endError');
+        if(end_date.length > 0){
+          endError.innerText = '';
+          return true;
+        }else{
+          endError.innerText = '*Required';
+          return false;
+        }
+      }
+
+      function yearValidator(acadyear){
+        let acadYears = document.querySelectorAll('#acad_year');
+        let acadError = document.getElementById('yearError');
+
+        let year = acadYears[0][0].innerText;
+        if(year === acadyear){
+          acadError.innerText = '*Invalid Input';
+          return false;
+        }else{
+          acadError.innerText = '';
+          return true;
+        }
+
+      }
+
+      function sessionValidator(acadSession) {
+          let acadSessions = document.querySelectorAll('#session_master');
+          let sessionError = document.getElementById('sessionError');
+
+          let session = acadSessions[0][0].innerText;
+
+          console.log(session,acadSession);
+          if (session === acadSession) {
+            sessionError.innerText = '*Invalid Input';
+            return false;
+          } else {
+            sessionError.innerText = '';
+            return true;
+          }
+        }
+
+        function campusValidator(campus) {
+            let campuses = document.querySelectorAll('#campus');
+            let campusError = document.getElementById('campusError');
+
+            let getCampus = campuses[0][0].innerText;
+            if (campus === getCampus) {
+              campusError.innerText = '*Invalid Input';
+              return false;
+            } else {
+              campusError.innerText = '';
+           return true;
+          }
+        }
 
   </script>
 

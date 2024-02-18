@@ -41,19 +41,19 @@
          <% eventData.forEach(event => { %>
             <tr id="eventList" data-eid=<%= event.id %> >
                <td><%= count %></td>
-               <td><%= event.event_name %></td>
-               <td><%= event.current_session %></td>
-               <td><%= event.acad_year %></td>
-               <td><%= event.campus_name %></td>
+               <td id="eventName"><%= event.event_name %></td>
+               <td id="eventSession"><%= event.current_session %></td>
+               <td id="eventYear"><%= event.acad_year %></td>
+               <td id="eventCampus"><%= event.campus_name %></td>
                <% let sdate = event.startdate.toISOString(); %>
                <% let date = sdate.split('T')[0]; let time= sdate.split('T')[1] ;  let stime= time.split('.')[0] ; %>
-               <td><%= date %><%= " " %><%= stime %></td>
+               <td id="eventStart"><%= date %><%= " " %><%= stime %></td>
                <% let edate = event.end_date.toISOString(); %>
                <% let endate = edate.split('T')[0]; let etime= edate.split('T')[1] ;  let edtime= etime.split('.')[0] ; %>
-               <td><%= endate %><%= " " %><%= edtime %></td>
-               <td><%= event.is_published %></td>  
+               <td id="eventEnd"><%= endate %><%= " " %><%= edtime %></td>
+               <td id="eventPublish"><%= event.is_published %></td>  
                <td ><i style="cursor:pointer;" class="fa-solid fa-trash-arrow-up deleteModal"  data-toggle='modal' data-toggle='tooltip' data-target="#deletModal" title = 'Delete' width="2%" ></i>&ensp;
-               <i class="fa-solid fa-pencil"  data-toggle='tooltip' title = 'Edit' width="2%"></i>&ensp;
+               <i style="cursor:pointer;" class="fa-solid fa-pencil editEventModal" data-toggle='modal' data-toggle='tooltip' data-target='#exampleModalCenter' title = 'Edit' width="2%"></i>&ensp;
                <i class="fa-solid fa-file-export" data-toggle='tooltip' title = 'Allocate Event Users' width="2%" ></i>&ensp;
                <i class="fa-solid fa-file-arrow-down" data-toggle='tooltip' title = 'Download Allocation Report' width="2%" ></i>&ensp;
                <i class="fa-solid fa-book"  data-toggle='tooltip' title = 'Publish' width="20%" ></i>&ensp;
@@ -70,6 +70,7 @@
     <%- include('editModal.ejs') %>
     <%- include('deleteModal.ejs') %>
     <%- include('deleteSuccessModal.ejs') %>
+    <%- include('editSuccessModal.ejs') %>
     </div>
 </body>
 
@@ -96,6 +97,8 @@ document.addEventListener('click',(e) => {
             if(response.status === 'error'){
              window.location.href= `${response.redirectTo}`;   
             }else{
+
+            if(response.status === 'success'){    
             let eventListId = document.querySelectorAll('#eventList');
 
             Array.from(eventListId).forEach(event => {
@@ -104,6 +107,7 @@ document.addEventListener('click',(e) => {
                 event.remove();
                }
             })
+            }
 
             let successModal = document.getElementById('deleteSuccess');
             successModal.innerText =response.message;
@@ -112,14 +116,129 @@ document.addEventListener('click',(e) => {
             })
     }
 
+    if(e.target.classList.contains('editEventModal')){
+  
+      let eventId = e.target.closest('tr').getAttribute('data-eid');
+      let modalBody = document.getElementById('getModal');
 
+      let tr = e.target.closest('tr');
+      let eventName = tr.querySelector('#eventName').textContent;
+      let eventSession = tr.querySelector('#eventSession').textContent;
+      let eventYear = tr.querySelector('#eventYear').textContent;
+      let eventStart = tr.querySelector('#eventStart').textContent;
+      let eventEnd =tr.querySelector('#eventEnd').textContent;
+      let eventPublish = tr.querySelector('#eventPublish').textContent;
+      let eventCampus =tr.querySelector('#eventCampus').textContent;
 
+      let editForm = `   <div class="eventNewDiv">
+            <div class="eventForm">
+              <div style="margin:0;" id="formdata">
+                <div class="form-row">
+                  <div class="form-group col-md-12">
+                    <label for="Event">Event Name</label>
+                    <input type="text" class="form-control " id="event" name="eventName" value="${eventName}">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="Semester">Semester</label>
+                  <select id="session_master" name="semester" class="form-control ">
+                    <option value="Select Semester" selected>Select Acad Session</option>
+                    <% acadSession.forEach(data=> { %>
+                      <option>
+                        <%= data.current_session %>
+                      </option>
+                      <% });%>
+                  </select>
+                </div>
+                <div class="form-row">
+                  <div class="form-group col-md-6">
+                    <label for="acad_year">Acad Year</label>
+                    <select id="acadYear" name="acad_year" class="form-control ">
+                    </select>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="campus">Campus</label>
+                    <select id="campusInput" name="campus" class="form-control campusOption">
+                      <option selected>Select Campus</option>
+                      <% campus.forEach(data=> { %>
+                        <option>
+                          <%= data.campus_name %>
+                        </option>
+                        <% }); %>
+                    </select>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="Start Date">Start Date</label>
+                    <input type="datetime-local" name="start_date" class="form-control" id="start_date" value="${eventStart}">
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="End Date">End Date</label>
+                    <input type="datetime-local" name="end_date" class="form-control" id="end_date" value="${eventEnd}">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>`;
 
+          let editModalButton =document.querySelector('.editModal');
+          editModalButton.setAttribute('data-eventId',eventId);
 
+         modalBody.innerHTML = editForm; 
+
+         let campusInput = document.getElementById('campusInput');
+         campusInput.value = eventCampus;
+
+          let sessionInput =document.getElementById('session_master');
+          sessionInput.value = eventSession;
+
+          let acadYear = document.getElementById('acadYear');
+          let date =new Date();
+          let currYear = date.getFullYear();
+          let prevYear = currYear - 1;
+          let nextYear = currYear + 1;
+
+          let year = `<option selected>Select Acad Year</option>
+                    <option value = ${prevYear}-${currYear}>${prevYear}-${currYear}</option>
+                    <option value = ${currYear}-${nextYear}>${currYear}-${nextYear}</option>
+                    <option value = ${nextYear}-${(nextYear + 1)}>${nextYear}-${(nextYear + 1)}</option>`;
+   
+          acadYear.innerHTML = year;
+          acadYear.value = eventYear;
+    }
+
+    if(e.target.classList.contains('editModal')){
+       let eventId = e.target.getAttribute('data-eventId') ;
+       let eventName = $(e.target).closest('div').prev().find('#event').val();
+       let campus =$(e.target).closest('div').prev().find('#campusInput').val();
+       let startDate =$(e.target).closest('div').prev().find('#start_date').val();
+       let endDate= $(e.target).closest('div').prev().find('#end_date').val();
+       let semester = $(e.target).closest('div').prev().find('#session_master').val();
+       let acad_year = $(e.target).closest('div').prev().find('#acadYear').val();
+
+       let obj = {eventId,eventName,campus,startDate,endDate,semester,acad_year};
+
+       dynamicFetchApi('/elective/editEvent','POST',obj)
+       .then(response => {
+
+        if(response.status === 'error'){
+         window.location.href=`${response.redirectTo}`;
+        }else{
+        let editmodal =document.getElementById('successModal');
+        editmodal.innerHTML = `<div><h4 style="text-align:center;">${response.message}</h4></div>`;
+
+        document.querySelector('[data-target="#exampleModal"]').click();
+        }
+
+       });
+
+       
+    }
+
+    if(e.target.classList.contains('okModal')){
+        window.location.reload();
+    }
 
 })
-
-
 
 
 

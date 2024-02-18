@@ -5,11 +5,13 @@ const courseQuery = require("../queries/courseQuery.js");
 const validation = require("../controller/validation.js");
 const programQuery = require("../queries/programQueries.js");
 const Validation = require("../controller/validation.js");
+const jwtauth = require("../middleware/request.js");
+
 
 module.exports = {
   addCourses: async (req, res) => {
     try {
-      let username = req.session.modules;
+      let username = jwtauth.verifySession(req,res);
 
       if (username != undefined) {
         let getmodules = await userQuery.getModules(username);
@@ -30,8 +32,8 @@ module.exports = {
 
   insertCourseViaExcel: async (req, res) => {
     try {
-      let username = req.session.modules;
-      let role = req.session.userRole;
+      let username = jwtauth.verifySession(req,res);
+      let role = jwtauth.verifySessionRole(req,res);
 
       if (username != undefined) {
         let file = req.file;
@@ -134,7 +136,7 @@ module.exports = {
 
   getAllCourses: async (req, res) => {
     try {
-      let username = req.session.modules;
+      let username = jwtauth.verifySession(req,res);
       if (username != undefined) {
         let courseData = await courseQuery.getCourses(username);
 
@@ -154,8 +156,8 @@ module.exports = {
 
   insertCourseManually: async (req, res) => {
     try {
-      let username = req.session.modules;
-      let role = req.session.userRole;
+      let username = jwtauth.verifySession(req,res);
+      let role = jwtauth.verifySessionRole(req,res);
 
       if (username != undefined) {
         let {
@@ -243,8 +245,8 @@ module.exports = {
 
   allocatePrograms: async (req, res) => {
     try {
-      let username = req.session.modules;
-      let role = req.session.userRole;
+      let username = jwtauth.verifySession(req,res);
+      let role = jwtauth.verifySessionRole(req,res);
 
       if (username != undefined) {
         let { programArray } = req.body;
@@ -290,8 +292,8 @@ module.exports = {
 
   commonCourseDelete: (req, res) => {
     try {
-      let username = req.session.modules;
-      let role = req.session.userRole;
+      let username = jwtauth.verifySession(req,res);
+      let role = jwtauth.verifySessionRole(req,res);
 
       if (username != undefined) {
         let { courseArray } = req.body;
@@ -324,7 +326,7 @@ module.exports = {
 
   getAllCoursePrograms: async (req, res) => {
     try {
-      let username = req.session.modules;
+      let username = jwtauth.verifySession(req,res);
       if (username != undefined) {
         let { subId } = req.body;
         let coursePrograms = await courseQuery.getAllCourseProgram(subId);
@@ -347,8 +349,8 @@ module.exports = {
 
   editCourse: async (req, res) => {
     try {
-      let username = req.session.modules;
-      let role = req.session.userRole;
+      let username = jwtauth.verifySession(req,res);
+      let role = jwtauth.verifySessionRole(req,res);
 
       if (username != undefined) {
         console.log("function called");
@@ -493,8 +495,8 @@ module.exports = {
 
   deleteCourse: async (req, res) => {
     try {
-      let username = req.session.modules;
-      let role = req.session.userRole;
+      let username = jwtauth.verifySession(req,res);
+      let role = jwtauth.verifySessionRole(req,res);
 
       console.log('delete api called')
 
