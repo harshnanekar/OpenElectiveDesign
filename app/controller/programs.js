@@ -4,7 +4,6 @@ const programQuery = require("../queries/programQueries.js");
 let excelController = require("../controller/excel.js");
 let validationController = require("../controller/validation.js");
 const jwtauth = require("../middleware/request.js");
-const Validation = require("../controller/validation.js");
 
 
 module.exports = {

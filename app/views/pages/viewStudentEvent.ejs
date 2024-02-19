@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include ('../partials/partial') %>
+    <title>Programs</title>
+    
+    <style>
+      body{
+        background-color: whitesmoke;
+      }  
+    </style>
+
+</head>
+<body>
+    <%- include('sidebar.ejs') %>
+    <%- include('header.ejs')  %>
+    <div id="main">
+       <table class="table table-responsive-lg">
+        <tr>
+         <th>Sr.No</th>
+         <th>Event Name</th>
+         <th>Start Date</th>
+         <th>End Date</th>
+         <th>Actions</th>   
+        </tr>
+        <% if(event.length > 0){ %>
+        <% let index =1; %>
+        <% event.forEach(eventRow => { %>
+        <tr>
+         <td><%= index %></td>   
+         <td><%= eventRow.event_name%></td>
+         <% let sdate = event.startdate.toISOString(); %>
+         <% let date = sdate.split('T')[0]; let time= sdate.split('T')[1] ;  let stime= time.split('.')[0] ; %>
+         <td id="eventStart"><%= date %><%= " " %><%= stime %></td>
+       
+         <td>
+         <i style="cursor:pointer" class="fa-solid fa-hand-pointer" data-toggle="tooltip" title="Start Selection" ></i>   
+         </td>
+        </tr>
+        <% index++; %>
+        <% }); %>
+        <% } else { %>
+
+        <% } %>    
+       </table>
+    </div>
+</body>
+
+<%- include ('../partials/partial2') %>
+<script src= "../js/script.js" ></script>
+</html>
