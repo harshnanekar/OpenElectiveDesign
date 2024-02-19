@@ -30,7 +30,7 @@
         <div id="programList">
         <table id="programTable">
         <tr>
-        <td><label for="programName"><input type="checkbox" />&nbsp;Select All</label></td>
+        <td><label for="programName" class="mb-4"><input type="checkbox" />&nbsp;Select All</label></td>
         </tr>
         <% programs.forEach(data => { %>
            <tr><td><label for="programName"><input type="checkbox" value="<%= data.program_id %>" class="checkProgram"/>&nbsp;<%= data.program_name %></label></td></tr>
@@ -50,8 +50,26 @@ allCheckedPrograms();
 function allCheckedPrograms(){
  let selectedPrograms = document.querySelectorAll('input');   
  let checkboxClass = document.querySelectorAll('.checkProgram');
+ let buttonAttr = document.getElementById('submitbtn');
+
+let count = 0;
+selectedPrograms.forEach(selectedElement => {
+  selectedElement.addEventListener('change', ()=> {
+    if (selectedElement.checked) {
+      buttonAttr.removeAttribute('disabled');
+    }else{
+      count--; 
+      if (count === 0) {
+       buttonAttr.setAttribute('disabled','disabled');
+    }
+  }
+    count = document.querySelectorAll('input:checked').length;
+  });
+});
 
  if(!selectedPrograms[0].checked){
+
+buttonAttr.setAttribute('disabled','disabled');
 
  selectedPrograms[0].addEventListener('change',() => {   
 
@@ -106,6 +124,10 @@ function allCheckedPrograms(){
  });
 
  });
+
+ document.querySelector('.messageOkModal').addEventListener('click',() => {
+  window.location.reload();s
+ })
 
 </script>
 </html>

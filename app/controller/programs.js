@@ -201,10 +201,12 @@ module.exports = {
       if (username != undefined) {
         let getmodules = await userQuery.getModules(username);
         let programData = await programQuery.viewPrograms(username);
+        let dataRows = programData.rowCount;
 
         return res.render("viewPrograms", {
           module: getmodules,
           programData: programData.rows,
+          dataRows: dataRows
         });
       } else {
         res.clearCookie("jwtauth");

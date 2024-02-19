@@ -15,8 +15,9 @@ static insertCourse(subjectName,departMentName,batchNo,maxCapacityPerBatch,campu
 
 static getCourses(username){
  let query={
-  text: `select s.sub_id,s.subject_name,c.campus_name,s.open_to_allprograms,s.dept_name,s.max_capacity_per_batch,s.batches from public.subject_master s inner join campus c on s.campus_lid=c.campus_id where s.createdby =$1
-         and s.active=true and c.active=true order by s.created_date desc`,
+  text: `SELECT s.sub_id, s.subject_name,COALESCE(c.campus_name, 'No Campus Assigned') AS campus_name,s.open_to_allprograms,s.dept_name,s.max_capacity_per_batch,s.batches,s.campus_lid
+  FROM public.subject_master s LEFT JOIN campus c ON s.campus_lid = c.campus_id WHERE s.createdby =$1 AND s.active = true AND (c.active = true OR c.active IS NULL) 
+  ORDER BY s.created_date DESC`,
   values:[username]  
  }   
  return pgPool.query(query);

@@ -6,31 +6,27 @@
     <%- include ('../partials/partial') %>
         <style>
             body {
-                background-color: whitesmoke;
+            background-color: whitesmoke;
             }
-
-            th,
-            tr,
-            td {
-                border: 1px solid black;
+            th{
+            background-color: #e6f7ff;
             }
-
-            td,
-            th {
-                text-align: center;
+            tr:nth-child(odd) {
+            background-color: #e6f7ff;
+            }   
+            tr:nth-child(even) {
+            background-color: white;
             }
-
             #basketForm {
-                background-color: white;
-                padding: 20px;
-                width: 100%;
-                margin-top: 20px;
+            background-color: white;
+            padding: 2%;
+            width: 1400px;
+            margin-top: 40px;
+            border-radius: 10px;
             }
-
             #basketData {
                 margin-top: 20px;
             }
-
             span {
                 color: red;
             }
@@ -66,7 +62,7 @@
                         <h4 id="totalRecord">
                             <%= basket.length %> Record Found
                         </h4>
-                        <table class="table table-bordered table-responsive-lg basketData">
+                        <table class="table table-bordered table-responsive-lg basketData text-center">
                             <tr>
                                 <th>Sr.No</th>
                                 <th>Basket Name</th>
@@ -200,7 +196,7 @@
 
                             if(basketSize == 0){
                                 let basketTable = document.querySelector('.basketData');
-                            let tableData = ` <table class="table table-bordered table-responsive-lg basketData">
+                            let tableData = ` <table class="table table-bordered table-responsive-lg basketData text-center">
                             <tr>
                                 <th>Sr.No</th>
                                 <th>Basket Name</th>

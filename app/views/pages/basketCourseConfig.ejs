@@ -10,11 +10,22 @@
      #basketConfig{
         background-color: white;
         margin-top:20px;
-        padding:20px;
-     }
+        width: 1400px;
+        padding: 3%;
+        border-radius: 10px;
+    }
      span{
         color:red;
      }
+     th{
+    background-color: #e6f7ff;
+      }
+    tr:nth-child(odd) {
+    background-color: #e6f7ff;
+    }
+    tr:nth-child(even) {
+    background-color: white;
+    }
     </style>
 </head>
 <body>
@@ -22,7 +33,7 @@
     <%- include('header.ejs')  %> 
     <div id="mains">
         <%- include('messageModal.ejs') %>
-        <div id='basketConfig' class="container">
+        <div id='basketConfig' class="container col-md-12 col-lg-12 col-sm-12">
             <div class="form-group ">
 
                 <label for="inputBasket">Select Basket's</label>&ensp;&ensp;<span id="basketError"></span>

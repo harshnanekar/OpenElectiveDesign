@@ -9,19 +9,33 @@
      body{
         background-color:whitesmoke;
         padding:0;
-        margin:0;
-        
+        margin:0;    
      }  
      table{
         width:50%;
      } 
+     th{
+    background-color: #e6f7ff;
+      }
+    tr:nth-child(even) {
+    background-color: #e6f7ff;
+    }
+    tr:nth-child(odd) {
+    background-color: white;
+    }
+    #selectDropdown {
+        margin-bottom: -52px;
+    }
     </style>
 </head>
 <body>
     <%- include('sidebar.ejs') %>
     <%- include('header.ejs')  %>
     <div id="main">
-        <table class="table table-bordered table-responsive text-center">
+
+        <%- include('paginationHeader.ejs')  %>
+
+        <table class="table mt-4 table-bordered table-responsive-lg text-center custom-pagination">
         <thead>
         <th>Sr.No</th>
         <th>Program Name</th>
@@ -35,16 +49,28 @@
         <td><%= count %></td>
         <td><%= program.program_name %></td>
         <td><%= program.campus_name %></td>
-        <td><i class="fa-solid fa-trash"  data-toggle='tooltip' title = 'Delete' width="2.5%" ></i>&ensp;
-       <i class="fa-solid fa-pen-to-square"  data-toggle='tooltip' title = 'Edit' width="2.5%" ></i>&ensp;
+        <td><i class="fa-solid fa-trash"  data-toggle='tooltip' title = 'Delete' width="2%" ></i>&ensp;
+       <i class="fa-solid fa-pen-to-square"  data-toggle='tooltip' title = 'Edit' width="2%" ></i>&ensp;
         </td>     
         </tr>
         <% count++ %>
         <% }); %>
         </tbody>
         </table>
+
+    <%- include('pagination.ejs')  %>
+    
+    <%- include('editModal.ejs') %>
+    <%- include('deleteModal.ejs') %>
+    <%- include('deleteSuccessModal.ejs') %>
+    <%- include('editSuccessModal.ejs') %>
+
     </div> 
 </body>
 <%- include ('../partials/partial2') %>
 <script src= "../js/script.js" ></script>
+<script src= "../js/paginationMain.js" ></script>
+<script>
+    initializePagination('.custom-pagination');
+</script>
 </html>

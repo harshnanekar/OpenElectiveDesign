@@ -5,26 +5,29 @@
     <title>View Event</title>
     <%- include ('../partials/partial') %>
     <style>
-      th, tr,td {
-      border: 1px solid black;
-      }
-      
       body{
        background-color: whitesmoke;
       }
-      td,th{
-         text-align:center;
+      th{
+    background-color: #e6f7ff;
       }
-
-
+    tr:nth-child(even) {
+    background-color: #e6f7ff;
+    }
+    tr:nth-child(odd) {
+    background-color: white;
+    }
     </style>
 </head>
 <body>
     <%- include('sidebar.ejs') %>
     <%- include('header.ejs')  %>
     <div id="main">
-    
-        <table id="datatable" class="table table-striped table-bordered bluetable table-responsive">
+
+      <%- include('paginationHeader.ejs')  %>
+
+
+        <table id="datatable" class="table text-center mt-4 table-bordered table-responsive-lg custom-pagination">
         <thead>
         <th>Sr.No</th>
         <th>Event Name</th>
@@ -71,6 +74,8 @@
         </tbody>
     </table>
 
+    <%- include('pagination.ejs')  %>
+
     <%- include('editModal.ejs') %>
     <%- include('deleteModal.ejs') %>
     <%- include('deleteSuccessModal.ejs') %>
@@ -80,8 +85,10 @@
 
 <%- include ('../partials/partial2') %>
 <script src= "../js/script.js" ></script>
+<script src= "../js/paginationMain.js" ></script>
 <script>
 
+  initializePagination('.custom-pagination');
 document.addEventListener('click',(e) => {
 
     if (e.target.classList.contains('deleteModal')) {

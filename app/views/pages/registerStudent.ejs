@@ -85,6 +85,9 @@
         margin-bottom: 50px;
         text-align: center;
       }
+      .notes {
+        margin-left: 0;
+      }
     </style>
 </head>
 
@@ -128,7 +131,14 @@
              <button type="submit" class="btn btn-primary excelDataSubmit" id='excelSubmit' >Upload</button>&nbsp;<button id='excelCancel' type="submit" class="btn btn-danger excelDataCancel" >Cancel</button>
              </div>
              </div>
-             <div><a class="downloadFile" href="/excel/StudentDetail_Demo1.xlsx" class="text-danger" >Download Sample Template</a></br>
+
+             <ul>
+                <li class="notes">Kindly Verify The File Before Uploading</li>
+                <li class="notes"><b style="color:red; ">*</b>The selection of all fields is mandatory.</li>
+                <li class="notes"><b style="color:red; ">*</b>The Acad Year and Campus field should only be selected, not written.</li> 
+              </ul>
+
+             <div style="margin-top: 2%; "><a class="downloadFile" href="/excel/StudentDetail_Demo1.xlsx" class="text-danger" >Download Sample Template</a></br>
              <h4 id="excel">Excel Format:</h4>
              <p>Username | Firstname | Lastname | Acad Session | Acad Year | Campus | Roll No.</p>
              </div>`;

@@ -51,7 +51,7 @@ module.exports = {
 
               let subjectName = subName ? subName.trim() : undefined;
               let departMentName = deptName ? deptName.trim() : undefined;
-              let campus = campusName ? campusName.trim() : undefined;
+              let campus = campusName ? campusName.trim() : null;
               let batchNo = batches ? batches.trim() : undefined;
               let maxCapacityPerBatch = maxCapacity
                 ? maxCapacity.trim()
@@ -59,18 +59,19 @@ module.exports = {
               let openToAllPrograms = openToPrograms
                 ? openToPrograms.trim()
                 : undefined;
+              let openPrograms;  
 
               if (
                 subjectName != undefined &&
                 departMentName != undefined &&
-                campus != undefined &&
                 batchNo != undefined &&
                 maxCapacityPerBatch != undefined &&
                 openToAllPrograms != undefined
               ) {
-                let openPrograms = openToAllPrograms === "Yes" ? "Y" : "N";
+                openPrograms = openToAllPrograms === "Yes" ? "Y" : "N";
 
                 if (role === "Role_Admin") {
+                  console.log("course campus ",campus)
                   let insertCourseQuery = await courseQuery.insertCourse(
                     subjectName,
                     departMentName,
@@ -150,6 +151,7 @@ module.exports = {
         return res.json({ status: "error", redirectTo: "/elective/loginPage" });
       }
     } catch (error) {
+      console.log(error);
       return res.json({ status: "error", redirectTo: "/elective/error" });
     }
   },
@@ -173,14 +175,12 @@ module.exports = {
         let batchValidation = validation.batchValidater(batches);
         let batchCapacityValidation =
           validation.batchCapacityValidater(batchCapacity);
-        let campusValidation = validation.campusValidation(campus);
 
         if (
           subjectValidation &&
           departmentValidation &&
           batchValidation &&
-          batchCapacityValidation &&
-          campusValidation
+          batchCapacityValidation 
         ) {
           let radioYesNoValue = radioTypeValue === "Yes" ? "Y" : "N";
 
@@ -366,7 +366,6 @@ module.exports = {
 
         let departmentValidation = Validation.departmentValidator(deptName);
         let capacityValidation = Validation.batchCapacityValidater(capacity);
-        let campusValidation = Validation.campusValidation(campus);
         let batchValidation = Validation.batchValidater(batch);
 
         console.log(
@@ -374,7 +373,6 @@ module.exports = {
           subjectId,
           departmentValidation,
           capacityValidation,
-          campusValidation,
           batchValidation
         );
 
@@ -384,7 +382,6 @@ module.exports = {
           departmentValidation &&
           batchValidation &&
           capacityValidation &&
-          campusValidation &&
           programs.length > 0
         ) {
           if (role === "Role_Admin") {

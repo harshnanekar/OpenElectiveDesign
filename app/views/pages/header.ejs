@@ -1,5 +1,4 @@
 <style>
-
 .sidebutton{
 position: relative;
 top:15px;
@@ -18,7 +17,6 @@ position: fixed;
 left:73%;
 top:10px;
 box-sizing: border-box;
-
 }
 .profiledropdown{
     position: relative;
@@ -35,29 +33,29 @@ box-sizing: border-box;
 .imagelogo{
     position:relative;
     top:10px;
-
 }
-
+#dropdownMenuLink:hover {
+  color: black;
+}
 </style>
 
 <div id="header">
 
     <div class="headersection" style="display:flex;align-items: center;">
-    <button id="sidebuttonid" class="sidebutton" ><img src= "../images/left.png" width="25%;" /></button> 
+    <button id="sidebuttonid" class="sidebutton" ><img src= "../images/left.png" width="25%;"/></button> 
 
 <div class="profilediv">
-<img class="imagelogo" src="../images/admin.png" width="8%;" />
+<img class="imagelogo" src="../images/admin.png" width="8%;" height="100%"/>
 <p class="roleName"><%= module[0].username %></p>
 
 <div class="dropdown show profiledropdown">
-    <a class= "dropdown-toggle togglebutton" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <a style="text-decoration: none;" class= "dropdown-toggle togglebutton" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       <img src="../images/user1.png" > Hii <%= module[0].firstname%> <%= module[0].lastname%> !</img>
     </a>
   
     <div style="position:relative;top:10%;" class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-      <a class="dropdown-item" href="#">Action</a>
-      <a class="dropdown-item" href="#">Another action</a>
-      <a class="dropdown-item" href="/elective/logout">Logout</a>
+      <a class="dropdown-item" href="#"><i class="fa-solid fa-user-gear"></i>&nbsp;Change Password</a>
+      <a class="dropdown-item" href="/elective/logout"><i class="fa-solid fa-right-from-bracket"></i>&nbsp;Logout</a>
     </div>
   </div>
   </div>

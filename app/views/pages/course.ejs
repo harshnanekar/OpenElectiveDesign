@@ -68,14 +68,15 @@
       tr:nth-child(even) {
         background-color: white;
       }
-
       th {
         background-color: #e6f7ff;
       }
-
       span {
         color: red;
       }
+      .notes {
+        margin-left: 0;
+      } 
     </style>
 </head>
 
@@ -120,7 +121,14 @@
              <button type="submit" class="btn btn-primary excelDataSubmit" id='excelCourseSubmit' >Upload</button>&nbsp;<button id='excelCancel' type="submit" class="btn btn-danger excelDataCancel" >Cancel</button>
              </div>
              </div>
-             <div id='displayNote'><a style="text-decoration:none;font-size:20px;" class="text-danger" href="/excel/Course_Excel.xlsx" id="downloadExcel"  >Download Sample Template</a></br>
+
+             <ul>
+                <li class="notes">Kindly Verify The File Before Uploading</li>
+                <li class="notes"><b style="color:red">*</b>The selection of Campus is not mandatory.</li>
+                <li class="notes"><b style="color:red">*</b>The "Open To All Programs" field should only be selected, not written.</li> 
+              </ul>
+
+             <div id='displayNote' style="margin-top: 45px"><a style="text-decoration:none;font-size:20px;" class="text-danger" href="/excel/Course_Excel.xlsx" id="downloadExcel"  >Download Sample Template</a></br>
              <h4 id="excelHeading">Excel Format:</h4>
              <p>Subject Name | Department Name | Campus(Optional) | No. Of Batches | Max Capacity Per Batch | Open To All Programs</p>
              </div>`
@@ -181,7 +189,7 @@
      </div>
      </div>
      <div class="form-group">
-    <label for="inputCampus">Campus</label>&ensp;&ensp;<span id="campusError"></span>
+    <label for="inputCampus">Campus(Optional)</label>&ensp;&ensp;<span id="campusError"></span>
     <select id="inputCampus" class="form-control">
         <option selected>Select Campus</option>
         <% campus.forEach(data => { %>
@@ -260,7 +268,7 @@
                 if (rows == 0) {
                   let tableData = document.querySelector('#viewAllCourse');
                   let data = `<h5 class="totalRows" style="float:left;padding-bottom:10px;">${rows} Records Found</h5>
-         <table class="table table-bordered table-responsive-lg ">
+         <table class="table table-bordered table-responsive-lg text-center">
          <tr>
          <th>Sr No.</th>
          <th>Select</th>
@@ -311,7 +319,7 @@
           radioTypeValue = 'No';
         }
 
-        if (subjectValidate && departmentValidate && batchesValidate && batchCapacityValidate && campusValidate) {
+        if (subjectValidate && departmentValidate && batchesValidate && batchCapacityValidate) {
           let obj = { subjectName, department, batches, batchCapacity, campus, radioTypeValue };
           dynamicFetchApi('/elective/insertCourseManually', 'POST', obj)
             .then(response => {
@@ -462,6 +470,7 @@
         let programs = $(e.target).closest('div').prev().find('#coursePrograms').val();
         let subjectId = $(e.target).closest('div').prev().find('#inputSubId').val();
 
+        
         let obj = { subjectId, subName, deptName, batch, capacity, campus, programs };
         console.log('edit course object ',obj);
 
@@ -532,7 +541,7 @@
               if (tlength == 0) {
                   let tableData = document.querySelector('#viewAllCourse');
                   let data = `<h5 class="totalRows" style="float:left;padding-bottom:10px;">${tlength} Records Found</h5>
-         <table class="table table-bordered table-responsive-lg ">
+         <table class="table table-bordered table-responsive-lg text-center">
          <tr>
          <th>Sr No.</th>
          <th>Select</th>
@@ -575,9 +584,9 @@
            <tr>
            <th>Sr No.</th>
            <th>Select</th>
-           <th>Subject Name</th>
+           <th style="width: 400px">Subject Name</th>
            <th>Campus</th>
-           <th>Actions</th>
+           <th style="width: 575px">Actions</th>
            </tr>
            <tr>
            <td></td>
@@ -605,7 +614,7 @@
 
       } else {
         data = `<h5 class="totalRows" style="float:left;padding-bottom:10px;">${allCourses.length} Records Found</h5>
-           <table class="table table-bordered table-responsive-lg">
+           <table class="table table-bordered table-responsive-lg text-center">
            <tr>
            <th>Sr No.</th>
            <th>Select</th>
@@ -699,15 +708,10 @@
     function campusValidator(campus) {
 
       let campusValidation = document.querySelectorAll('#inputCampus');
-      let campusError = document.getElementById('campusError');
       let campusName = campusValidation[0][0].innerText;
 
-      if (campusName != campus) {
-        campusError.innerText = '';
-        return true;
-      } else {
-        campusError.innerText = '*Invalid Input Field';
-        return false;
+      if (campusName === campus) {
+        return null;
       }
 
     }

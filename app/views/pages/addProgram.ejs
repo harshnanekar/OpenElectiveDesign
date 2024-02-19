@@ -65,10 +65,10 @@
         th,td{
           text-align:center;
         }
-
-     
-      
-        
+      .notes{
+        margin-left: 0;
+      }  
+   
     </style>
 </head>
 <body>
@@ -96,7 +96,7 @@
 
      </div>
      </div>
-    
+    notes
 </body>
 <%- include ('../partials/partial2') %>
 <script src= "../js/script.js" ></script>
@@ -108,7 +108,14 @@
              <button type="submit" class="btn btn-primary excelDataSubmit" id='excelProgramSubmit' >Upload</button>&nbsp;<button id='excelCancel' type="submit" class="btn btn-danger excelDataCancel" >Cancel</button>
              </div>
              </div>
-             <div id='displayNote'><a style="text-decoration:none;font-size:20px;" class="text-danger" href="/excel/Program_Excel.xlsx" id="downloadExcel"  >Download Sample Template</a></br>
+
+             <ul>
+                <li class="notes">Kindly Verify The File Before Uploading</li>
+                <li class="notes"><b style="color:red; ">*</b>The selection of all fields is mandatory.</li>
+                <li class="notes"><b style="color:red; ">*</b>The Acad Year and Campus field should only be selected, not written.</li> 
+              </ul>
+
+             <div id='displayNote' style="margin-top: 60px; "><a style="text-decoration:none;font-size:20px;" class="text-danger" href="/excel/Program_Excel.xlsx" id="downloadExcel"  >Download Sample Template</a></br>
              <h4 id="excelHeading">Excel Format:</h4>
              <p>Program Name | Campus | Program Id</p>
              </div>`;
