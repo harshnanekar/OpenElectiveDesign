@@ -83,7 +83,7 @@ module.exports = {
 
 
     errorPage: async function (req,res) {
-     let username = req.session.modules;
+     let username = jwtauth.verifySession(req,res);
      let getModules = await query.getModules(username);
      return res.render("500",{module :getModules});
      },

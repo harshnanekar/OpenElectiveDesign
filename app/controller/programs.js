@@ -3,11 +3,13 @@ const userQuery = require("../queries/user.js");
 const programQuery = require("../queries/programQueries.js");
 let excelController = require("../controller/excel.js");
 let validationController = require("../controller/validation.js");
+const jwtauth = require("../middleware/request.js");
+
 
 module.exports = {
   programs: async (req, res) => {
     try {
-      let username = await req.session.modules;
+      let username = jwtauth.verifySession(req,res);
 
       if (username != undefined) {
         let getmodules = await userQuery.getModules(username);
@@ -28,7 +30,7 @@ module.exports = {
 
   addPrograms: async (req, res) => {
     try {
-      let username = req.session.modules;
+      let username = jwtauth.verifySession(req,res);
 
       if (username != undefined) {
         let getmodules = await userQuery.getModules(username);
@@ -51,7 +53,9 @@ module.exports = {
   insertProgramsViaExcel: async (req, res) => {
     try {
       console.log("Function called for excel");
-      let username = req.session.modules;
+      let username = jwtauth.verifySession(req,res);
+      let role = jwtauth.verifySessionRole(req,res);
+
 
       if (username != undefined) {
         let file = req.file;
@@ -75,8 +79,6 @@ module.exports = {
               let campus = campusName ? campusName.trim() : undefined;
               let programId = program_id ? program_id.trim() : undefined;
 
-              let role = req.session.userRole;
-
               if (
                 program != undefined &&
                 campus != undefined &&
@@ -92,7 +94,7 @@ module.exports = {
                 nonInsertedPrograms
               );
 
-                if (role != undefined && role === "Role_Admin") {
+                if (role === "Role_Admin") {
                   let insertProgram = await programQuery.insertPrograms({
                     prgArray: programArray,
                   });
@@ -138,8 +140,8 @@ module.exports = {
     try {
       console.log("function called");
 
-      let username = req.session.modules;
-      let userRole = req.session.userRole;
+      let username = jwtauth.verifySession(req,res);
+      let userRole = jwtaith.verifySessionRole(req,res);
 
       if (username != undefined) {
         let { program, campus, programId } = req.body;
@@ -194,7 +196,7 @@ module.exports = {
 
   viewPrograms: async (req, res) => {
     try {
-      let username = req.session.modules;
+      let username = jwtauth.verifySession(req,res);
 
       if (username != undefined) {
         let getmodules = await userQuery.getModules(username);
@@ -216,7 +218,7 @@ module.exports = {
 
   getAllProgramsList: async (req, res) => {
     try {
-      let username = req.session.modules;
+      let username = jwtauth.verifySession(req,res);
 
       if (username != undefined) {
         let getmodules = await userQuery.getModules(username);

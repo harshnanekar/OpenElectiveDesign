@@ -101,6 +101,8 @@
                     <%- include('editModal.ejs') %>
                         <%- include('deleteModal.ejs') %>
                             <%- include('deleteSuccessModal.ejs') %>
+                                <%- include('editSuccessModal.ejs') %>
+
             </div>
 
 
@@ -120,7 +122,7 @@
 
                 let basketValidation = basketValidator(basketName);
                 let basketAbbrValidation = basketAbbrValidator(basketAbbr);
-              
+
                 if (basketValidation && basketAbbrValidation) {
 
                     let urlValue = window.location.search;
@@ -139,65 +141,20 @@
                                 modalBody.innerHTML = `<div><h4 style="text-align:center;">${response.message}</h4></div>`
                                 await document.querySelector('[data-target="#messageModal"]').click();
 
-                                let bsLid = response.basketLid;
-                                let basketname = `<td>${basketName}</td>`;
-                                let abbr = `<td>${basketAbbr}</td>`;
-                                let actions = `<td>
-                            <i class="fa-solid fa-trash-arrow-up" data-toggle='modal' data-toggle='tooltip' data-target='#deletModal' title='Delete'
-                            width="2%"></i>&ensp;
-                            <i class="fa-solid fa-pencil" data-toggle='modal' data-toggle='tooltip' data-target='#exampleModalCenter' title='Edit'
-                            width="2%"></i>&ensp;
-                            </td>`
-
-                                console.log('bs ', bsLid)
-                                
-                                let insert = document.querySelector('.basketData');
-                                let row = insert.insertRow(-1);
-                                let lengthUpd = row.insertCell(0);
-                                let cell = row.insertCell(1);
-                                let cell1 = row.insertCell(2);
-                                let cell2 = row.insertCell(3);
-                                
-
-                                let basketSize = document.querySelectorAll('.basketData');
-                                let bskSize = (insert.rows.length - 1);
-                                let record = document.getElementById('totalRecord');
-                                record.innerText = bskSize + ' Record Found';
-                               
-
-                                lengthUpd.innerHTML = bskSize;
-                                cell.innerHTML = basketname;
-                                cell1.innerHTML = abbr;
-                                cell2.innerHTML = actions;
-
-                                let modal = document.getElementById('getModal');
-                                let modalBodie = `<div id='basketEditForm'>
-                    <div class="form-row">
-                        <div class="form-group col-md-12">
-                            <label for="nameInput">Basket Name</label>&ensp;&ensp;
-                            <input value="${bsLid}" id ="bskId" hidden />
-                            <input value="${basketName}" type="text" class="form-control" id="inputBasket" />
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-12">
-                            <label for="abbrInput">Basket Abbr</label>&ensp;&ensp;
-                            <input value="${basketAbbr}" type="text" class="form-control" id="inputBasketAbbr" />
-                        </div>
-                    </div>
-                    `;
-
-                                modal.innerHTML = modalBodie; 
-
                             }
 
                         })
                 }
-            }      
-            
+            }
+
+            if (e.target.classList.contains('messageOkModal')) {
+                window.location.reload();
+            }
+
             if (e.target.classList.contains('deleteIcon')) {
                 let bid = e.target.closest('tr').getAttribute('data-basketId');
 
+                console.log('basket delete id ', bid)
                 let confirmButton = document.querySelector('.confirmDelete');
                 confirmButton.setAttribute('data-bid', bid);
             }
@@ -207,6 +164,7 @@
                 let basketId = confirmButton.getAttribute('data-bid');
 
                 let obj = { basketId };
+                console.log('basket delete id ', obj)
                 dynamicFetchApi('/elective/deleteBasket', 'POST', obj)
                     .then(response => {
                         if (response.status === 'error') {
@@ -216,21 +174,24 @@
                             let deleteModal = document.querySelector('#deleteSuccess');
                             deleteModal.innerText = response.message;
 
+                            if(response.status === 'success'){
+
                             let basketRows = document.querySelectorAll('#basketRow');
                             let bskLength = basketRows.length;
 
                             Array.from(basketRows).forEach(row => {
                                 let bsId = row.getAttribute('data-basketId');
+                                console.log('basket ids ', basketId, bsId)
                                 if (basketId == bsId) {
                                     row.remove();
                                 }
                             });
 
-                            console.log('basket rows ' ,basketRows.length )
+                            console.log('basket rows ', basketRows.length)
                             let basketLength = document.querySelector('#totalRecord');
                             let basketSize = bskLength - 1;
                             basketLength.innerText = `${basketSize} Record Found`;
-
+                           }
                             document.querySelector('[data-target="#deleteSuccessModal"]').click();
 
                         }
@@ -242,11 +203,11 @@
                 let basketDataId = e.target.closest('tr').getAttribute('data-basketId');
                 let bsNameData = tr.querySelector('#inputBasketName').textContent;
                 let bsAbbrData = tr.querySelector('#inputBasketAbbr').textContent;
-              
+
                 let basketData = basketDataId.trim();
                 let bsName = bsNameData.trim();
                 let bsAbbr = bsAbbrData.trim();
-            
+
 
                 console.log(bsName)
 
@@ -266,7 +227,7 @@
                         </div>
                     </div>
                     `;
-  
+
                 modal.innerHTML = modalBody;
 
 
@@ -280,9 +241,9 @@
                 let basket_id = $(e.target.closest('div')).prev().find('#bskId').val();
                 let basketName = $(e.target.closest('div')).prev().find('#inputBasket').val();
                 let basket_abbr = $(e.target.closest('div')).prev().find('#inputBasketAbbr').val();
-               
 
-                let obj = { basket_id, basketName, basket_abbr,  eventId };
+
+                let obj = { basket_id, basketName, basket_abbr, eventId };
 
                 dynamicFetchApi('/elective/editBasket', 'POST', obj)
                     .then(response => {
@@ -290,21 +251,25 @@
                             window.location.href = `${response.redirectTo}`;
                         } else {
 
-                            let modalBody = document.getElementById('successModal');
-                            modalBody.innerText = 'Basket Edited Successfully !!';
+                            console.log('basket edit ', response.message)
+                            let message = response.message;
 
-                            document.querySelector('[data-target="#deleteSuccessModal"]').click();
+                            let modalBody = document.getElementById('successModal');
+                            modalBody.innerHTML = '';
+                            modalBody.innerHTML = `<h4 style='text-align:center;'>${message}</h4>`
+
+                            document.querySelector('[data-target="#exampleModal"]').click();
 
                             let basketRows = document.querySelectorAll('#basketRow');
                             let basketRowName = document.querySelector('#inputBasketName');
                             let basketRowAbbr = document.querySelector('#inputBasketAbbr');
-                           
+
 
                             Array.from(basketRows).forEach(row => {
                                 let bskId = row.getAttribute('data-basketId');
                                 let basketRowName = row.querySelector('#inputBasketName');
                                 let basketRowAbbr = row.querySelector('#inputBasketAbbr');
-                             
+
 
                                 if (basket_id == bskId) {
                                     basketRowName.innerText = basketName;
@@ -343,7 +308,7 @@
 
         }
 
-      
+
 
 
 

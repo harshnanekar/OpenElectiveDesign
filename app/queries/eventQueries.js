@@ -14,11 +14,11 @@ const query = class EventQuery{
 
 
   static async getCampus(){
-    return pgPool.query(`select campus_name from campus`);
+    return pgPool.query(`select campus_name from campus where active=true`);
   }
 
   static async getacadSession(){
-    return pgPool.query(`select current_session from session_master`);
+    return pgPool.query(`select current_session from session_master where active=true`);
   }
 
   static async addEventdata(jsonData){

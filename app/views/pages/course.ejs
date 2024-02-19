@@ -99,29 +99,10 @@
           <div id="viewAllCourse">
 
           </div>
-
-          <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
-            aria-labelledby="exampleModalCenterTitle" data-backdrop="false"
-            style="background-color: rgba(0, 0, 0, 0.3);" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered setModal modal-md" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  </button>
-                </div>
-                <div id="successModal" class="modal-body">
-
-                </div>
-                <div class="modal-footer modalFooter">
-                  <button type="button" data-toggle="modal" data-target="#exampleModal" hidden></button>
-                  <button type="button" class="btn btn-danger okModal" data-dismiss="modal">Ok</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
           <%- include('editModal.ejs') %>
             <%- include('deleteModal.ejs') %>
               <%- include('deleteSuccessModal.ejs') %>
+              <%- include('editSuccessModal.ejs') %>
 
 </body>
 <%- include ('../partials/partial2') %>
@@ -270,6 +251,9 @@
                 window.location.href = `${response.redirectTo}`;
               } else {
                 alert(response.message);
+
+               if(response.status === 'success'){
+                
                 let subjectRows = document.querySelectorAll('#subjectRow');
 
                 for (let i = 0; i < subjectRows.length; i++) {
@@ -303,6 +287,8 @@
                   tableData.innerHTML = data;
                 }
               }
+
+            }
             })
         }
       }
@@ -537,42 +523,53 @@
               window.location.href = `${response.redirectTo}`;
             } else {
 
-              let courseIds = document.querySelector('#subjectRow');
+              if(response.status === 'success'){
 
-              let buttonvalue = document.querySelector('#DeletebtnValue');
-              buttonvalue.setAttribute('data-deleteid', subjectId);
+              let courseIds = document.querySelectorAll('#subjectRow');
+              let totalRows = document.querySelector('.totalRows');
 
+              Array.from(courseIds).forEach(course => {
+                let subId = course.getAttribute('data-subId');
+                console.log('course id ', subId)
+                if (subjectId === subId) {
+                  course.remove();
+                  console.log('query escecuted')
+                }
+              })
+
+
+              let tlength = courseIds.length - 1;
+              totalRows.innerText = `${tlength} Record Found`;
+
+              if (tlength == 0) {
+                  let tableData = document.querySelector('#viewAllCourse');
+                  let data = `<h5 class="totalRows" style="float:left;padding-bottom:10px;">${tlength} Records Found</h5>
+         <table class="table table-bordered table-responsive-lg ">
+         <tr>
+         <th>Sr No.</th>
+         <th>Select</th>
+         <th>Subject Name</th>
+         <th>Campus</th>
+         <th>Actions</th>
+         </tr>
+         <tr>
+         <td colspan="5px">---- No Data Available ---- </td>
+         <tr>
+          </table>`;
+                  tableData.innerHTML = data;
+                }
+
+
+
+            }
               let successModal = document.getElementById('deleteSuccess');
               successModal.innerText =response.message;
 
+              console.log('delete course message ',response.message)
               document.querySelector('[data-target="#deleteSuccessModal"]').click();
 
             }
           })
-      }
-
-      if (e.target.classList.contains('SuccessModal')) {
-
-        console.log('modal called')
-
-        let courseIds = document.querySelectorAll('#subjectRow');
-        let buttonvalue = document.querySelector('#DeletebtnValue');
-        let subjectId = buttonvalue.getAttribute('data-deleteid');
-        let totalRows = document.querySelector('.totalRows');
-
-        Array.from(courseIds).forEach(course => {
-          let subId = course.getAttribute('data-subId');
-          console.log('course id ', subId)
-          if (subjectId === subId) {
-            course.remove();
-            console.log('query escecuted')
-          }
-        })
-
-
-        let tlength = courseIds.length - 1;
-        totalRows.innerText = `${tlength} Record Found`;
-
       }
     })
 

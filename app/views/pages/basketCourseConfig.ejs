@@ -51,7 +51,7 @@
     </br>
 
     <div>   
-    <h5><%= dispBasket.length %> Record Found</h5> 
+    <h5 id="bsklength"><%= dispBasket.length %> Record Found</h5> 
     
     <table class="table table-bordered table-responsive-lg basketData" style="text-align: center;">
         <tr>
@@ -65,12 +65,12 @@
         <tbody>
         <% index = 1; %>
         <% dispBasket.forEach(data => { %>
-        <tr data-basketId = "<%= data.id %>">
+        <tr class="basketListRow" data-basketId = "<%= data.id %>" > 
             <td><%= index %></td>
             <td><%= data.basket_name %></td>
             <td><%= data.current_session %></td>
             <td><%= data.campus_name %></td>
-            <td><%= data.no_of_comp_subj %></td>
+            <td><%= data.no_of_comp_sub %></td>
             <td>
             <i class="fa-solid fa-trash-arrow-up deleteIcon" data-toggle='modal'
             data-toggle='tooltip' data-target="#deletModal" title='Delete Basket'
@@ -170,10 +170,49 @@
                     }
                 }
 
-                if(e.target.classList.contains('deleteIcon')){
-                   let basket = e.target.closest('tr').basketid;
-                   console.log(basket);
+                if(e.target.classList.contains('okModal')){
+                    window.location.reload();
+                }
 
+                if(e.target.classList.contains('deleteIcon')){
+                   let basketId = e.target.closest('tr').getAttribute('data-basketId');
+
+                   let confirmButton = document.querySelector('.confirmDelete');
+                   confirmButton.setAttribute('data-basketId',basketId);
+                }
+
+                if(e.target.classList.contains('confirmDelete')){
+
+                 let basketId = e.target.getAttribute('data-basketId');
+                 let obj = {basketId};
+
+                 dynamicFetchApi('/elective/deletEventBasket','POST',obj)
+                 .then(response => {
+                    if(response.status === 'error'){
+                     window.location.href=`${response.redirectTo}`;
+                    }else{
+                      let successModal = document.querySelector('#deleteSuccess');
+                      successModal.innerText = response.message;
+
+                      if(response.status === 'success'){
+                        let basketRows = document.querySelectorAll('.basketListRow');
+
+                        Array.from(basketRows).forEach(row => {
+                           let bid = row.getAttribute('data-basketId');
+                           if(basketId === bid){
+                            row.remove();
+                           } 
+                        })
+
+                        let basketLength = (basketRows.length - 1);
+                        let bskLength = document.getElementById('bsklength');
+                        bskLength.innerText = `${basketLength} Record Found`;
+                      }
+
+
+                      document.querySelector('[data-target="#deleteSuccessModal"]').click();
+                    }
+                 })
                 }
             });
 
