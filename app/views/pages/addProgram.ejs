@@ -62,9 +62,15 @@
           margin-left:20px;
           visibility:hidden;
         }    
-        th,td{
-          text-align:center;
-        }
+        th{
+    background-color: #e6f7ff;
+      }
+    tr:nth-child(odd) {
+    background-color: #e6f7ff;
+    }
+    tr:nth-child(even) {
+    background-color: white;
+    }
       .notes{
         margin-left: 0;
       }  
@@ -96,7 +102,7 @@
 
      </div>
      </div>
-    notes
+    
 </body>
 <%- include ('../partials/partial2') %>
 <script src= "../js/script.js" ></script>
@@ -224,7 +230,7 @@
 
       let  iTag = `<i style='font-weight:bold;color:red;'>Empty Field</i>`;
             
-      let nonInsertedData = `<table class="table table-bordered table-responsive-lg" >
+      let nonInsertedData = `<table class="table table-bordered table-responsive-lg text-center" >
                                  <tr>
                                  <th>Sr No.</th>
                                  <th>Program Name</th>

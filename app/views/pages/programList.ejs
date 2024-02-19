@@ -1,133 +1,150 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <%- include ('../partials/partial') %>
+  <%- include ('../partials/partial') %>
     <title>Programs</title>
-    
+
     <style>
-      body{
+      body {
         background-color: whitesmoke;
-      }  
-      #programList{
-        background-color:white;
-        padding:20px;
-        width:1450px;
-        margin-top:30px;
       }
-      button{
-        margin-top:10px;
+
+      #programList {
+        background-color: white;
+        padding: 20px;
+        width: 1450px;
+        margin-top: 30px;
       }
-     
+
+      button {
+        margin-top: 10px;
+      }
     </style>
 
 </head>
+
 <body>
-    <%- include('sidebar.ejs') %>
-    <%- include('header.ejs')  %>
-    <div id="main">
-        
+  <%- include('sidebar.ejs') %>
+    <%- include('header.ejs') %>
+      <div id="main">
+
         <%- include('messageModal.ejs') %>
-        <div id="programList">
-        <table id="programTable">
-        <tr>
-        <td><label for="programName" class="mb-4"><input type="checkbox" />&nbsp;Select All</label></td>
-        </tr>
-        <% programs.forEach(data => { %>
-           <tr><td><label for="programName"><input type="checkbox" value="<%= data.program_id %>" class="checkProgram"/>&nbsp;<%= data.program_name %></label></td></tr>
-          <% }); %>
-        </table>
-        <button type="button" id="submitbtn" class="btn btn-danger" >Allocate</button>
-        </div>
-    </div>
+          <div id="programList">
+            <table id="programTable">
+              <tr>
+                <td><label for="programName" class="mb-4"><input type="checkbox" class="selectCheckBox"/>&nbsp;Select All</label></td>
+              </tr>
+              <% programs.forEach(data=> { %>
+                <tr>
+                  <td><label for="programName"><input type="checkbox" value="<%= data.program_id %>"
+                        class="checkProgram" />&nbsp;<%= data.program_name %></label></td>
+                </tr>
+                <% }); %>
+            </table>
+            <button type="button" id="submitbtn" class="btn btn-danger">Allocate</button>
+          </div>
+      </div>
 </body>
 
 <%- include ('../partials/partial2') %>
-<script src= "../js/script.js" ></script>
-<script>
+  <script src="../js/script.js"></script>
+  <script>
 
-allCheckedPrograms();
+    allCheckedPrograms();
 
-function allCheckedPrograms(){
- let selectedPrograms = document.querySelectorAll('input');   
- let checkboxClass = document.querySelectorAll('.checkProgram');
- let buttonAttr = document.getElementById('submitbtn');
+    function allCheckedPrograms() {
+      let selectedPrograms = document.querySelectorAll('input');
+      let checkboxClass = document.querySelectorAll('.checkProgram');
+      let buttonAttr = document.getElementById('submitbtn');
 
-let count = 0;
-selectedPrograms.forEach(selectedElement => {
-  selectedElement.addEventListener('change', ()=> {
-    if (selectedElement.checked) {
-      buttonAttr.removeAttribute('disabled');
-    }else{
-      count--; 
-      if (count === 0) {
-       buttonAttr.setAttribute('disabled','disabled');
+      let count = 0;
+      selectedPrograms.forEach(selectedElement => {
+        selectedElement.addEventListener('change', () => {
+          if (selectedElement.checked) {
+            buttonAttr.removeAttribute('disabled');
+          } else {
+            count--;
+            if (count === 0) {
+              buttonAttr.setAttribute('disabled', 'disabled');
+            }
+          }
+          count = document.querySelectorAll('input:checked').length;
+        });
+      });
+
+      if (!selectedPrograms[0].checked) {
+
+        buttonAttr.setAttribute('disabled', 'disabled');
+
+        selectedPrograms[0].addEventListener('change', () => {
+
+          for (let i = 0; i < checkboxClass.length; i++) {
+            if (selectedPrograms[i].checked) {
+
+              checkboxClass[i].setAttribute('checked', 'checked');
+
+            } else {
+              checkboxClass[i].removeAttribute('checked');
+            }
+          }
+        });
+
+      } else {
+        checkboxClass[i].removeAttribute('checked');
+      }
     }
-  }
-    count = document.querySelectorAll('input:checked').length;
-  });
-});
 
- if(!selectedPrograms[0].checked){
+    document.getElementById('submitbtn').addEventListener('click', () => {
+      let checkPrograms = document.querySelectorAll('.checkProgram');
+      let buttonAttr = document.getElementById('submitbtn');
 
-buttonAttr.setAttribute('disabled','disabled');
+      let programArray = [];
 
- selectedPrograms[0].addEventListener('change',() => {   
+      let urlValue = window.location.search;
+      let fetchValue = new URLSearchParams(urlValue);
+      let subjectId = fetchValue.get('id');
+      console.log(subjectId);
 
- for(let i=0;i<checkboxClass.length;i++){
-  if(selectedPrograms[i].checked){
-  
-  checkboxClass[i].setAttribute('checked','checked');
+      for (let i = 0; i < checkPrograms.length; i++) {
+        if (checkPrograms[i].checked) {
+          let programId = checkPrograms[i].getAttribute('value');
+          programArray.push({ subjectId, programId });
+        }
+      }
 
-  }else{
-  checkboxClass[i].removeAttribute('checked');
-  } 
- }
- }); 
+      let obj = { programArray };
 
- }else{
-  checkboxClass[i].removeAttribute('checked');
- }
- }
+      dynamicFetchApi('/elective/allocatePrograms', 'POST', obj)
+        .then(response => {
+          if (response.status === 'error') {
+            window.location.href = `${response.redirectTo}`;
+          } else {
 
- document.getElementById('submitbtn').addEventListener('click',() => {
- let checkPrograms = document.querySelectorAll('.checkProgram');
- let buttonAttr = document.getElementById('submitbtn');
+            let msg = document.getElementById('msgModal');
+            let modalPage = `<div><h4 style="text-align:center;">${response.message}</h4></div>`
+            msg.innerHTML = modalPage;
+            document.querySelector('[data-target="#messageModal"]').click();
 
- let programArray = [];
+          }
+        });
 
- let urlValue = window.location.search;
- let fetchValue = new URLSearchParams(urlValue);
- let subjectId = fetchValue.get('id');
- console.log(subjectId);
- 
- for(let i=0;i<checkPrograms.length;i++){
-    if(checkPrograms[i].checked){    
-    let programId = checkPrograms[i].getAttribute('value');
-    programArray.push({subjectId,programId});
-    }
- }
+    });
 
- let obj ={programArray};
+    document.querySelector('.messageOkModal').addEventListener('click', () => {
+        console.log('checked')
 
- dynamicFetchApi('/elective/allocatePrograms','POST',obj)
- .then(response => {
-  if(response.status === 'error'){
-   window.location.href= `${response.redirectTo}`;
-  }else{
-     
-    let msg = document.getElementById('msgModal');
-    let modalPage = `<div><h4 style="text-align:center;">${response.message}</h4></div>`
-    msg.innerHTML = modalPage;
-    document.querySelector('[data-target="#messageModal"]').click();
-  
-  }
- });
+        let checkProgram = document.querySelectorAll('.checkProgram');
+        Array.from(checkProgram).forEach(check => {
+          if (check.checked) {
+            check.checked = false;
+          }
+        })
 
- });
+        let selectProgram = document.querySelector('.selectCheckBox');
+        selectProgram.checked = false;
+      })
 
- document.querySelector('.messageOkModal').addEventListener('click',() => {
-  window.location.reload();s
- })
+  </script>
 
-</script>
 </html>

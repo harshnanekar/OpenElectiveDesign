@@ -4,12 +4,13 @@ const programQuery = require("../queries/programQueries.js");
 let excelController = require("../controller/excel.js");
 let validationController = require("../controller/validation.js");
 const jwtauth = require("../middleware/request.js");
+const Validation = require("../controller/validation.js");
 
 
 module.exports = {
   programs: async (req, res) => {
     try {
-      let username = jwtauth.verifySession(req,res);
+      let username = jwtauth.verifySession(req, res);
 
       if (username != undefined) {
         let getmodules = await userQuery.getModules(username);
@@ -30,7 +31,7 @@ module.exports = {
 
   addPrograms: async (req, res) => {
     try {
-      let username = jwtauth.verifySession(req,res);
+      let username = jwtauth.verifySession(req, res);
 
       if (username != undefined) {
         let getmodules = await userQuery.getModules(username);
@@ -53,9 +54,8 @@ module.exports = {
   insertProgramsViaExcel: async (req, res) => {
     try {
       console.log("Function called for excel");
-      let username = jwtauth.verifySession(req,res);
-      let role = jwtauth.verifySessionRole(req,res);
-
+      let username = jwtauth.verifySession(req, res);
+      let role = jwtauth.verifySessionRole(req, res);
 
       if (username != undefined) {
         let file = req.file;
@@ -94,31 +94,28 @@ module.exports = {
                 nonInsertedPrograms
               );
 
-                if (role === "Role_Admin") {
-                  let insertProgram = await programQuery.insertPrograms({
-                    prgArray: programArray,
-                  });
+              if (role === "Role_Admin") {
+                let insertProgram = await programQuery.insertPrograms({
+                  prgArray: programArray,
+                });
 
-                  if (insertProgram.rowCount > 0) {
-                    console.log(
-                      "Non Inserted Array--->> ",
-                      nonInsertedPrograms
-                    );
-                    return res.json({
-                      status: "success",
-                      message: "Programs Uploaded Succesfully !!",
-                      nonInsertedPrograms: nonInsertedPrograms,
-                    });
-                  } else {
-                    return res.json({ message: "Failed To Upload Data !!" });
-                  }
-                } else {
-                  res.clearCookie("jwtauth");
-                  res.json({
-                    status: "error",
-                    redirectTo: "/elective/loginPage",
+                if (insertProgram.rowCount > 0) {
+                  console.log("Non Inserted Array--->> ", nonInsertedPrograms);
+                  return res.json({
+                    status: "success",
+                    message: "Programs Uploaded Succesfully !!",
+                    nonInsertedPrograms: nonInsertedPrograms,
                   });
+                } else {
+                  return res.json({ message: "Failed To Upload Data !!" });
                 }
+              } else {
+                res.clearCookie("jwtauth");
+                res.json({
+                  status: "error",
+                  redirectTo: "/elective/loginPage",
+                });
+              }
             });
           } else {
             return res.json({ message: "File Cannot Be Empty !!" });
@@ -140,8 +137,8 @@ module.exports = {
     try {
       console.log("function called");
 
-      let username = jwtauth.verifySession(req,res);
-      let userRole = jwtaith.verifySessionRole(req,res);
+      let username = jwtauth.verifySession(req, res);
+      let userRole = jwtauth.verifySessionRole(req, res);
 
       if (username != undefined) {
         let { program, campus, programId } = req.body;
@@ -190,23 +187,26 @@ module.exports = {
         return res.json({ status: "error", redirectTo: "/elective/loginPage" });
       }
     } catch (error) {
+      console.log(error);
       return res.json({ status: "error", redirectTo: "/elective/error" });
     }
   },
 
   viewPrograms: async (req, res) => {
     try {
-      let username = jwtauth.verifySession(req,res);
+      let username = jwtauth.verifySession(req, res);
 
       if (username != undefined) {
         let getmodules = await userQuery.getModules(username);
         let programData = await programQuery.viewPrograms(username);
+        let campus = await query.getCampus();
         let dataRows = programData.rowCount;
 
         return res.render("viewPrograms", {
           module: getmodules,
           programData: programData.rows,
-          dataRows: dataRows
+          dataRows: dataRows,
+          campus: campus.rows,
         });
       } else {
         res.clearCookie("jwtauth");
@@ -220,7 +220,7 @@ module.exports = {
 
   getAllProgramsList: async (req, res) => {
     try {
-      let username = jwtauth.verifySession(req,res);
+      let username = jwtauth.verifySession(req, res);
 
       if (username != undefined) {
         let getmodules = await userQuery.getModules(username);
@@ -235,6 +235,42 @@ module.exports = {
       }
     } catch (error) {
       return res.redirect("/elective/error");
+    }
+  },
+
+  deleteProgram: async (req, res) => {
+    try {
+      let username = jwtauth.verifySession(req, res);
+      let role = jwtauth.verifySessionRole(req, res);
+
+      if (username != undefined) {
+        let { programId } = req.body;
+        console.log("delete program ", programId);
+
+        if (role === "Role_Admin") {
+          let deleteProgram = await programQuery.deleteProgram(programId);
+          if (deleteProgram.rowCount > 0) {
+            return res.json({
+              status: "success",
+              message: "Program deleted successfully !!",
+            });
+          } else {
+            return res.json({ message: "Failed To Delete Program !!" });
+          }
+        } else {
+          res.clearCookie("jwtauth");
+          return res.json({
+            status: "error",
+            redirectTo: "/elective/loginPage",
+          });
+        }
+      } else {
+        res.clearCookie("jwtauth");
+        return res.json({ status: "error", redirectTo: "/elective/loginPage" });
+      }
+    } catch (error) {
+      console.log(error);
+      return res.json({ status: "error", redirectTo: "/elective/error" });
     }
   },
 };

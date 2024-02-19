@@ -69,7 +69,14 @@ const query = class EventQuery{
     values : [eventId]
    } 
    return pgPool.query(query);
-   
+  }
+
+  static publishEvent(eventId){
+   let query ={
+    text:`update event_master set is_published='Y' where id=$1`,
+    values:[eventId]
+   }
+   return pgPool.query(query);  
   }
 
 

@@ -23,9 +23,7 @@
     tr:nth-child(odd) {
     background-color: white;
     }
-    #selectDropdown {
-        margin-bottom: -52px;
-    }
+
     </style>
 </head>
 <body>
@@ -40,30 +38,30 @@
         <th>Sr.No</th>
         <th>Program Name</th>
         <th>Campus</th>
-        <th colspan="1px">Actions</th>
+        <th style="width:200px;">Actions</th>
         </thead>
         <tbody>
         <% let count=1; %>
+        <% if(programData.length > 0){ %>
         <% programData.forEach(program => { %>
-        <tr>
+        <tr class="programData" data-programId = "<%= program.program_id %>" data-id="<%= program.id %>">
         <td><%= count %></td>
-        <td><%= program.program_name %></td>
-        <td><%= program.campus_name %></td>
-        <td><i class="fa-solid fa-trash"  data-toggle='tooltip' title = 'Delete' width="2%" ></i>&ensp;
-       <i class="fa-solid fa-pen-to-square"  data-toggle='tooltip' title = 'Edit' width="2%" ></i>&ensp;
+        <td id="programName"><%= program.program_name %></td>
+        <td id="programCampus"><%= program.campus_name %></td>
+        <td><i class="fa-solid fa-trash deleteIcon" style="cursor:pointer;" data-toggle="modal"  data-toggle='tooltip' data-target="#deletModal" title = 'Delete' width="2%" ></i>&ensp;
         </td>     
         </tr>
         <% count++ %>
         <% }); %>
+        <% }else{ %>
+        <tr><td colspan = "4px">-----------------------------------No Data Available-------------------------------</td></tr>   
+        <% } %>
         </tbody>
         </table>
 
     <%- include('pagination.ejs')  %>
-    
-    <%- include('editModal.ejs') %>
     <%- include('deleteModal.ejs') %>
     <%- include('deleteSuccessModal.ejs') %>
-    <%- include('editSuccessModal.ejs') %>
 
     </div> 
 </body>
@@ -72,5 +70,46 @@
 <script src= "../js/paginationMain.js" ></script>
 <script>
     initializePagination('.custom-pagination');
+
+        document.addEventListener('click', function (e) {
+
+            if (e.target.classList.contains('deleteIcon')) {
+                let programId = e.target.closest('tr').getAttribute('data-id');
+
+                let confirmButton = document.querySelector('.confirmDelete');
+                confirmButton.setAttribute('data-id', programId);
+            }
+
+            if (e.target.classList.contains('confirmDelete')) {
+                let programId = e.target.getAttribute('data-id');
+                let obj = { programId };
+
+                dynamicFetchApi('/elective/deleteProgram', 'POST', obj)
+                    .then(response => {
+                        if (response.status === 'error') {
+                            window.location.href = `${response.redirectTo}`;
+                        } else {
+                            if (response.status === 'success') {
+
+                                let programData = document.querySelectorAll('.programData');
+                                Array.from(programData).forEach(data => {
+                                    let pgrmId = data.getAttribute('data-id');
+                                    if (programId === pgrmId) {
+                                        data.remove();
+                                    }
+                                });
+
+                            }
+
+                            let deleteSuccess = document.querySelector('#deleteSuccess');
+                            deleteSuccess.innerText = response.message;
+
+                            document.querySelector('[data-target="#deleteSuccessModal"]').click();
+                        }
+                    })
+            }
+
+            
+        })
 </script>
 </html>

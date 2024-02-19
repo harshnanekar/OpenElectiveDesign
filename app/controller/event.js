@@ -523,6 +523,40 @@ let controller = {
       return res.json({ status: "error", redirectTo: "/elective/error" });
     }
   },
+
+  publishEvent : async (req,res) => {
+
+    try {
+
+      let username = jwtauth.verifySession(req,res);
+      let role = jwtauth.verifySessionRole(req,res);
+
+      if(username != undefined){
+
+      let {eventId} = req.body;
+      if(role === 'Role_Admin'){
+
+      let publishEvent = await eventQuery.publishEvent(eventId);
+      if(publishEvent.rowCount > 0){
+       return res.json({status:'success',message:'Event Published Successfully !!'})
+      }else{
+       return res.json({message:'Failed To Publish Event !!'})
+      }  
+
+      }else{
+        res.clearCookie("jwtauth");
+        return res.json({ status: "error", redirectTo: "/elective/loginPage" }); 
+      }
+      }else{
+        res.clearCookie("jwtauth");
+        return res.json({ status: "error", redirectTo: "/elective/loginPage" }); 
+      }
+      
+    } catch (error) {
+      console.log(error);
+      return res.json({ status: "error", redirectTo: "/elective/error" });
+    }
+  }
 };
 
 module.exports = controller;
