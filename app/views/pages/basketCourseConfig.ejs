@@ -64,6 +64,7 @@
         </tr>
         <tbody>
         <% index = 1; %>
+        <% if(dispBasket.length > 0) { %>
         <% dispBasket.forEach(data => { %>
         <tr class="basketListRow" data-basketId = "<%= data.id %>" > 
             <td><%= index %></td>
@@ -79,6 +80,13 @@
         </tr>
         <% index++ %>
         <% }); %> 
+        <% }else{ %>
+            <tr>
+            <td colspan="6px">
+            ------------------No Data Available-----------------
+            </td>
+            </tr>
+         <% } %>   
     </tbody>
     </table> 
     
@@ -207,6 +215,22 @@
                         let basketLength = (basketRows.length - 1);
                         let bskLength = document.getElementById('bsklength');
                         bskLength.innerText = `${basketLength} Record Found`;
+
+                        if(basketLength == 0){
+                         let basketCourseTable = document.querySelector('.basketData');
+                         let tableData = `<table class="table table-bordered table-responsive-lg basketData" style="text-align: center;">
+                            <tr>
+                                <th>Sr.No</th>
+                                <th>Basket Name</th>
+                                <th>Semester</th>
+                                <th>Campus</th>
+                                <th>Compulsory Subjects</th>
+                                <th>Actions</th>
+                            </tr>
+                            <tr><td colspan="6px">-------------------No Data Available-----------------</td></tr>
+                            </table>`; 
+                        basketCourseTable.innerHTML= tableData;
+                        }
                       }
 
 

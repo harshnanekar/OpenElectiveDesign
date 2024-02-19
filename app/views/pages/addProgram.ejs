@@ -102,12 +102,7 @@
 <script src= "../js/script.js" ></script>
 <script>
 
-    defaultFormatDisplay();
-
-    function defaultFormatDisplay(){
-    let upload = document.querySelector('#uploadFormat');
-
-    let excelFormat = `<div id="heading"><h2>Upload Program's file(Excel):</h2></div>
+    let excelProgram = `<div id="heading"><h2>Upload Program's file(Excel):</h2></div>
              <div>
              <input type="file" id='fileName' name = "programDetails" /></br>
              <button type="submit" class="btn btn-primary excelDataSubmit" id='excelProgramSubmit' >Upload</button>&nbsp;<button id='excelCancel' type="submit" class="btn btn-danger excelDataCancel" >Cancel</button>
@@ -117,7 +112,12 @@
              <h4 id="excelHeading">Excel Format:</h4>
              <p>Program Name | Campus | Program Id</p>
              </div>`;
-        upload.innerHTML = excelFormat;
+
+    defaultFormatDisplay();
+
+    function defaultFormatDisplay(){
+    let upload = document.querySelector('#uploadFormat');
+      upload.innerHTML = excelProgram;
   
     }
 
@@ -125,18 +125,7 @@
       console.log('function called');
         
     let upload = document.querySelector('#uploadFormat');
-
-    let excelFormat =`<div id="heading"><h2>Upload Program's file(Excel):</h2></div>
-              <div>
-              <input type="file" id='fileName' name = "programDetails" /></br>
-              <button type="submit" class="btn btn-primary" id='excelProgramSubmit' >Upload</button>&nbsp;<button id='excelCancel' type="submit" class="btn btn-danger excelDataCancel" >Cancel</button>
-              </div>
-              </div>
-              <div id='displayNote'><a style="text-decoration:none;font-size:20px;" class="text-danger" href="/excel/Program_Excel.xlsx" id="downloadExcel"  >Download Sample Template</a></br>
-              <h4 id="excelHeading">Excel Format:</h4>
-              <p>Program Name | Campus | Program Id</p>
-              </div>`;
-        upload.innerHTML = excelFormat;
+        upload.innerHTML = excelProgram;
 
     });
 

@@ -74,6 +74,7 @@
                                 <th>Actions</th>
                             </tr>
                             <% index=1; %>
+                            <% if(basket.length > 0) { %>
                                 <% basket.forEach(data=> { %>
                                     <tr id="basketRow" data-basketId="<%= data.id %>">
                                         <td>
@@ -96,6 +97,11 @@
                                     </tr>
                                     <% index++; %>
                                         <% }) %>
+                                        <% }else{ %> 
+                                                <tr>
+                                                 <td colspan="4px">------------No Data Available-----------</td>
+                                                </tr> 
+                                            <%}%>
                         </table>
                     </div>
                     <%- include('editModal.ejs') %>
@@ -191,7 +197,22 @@
                             let basketLength = document.querySelector('#totalRecord');
                             let basketSize = bskLength - 1;
                             basketLength.innerText = `${basketSize} Record Found`;
+
+                            if(basketSize == 0){
+                                let basketTable = document.querySelector('.basketData');
+                            let tableData = ` <table class="table table-bordered table-responsive-lg basketData">
+                            <tr>
+                                <th>Sr.No</th>
+                                <th>Basket Name</th>
+                                <th>Basket Abbr</th>
+                                <th>Actions</th>
+                            </tr>
+                            <tr><td colspan="4px">------------------No Data Available------------------</td></tr>
+                            </table>`
+                            basketTable.innerHTML = tableData;
+                            }
                            }
+
                             document.querySelector('[data-target="#deleteSuccessModal"]').click();
 
                         }

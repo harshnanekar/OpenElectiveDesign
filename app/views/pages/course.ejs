@@ -114,6 +114,17 @@
 
   <script>
 
+    let excelCourse = `<div id="heading"><h2>Upload Course file(Excel):</h2></div>
+             <div>
+             <input type="file" id='fileName' name = "CourseDetails" /></br>
+             <button type="submit" class="btn btn-primary excelDataSubmit" id='excelCourseSubmit' >Upload</button>&nbsp;<button id='excelCancel' type="submit" class="btn btn-danger excelDataCancel" >Cancel</button>
+             </div>
+             </div>
+             <div id='displayNote'><a style="text-decoration:none;font-size:20px;" class="text-danger" href="/excel/Course_Excel.xlsx" id="downloadExcel"  >Download Sample Template</a></br>
+             <h4 id="excelHeading">Excel Format:</h4>
+             <p>Subject Name | Department Name | Campus(Optional) | No. Of Batches | Max Capacity Per Batch | Open To All Programs</p>
+             </div>`
+
     defaultCourseDisplay();
     showAllCourses();
 
@@ -133,38 +144,15 @@
     function defaultCourseDisplay() {
 
       let excelPage = document.getElementById('uploadFormat');
-
-      let excel = `<div id="heading"><h2>Upload Course file(Excel):</h2></div>
-             <div>
-             <input type="file" id='fileName' name = "CourseDetails" /></br>
-             <button type="submit" class="btn btn-primary excelDataSubmit" id='excelCourseSubmit' >Upload</button>&nbsp;<button id='excelCancel' type="submit" class="btn btn-danger excelDataCancel" >Cancel</button>
-             </div>
-             </div>
-             <div id='displayNote'><a style="text-decoration:none;font-size:20px;" class="text-danger" href="/excel/Course_Excel.xlsx" id="downloadExcel"  >Download Sample Template</a></br>
-             <h4 id="excelHeading">Excel Format:</h4>
-             <p>Subject Name | Department Name | Campus(Optional) | No. Of Batches | Max Capacity Per Batch | Open To All Programs</p>
-             </div>`;
-
-      excelPage.innerHTML = excel;
+      excelPage.innerHTML = excelCourse;
 
     }
 
     document.getElementById('uploadViaExcel').addEventListener('change', () => {
 
       let excelPage = document.getElementById('uploadFormat');
-
-      let excel = `<div id="heading"><h2>Upload Course file(Excel):</h2></div>
-             <div>
-             <input type="file" id='fileName' name = "CourseDetails" /></br>
-             <button type="submit" class="btn btn-primary excelDataSubmit" id='excelCourseSubmit' >Upload</button>&nbsp;<button id='excelCancel' type="submit" class="btn btn-danger excelDataCancel" >Cancel</button>
-             </div>
-             </div>
-             <div id='displayNote'><a style="text-decoration:none;font-size:20px;" class="text-danger" href="/excel/Course_Excel.xlsx" id="downloadExcel"  >Download Sample Template</a></br>
-             <h4 id="excelHeading">Excel Format:</h4>
-             <p>Subject Name | Department Name | Campus(Optional) | No. Of Batches | Max Capacity Per Batch | Open To All Programs</p>
-             </div>`;
-
-      excelPage.innerHTML = excel;
+      excelPage.innerHTML = excelCourse;
+      
     });
 
     document.getElementById('uploadViaManually').addEventListener('change', () => {

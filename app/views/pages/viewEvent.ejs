@@ -38,6 +38,7 @@
         </thead>
         <tbody>
          <% let count=1; %>
+         <% if(eventData.length > 0) { %>
          <% eventData.forEach(event => { %>
             <tr id="eventList" data-eid=<%= event.id %> >
                <td><%= count %></td>
@@ -64,6 +65,9 @@
             </tr>
            <% count++ %>
             <% }); %>
+            <% }else { %>
+            <tr><td colspan="9px">--------------------------No Data Available--------------------------</td></tr>    
+            <% } %>    
         </tbody>
     </table>
 
@@ -107,6 +111,27 @@ document.addEventListener('click',(e) => {
                 event.remove();
                }
             })
+
+            if(eventListId.length == 0){
+             let eventTable = document.querySelector('#datatable');
+             let tableData = `<table id="datatable" class="table table-striped table-bordered bluetable table-responsive">
+            <thead>
+            <th>Sr.No</th>
+            <th>Event Name</th>
+            <th>Semester</th>
+            <th>Acad Year</th>
+            <th>Campus</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Published</th>
+            <th>Actions</th>
+            </thead>
+            <tbody>
+            <tr><td colspan="9px">------------------------No Data Available---------------------</td></tr>    
+            </tbody>`;   
+
+            eventTable.innerHTML = tableData;
+            }
             }
 
             let successModal = document.getElementById('deleteSuccess');

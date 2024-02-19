@@ -135,11 +135,14 @@ let controller = {
         let campus = await eventQuery.getCampus();
         let acadSessions = await eventQuery.getacadSession();
 
+        let dataRows = eventData.rowCount;
+
         return res.render("viewEvent", {
           module: getmodules,
           eventData: eventData.rows,
           campus: campus.rows,
           acadSession: acadSessions.rows,
+          dataRows:dataRows
         });
       } else {
         res.clearCookie("jwtauth");
@@ -198,15 +201,15 @@ let controller = {
               let excelSession = data.Acad_Session;
               let excelYear = data.Acad_Year;
               let excelCampus = data.Campus;
-              let excelRoll = data.RollNo;
+              let excelRoll = new String(data.RollNo);
 
-              let studentUname = excelStudentUname.trim();
-              let studentFirstName = excelFirstName.trim();
-              let studentLastName = excelLastName.trim();
-              let acadSession = excelSession.trim();
-              let acadYear = excelYear.trim();
-              let campus = excelCampus.trim();
-              let rollNo = excelRoll.trim();
+              let studentUname = excelStudentUname!=undefined ? excelStudentUname.trim() : undefined;
+              let studentFirstName = excelFirstName!=undefined ?  excelFirstName.trim() : undefined;
+              let studentLastName = excelLastName!=undefined ? excelLastName.trim() : undefined;
+              let acadSession = excelSession!=undefined ?  excelSession.trim() : undefined;
+              let acadYear = excelYear!=undefined ? excelYear.trim() : undefined;
+              let campus = excelCampus!=undefined ? excelCampus.trim() : undefined;
+              let rollNo = excelRoll!=undefined ? excelRoll.trim() : undefined;
 
               if (
                 studentUname != undefined &&
