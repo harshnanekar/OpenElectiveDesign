@@ -308,4 +308,34 @@ module.exports = {
       return res.json({ status: "error", redirectTo: "/elective/error" });
     }
   },
+
+  checkBasketAbbr : async (req,res) => {
+
+    try {
+
+      let username = jwtauth.verifySession(req,res);
+
+      if(username != undefined){
+       let {basketAbbr} = req.body;
+       let checkabbr = await basket.checkAbbr(basketAbbr);
+
+       console.log(checkabbr)
+      
+       if(checkabbr.rowCount > 0){
+        return res.json({status:'success',message:'*Basket Abbr Must Be Unique'});
+       }else{
+        return res.json({message:undefined});
+       }
+
+      }else{
+        res.clearCookie("jwtauth");
+        return res.json({ status: "error", redirectTo: "/elective/loginPage" }); 
+      }
+      
+    } catch (error) {
+      console.log(error);
+      return res.json({ status: "error", redirectTo: "/elective/error" });
+    }
+       
+  }
 };

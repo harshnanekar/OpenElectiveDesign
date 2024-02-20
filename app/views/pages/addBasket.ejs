@@ -6,27 +6,33 @@
     <%- include ('../partials/partial') %>
         <style>
             body {
-            background-color: whitesmoke;
+                background-color: whitesmoke;
             }
-            th{
-            background-color: #e6f7ff;
+
+            th {
+                background-color: #e6f7ff;
             }
+
             tr:nth-child(odd) {
-            background-color: #e6f7ff;
-            }   
+                background-color: #e6f7ff;
+            }
+
             tr:nth-child(even) {
-            background-color: white;
+                background-color: white;
             }
+
             #basketForm {
-            background-color: white;
-            padding: 2%;
-            width: 1400px;
-            margin-top: 40px;
-            border-radius: 10px;
+                background-color: white;
+                padding: 2%;
+                width: 1400px;
+                margin-top: 40px;
+                border-radius: 10px;
             }
+
             #basketData {
                 margin-top: 20px;
             }
+
             span {
                 color: red;
             }
@@ -70,34 +76,34 @@
                                 <th>Actions</th>
                             </tr>
                             <% index=1; %>
-                            <% if(basket.length > 0) { %>
-                                <% basket.forEach(data=> { %>
-                                    <tr id="basketRow" data-basketId="<%= data.id %>">
-                                        <td>
-                                            <%= index %>
-                                        </td>
-                                        <td id="inputBasketName">
-                                            <%= data.basket_name %>
-                                        </td>
-                                        <td id="inputBasketAbbr">
-                                            <%= data.basket_abbr %>
-                                        </td>
-                                        <td>
-                                            <i class="fa-solid fa-trash-arrow-up deleteIcon" data-toggle='modal'
-                                                data-toggle='tooltip' data-target="#deletModal" title='Delete Basket'
-                                                width="2%" style="cursor:pointer;"></i>&ensp;
-                                            <i class="fa-solid fa-pencil editIcon" id="editIcon" data-toggle='modal'
-                                                data-toggle='tooltip' data-target="#exampleModalCenter"
-                                                title='Edit Basket' width="2%"></i>&ensp;
-                                        </td>
-                                    </tr>
-                                    <% index++; %>
-                                        <% }) %>
-                                        <% }else{ %> 
-                                                <tr>
-                                                 <td colspan="4px">------------No Data Available-----------</td>
-                                                </tr> 
-                                            <%}%>
+                                <% if(basket.length> 0) { %>
+                                    <% basket.forEach(data=> { %>
+                                        <tr id="basketRow" data-basketId="<%= data.id %>">
+                                            <td>
+                                                <%= index %>
+                                            </td>
+                                            <td id="inputBasketName">
+                                                <%= data.basket_name %>
+                                            </td>
+                                            <td id="inputBasketAbbr">
+                                                <%= data.basket_abbr %>
+                                            </td>
+                                            <td>
+                                                <i class="fa-solid fa-trash-arrow-up deleteIcon" data-toggle='modal'
+                                                    data-toggle='tooltip' data-target="#deletModal"
+                                                    title='Delete Basket' width="2%" style="cursor:pointer;"></i>&ensp;
+                                                <i class="fa-solid fa-pencil editIcon" id="editIcon" data-toggle='modal'
+                                                    data-toggle='tooltip' data-target="#exampleModalCenter"
+                                                    title='Edit Basket' width="2%"></i>&ensp;
+                                            </td>
+                                        </tr>
+                                        <% index++; %>
+                                            <% }) %>
+                                                <% }else{ %>
+                                                    <tr>
+                                                        <td colspan="4px">------------No Data Available-----------</td>
+                                                    </tr>
+                                                    <%}%>
                         </table>
                     </div>
                     <%- include('editModal.ejs') %>
@@ -127,24 +133,41 @@
 
                 if (basketValidation && basketAbbrValidation) {
 
-                    let urlValue = window.location.search;
-                    let fetchValue = new URLSearchParams(urlValue);
-                    let eventId = fetchValue.get('id');
-
-                    let obj = { basketName, basketAbbr, eventId };
-                    dynamicFetchApi('/elective/createBasket', 'POST', obj)
-                        .then(async response => {
-                            console.log('response:::: ', response.message);
+                    let basketobj = { basketAbbr };
+                    dynamicFetchApi('/elective/checkBasketAbbr', 'POST', basketobj)
+                        .then(response => {
                             if (response.status === 'error') {
                                 window.location.href = `${response.redirectTo}`;
                             } else {
 
-                                let modalBody = document.querySelector('#msgModal');
-                                modalBody.innerHTML = `<div><h4 style="text-align:center;">${response.message}</h4></div>`
-                                await document.querySelector('[data-target="#messageModal"]').click();
+                                let basketAbbrError = document.querySelector('#BasketAbbrError');
+                                if (response.message != undefined) {
+                                    basketAbbrError.innerText = response.message;
+                                } else {
+                                    basketAbbrError.innerText = '';
 
+                                    let urlValue = window.location.search;
+                                    let fetchValue = new URLSearchParams(urlValue);
+                                    let eventId = fetchValue.get('id');
+
+                                    let obj = { basketName, basketAbbr, eventId };
+                                    dynamicFetchApi('/elective/createBasket', 'POST', obj)
+                                        .then(async response => {
+                                            console.log('response:::: ', response.message);
+                                            if (response.status === 'error') {
+                                                window.location.href = `${response.redirectTo}`;
+                                            } else {
+
+                                                let modalBody = document.querySelector('#msgModal');
+                                                modalBody.innerHTML = `<div><h4 style="text-align:center;">${response.message}</h4></div>`
+                                                await document.querySelector('[data-target="#messageModal"]').click();
+
+                                            }
+
+                                        })
+
+                                }
                             }
-
                         })
                 }
             }
@@ -176,27 +199,27 @@
                             let deleteModal = document.querySelector('#deleteSuccess');
                             deleteModal.innerText = response.message;
 
-                            if(response.status === 'success'){
+                            if (response.status === 'success') {
 
-                            let basketRows = document.querySelectorAll('#basketRow');
-                            let bskLength = basketRows.length;
+                                let basketRows = document.querySelectorAll('#basketRow');
+                                let bskLength = basketRows.length;
 
-                            Array.from(basketRows).forEach(row => {
-                                let bsId = row.getAttribute('data-basketId');
-                                console.log('basket ids ', basketId, bsId)
-                                if (basketId == bsId) {
-                                    row.remove();
-                                }
-                            });
+                                Array.from(basketRows).forEach(row => {
+                                    let bsId = row.getAttribute('data-basketId');
+                                    console.log('basket ids ', basketId, bsId)
+                                    if (basketId == bsId) {
+                                        row.remove();
+                                    }
+                                });
 
-                            console.log('basket rows ', basketRows.length)
-                            let basketLength = document.querySelector('#totalRecord');
-                            let basketSize = bskLength - 1;
-                            basketLength.innerText = `${basketSize} Record Found`;
+                                console.log('basket rows ', basketRows.length)
+                                let basketLength = document.querySelector('#totalRecord');
+                                let basketSize = bskLength - 1;
+                                basketLength.innerText = `${basketSize} Record Found`;
 
-                            if(basketSize == 0){
-                                let basketTable = document.querySelector('.basketData');
-                            let tableData = ` <table class="table table-bordered table-responsive-lg basketData text-center">
+                                if (basketSize == 0) {
+                                    let basketTable = document.querySelector('.basketData');
+                                    let tableData = ` <table class="table table-bordered table-responsive-lg basketData text-center">
                             <tr>
                                 <th>Sr.No</th>
                                 <th>Basket Name</th>
@@ -205,9 +228,9 @@
                             </tr>
                             <tr><td colspan="4px">------------------No Data Available------------------</td></tr>
                             </table>`
-                            basketTable.innerHTML = tableData;
+                                    basketTable.innerHTML = tableData;
+                                }
                             }
-                           }
 
                             document.querySelector('[data-target="#deleteSuccessModal"]').click();
 
@@ -300,6 +323,7 @@
             }
 
         })
+
 
         function basketValidator(basketName) {
             let basketError = document.getElementById('BasketError');

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <%- include ('../partials/partial') %>
-    <title>Programs</title>
+    <title>View Events</title>
     
     <style>
       body{
@@ -15,7 +15,7 @@
     <%- include('sidebar.ejs') %>
     <%- include('header.ejs')  %>
     <div id="main">
-       <table class="table table-responsive-lg">
+       <table class="table table-bordered text-center table-responsive-lg">
         <tr>
          <th>Sr.No</th>
          <th>Event Name</th>
@@ -29,12 +29,14 @@
         <tr>
          <td><%= index %></td>   
          <td><%= eventRow.event_name%></td>
-         <% let sdate = event.startdate.toISOString(); %>
+         <% let sdate = eventRow.startdate.toISOString(); %>
          <% let date = sdate.split('T')[0]; let time= sdate.split('T')[1] ;  let stime= time.split('.')[0] ; %>
-         <td id="eventStart"><%= date %><%= " " %><%= stime %></td>
-       
+         <td><%= date %><%= " " %><%= stime %></td>
+         <% let edate = eventRow.end_date.toISOString(); %>
+         <% let endate = edate.split('T')[0]; let etime= edate.split('T')[1] ;  let edtime= etime.split('.')[0] ; %>
+         <td id="eventEnd"><%= endate %><%= " " %><%= edtime %></td>
          <td>
-         <i style="cursor:pointer" class="fa-solid fa-hand-pointer" data-toggle="tooltip" title="Start Selection" ></i>   
+         <a href="/elective/startCourseSelection?id=<%= eventRow.id %>"><i style="cursor:pointer" class="fa-solid fa-hand-pointer" data-toggle="tooltip" title="Start Selection" ></i></a>   
          </td>
         </tr>
         <% index++; %>

@@ -3,32 +3,53 @@ const userQuery = require("../queries/user.js");
 const validationController = require("../controller/validation.js");
 const jwtauth = require("../middleware/request.js");
 
-module.exports ={
+module.exports = {
 
-viewStudentEvents : async (req,res) => {
+  viewStudentEvents: async (req, res) => {
+    try {
+      let username = jwtauth.verifySession(req, res);
 
-  try{
+      if (username != undefined) {
+        let getStudentEvent = await studentQuery.getStudentEvent(username);
+        let getmodules = await userQuery.getModules(username);
+
+        return res.render("viewStudentEvent", {
+          module: getmodules,
+          event: getStudentEvent.rows,
+        });
+      } else {
+        res.clearCookie("jwtauth");
+        return res.redirect("/elective/loginPage#sessionTimeout");
+      }
+    } catch (error) {
+      console.log(error.message);
+      return res.redirect("/elective/error");
+    }
+  },
+
+  startCourseSelection: async (req,res) =>{
+   try {
 
     let username = jwtauth.verifySession(req,res);
     
     if(username != undefined){
+     
+      let eventId = req.query.id;
+      let defaultBasketNo = 1;
 
-    let getStudentEvent = await studentQuery.getStudentEvent(username);
-    let getmodules = await userQuery.getModules(username);
+      let displayBasket = await studentQuery.displayBasket(eventId,defaultBasketNo);
+      let showYearBackSubjects = await studentQuery.showYearBackSubjects(username,eventId);
 
-    return res.render('viewStudentEvent',{module:getmodules,event:getStudentEvent.rows});  
-
+      return res.render('selectBasket',{showBasket:displayBasket.rows,yearBackSubjects:showYearBackSubjects.rows});
+     
     }else{
-    res.clearCookie("jwtauth");
-    return res.redirect("/elective/loginPage#sessionTimeout");   
+      res.clearCookie("jwtauth");
+      return res.redirect("/elective/loginPage#sessionTimeout");
     }
-
-  }catch(error){
+    
+   } catch (error) {
     console.log(error.message);
     return res.redirect("/elective/error");
-  }  
-}   
-
-
-
-}
+   }
+  }
+};

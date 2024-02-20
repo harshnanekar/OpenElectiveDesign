@@ -83,4 +83,12 @@ static insertCompulsorySub(basketId,compulsorySub){
  return pgPool.query(query);
 }
 
+static checkAbbr(abbr){
+ let query = {
+  text : `select basket_abbr from basket where basket_abbr=$1`,
+  values:[abbr]
+ }
+ return pgPool.query(query); 
+}
+
 } 
