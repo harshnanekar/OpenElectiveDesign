@@ -5,6 +5,7 @@ const eventController = require('../controller/event.js');
 const programController = require('../controller/programs.js');
 const courseController = require('../controller/course.js');
 const basketController = require('../controller/basket.js');
+const studentController = require('../controller/student.js');
 
 const multer = require('multer');
 
@@ -25,6 +26,7 @@ apiRouter.get('/getAllCourses',middleware.verifyRequest,courseController.getAllC
 apiRouter.get('/programList',middleware.verifyRequest,programController.getAllProgramsList);
 apiRouter.get('/addBasketPage',middleware.verifyRequest,basketController.addBasketPage);
 apiRouter.get('/basketCourseConfig',middleware.verifyRequest,basketController.basketCourseConfig);
+apiRouter.get('/viewStudentEvents',middleware.verifyRequest,studentController.viewStudentEvents);
 
 
 //Post Requests
