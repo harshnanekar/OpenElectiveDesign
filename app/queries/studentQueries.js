@@ -16,11 +16,24 @@ static getStudentEvent(username){
 static displayBasket(eventId,username){
   let query = {
    text:`
-   select bsk.basket_name,s.subject_name,be.basket_elective_no,be.event_lid,be.no_of_comp_sub from basket_subject bs inner join basket_event be on bs.basket_lid=be.basket_lid inner join subject_master s
-   on bs.subject_lid = s.sub_id inner join basket bsk on bsk.id=be.basket_lid where be.basket_lid in 
-   (select basket_lid from basket_event where basket_lid not in (select distinct bs.basket_lid from student_sub_allocation s 
-   inner join basket_subject bs on s.subject_lid = bs.subject_lid inner join user_info u on s.user_lid=u.id where s.event_lid = $1 and s.active=true and bs.active=true and u.username=$2) 
-   and event_lid = $3 and active=true order by basket_elective_no limit 1) and bs.active=true and be.active=true and bsk.active = true order by be.basket_elective_no asc`,
+   select s.sub_id,bsk.basket_name,s.subject_name,be.basket_elective_no,be.event_lid,be.no_of_comp_sub,e.event_name from basket_subject bs inner join basket_event be on bs.basket_lid=be.basket_lid 
+   inner join subject_master s on bs.subject_lid = s.sub_id inner join basket bsk on bsk.id=be.basket_lid inner join event_master e on e.id=be.event_lid where be.basket_lid in 
+   (SELECT basket_lid 
+   FROM basket_event 
+   WHERE basket_lid NOT IN (
+    SELECT DISTINCT bs.basket_lid 
+    FROM student_sub_allocation s 
+    INNER JOIN basket_subject bs ON s.subject_lid = bs.subject_lid 
+    INNER JOIN user_info u ON s.user_lid = u.id 
+    WHERE s.event_lid = $1 
+    AND s.active = true 
+    AND bs.active = true 
+    AND u.username = $2
+   ) 
+	AND event_lid = $3
+	AND active = true 
+	ORDER BY basket_elective_no ASC 
+	LIMIT 1) and bs.active=true and be.active=true and bsk.active = true order by be.basket_elective_no asc`,
    values:[eventId,username,eventId] 
   }
   return pgPool.query(query);

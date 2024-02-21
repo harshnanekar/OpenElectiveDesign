@@ -1,24 +1,102 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <%- include ('../partials/partial') %>
-    <title>Select Basket</title>
-    
-    <style>
-      body{
-        background-color: whitesmoke;
-      }  
-    </style>
+        <title>Select Basket</title>
+
+        <style>
+            body {
+                background-color: whitesmoke;
+            }
+
+            #basketDiv {
+                margin-top: 30px;
+                background-color: white;
+                padding: 30px;
+                border-radius: 20px;
+                width: 1450px;
+            }
+
+            #subjectColumn {
+                margin-left: 430px;
+            }
+
+            #basketSubject {
+                margin-left: 20px;
+            }
+
+            #note {
+                margin-bottom: 50px;
+            }
+        </style>
 
 </head>
+
 <body>
     <%- include('sidebar.ejs') %>
-    <%- include('header.ejs')  %>
-    <div id="main">
-     
-    </div>
+        <%- include('header.ejs') %>
+            <div id="mains">
+                <h4 class="mt-4 ml-4">
+                    <%= showBasket[0].event_name %>
+                </h4>
+
+                <div id="basketDiv">
+                    <h5 id="basketName">
+                        <%= showBasket[0].basket_name %>
+                    </h5>
+                    </br>
+                    <h5>
+                        Preference Order
+                    </h5>
+                    <p id="note" style="color:red;">*Please Check The Order Of Preferences Here As Selected From 1 To 5,
+                        Deselect and Reselect
+                        Subject To Change Order If Needed </p>
+                    <div>
+                        <% let index=1; %>
+                            <% for(let i=1;i<=5;i++) {%>
+                                <div style="display: flex;align-items:center;"><span class="mr-2">
+                                        <%= index %>.
+                                    </span><select class="selectSubject form-control">
+                                        <% showBasket.forEach(data=> { %>
+                                            <option>
+                                                <%= data.subject_name %>
+                                            </option>
+                                            <% }) %>
+                                                <% yearBackSubjects.forEach(data=> { %>
+                                                    <option style="color:grey;" disabled>
+                                                        <%= data.subject_name %>
+                                                    </option>
+                                                    <% }); %>
+                                    </select></div></br>
+
+                                <% index++; %>
+                                    <% } %>
+                    </div>
+                    <div>
+                    </div>
+                    <button class="btn btn-primary ml-3 mt-4 reset">Reset</button><button
+                        class="btn btn-danger ml-3 mt-4">Next</button>
+                </div>
+            </div>
 </body>
 
 <%- include ('../partials/partial2') %>
 <script src= "../js/script.js" ></script>
+<script>
+
+ document.addEventListener('click',function(e){
+
+ if(e.target.classList.contains('reset')){
+  let selectValue = document.querySelectorAll('.selectSubject');
+
+  Array.from(selectValue).forEach(data => {
+   data.value = ''; 
+  })
+  console.log(selectValue)
+ }
+ 
+ })
+
+</script>
 </html>

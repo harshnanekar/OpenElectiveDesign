@@ -77,7 +77,7 @@ static insertBasketSubject(basketId,courses,username){
 
 static insertCompulsorySub(basketId,compulsorySub){
  let query={
-  text:`update basket_event set no_of_comp_sub=$1 where basket_lid=$2`,
+  text:`update basket_event set no_of_comp_sub=$1,modified_date=now() where basket_lid=$2`,
   values:[compulsorySub,basketId]  
  }   
  return pgPool.query(query);
