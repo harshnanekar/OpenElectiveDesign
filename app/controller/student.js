@@ -35,12 +35,13 @@ module.exports = {
     if(username != undefined){
      
       let eventId = req.query.id;
-      let defaultBasketNo = 1;
 
-      let displayBasket = await studentQuery.displayBasket(eventId,defaultBasketNo);
+      console.log(eventId,username)
+      let displayBasket = await studentQuery.displayBasket(eventId,username);
       let showYearBackSubjects = await studentQuery.showYearBackSubjects(username,eventId);
+      let getModules = await userQuery.getModules(username);
 
-      return res.render('selectBasket',{showBasket:displayBasket.rows,yearBackSubjects:showYearBackSubjects.rows});
+      return res.render('selectBasket',{module:getModules,showBasket:displayBasket.rows,yearBackSubjects:showYearBackSubjects.rows});
      
     }else{
       res.clearCookie("jwtauth");
