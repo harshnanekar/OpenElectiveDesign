@@ -349,8 +349,8 @@
         let excelFile = document.querySelector('#fileName');
         let file = excelFile.files[0];
 
-        let fileName = file.name;
-        let getFileExtension = fileName.substring(fileName.lastIndexOf('.'), fileName.length);
+        let fileName = file!=undefined ?  file.name : undefined;
+        let getFileExtension = fileName!=undefined ? fileName.substring(fileName.lastIndexOf('.'), fileName.length) : undefined;
 
         let validateFile = fileError(getFileExtension);
         console.log('file extension::: ', validateFile);

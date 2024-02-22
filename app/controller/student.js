@@ -53,5 +53,29 @@ module.exports = {
     console.log(error.message);
     return res.redirect("/elective/error");
    }
+  },
+
+  insertStudentCourses: async (req,res) => {
+  
+   try {
+
+    let username = jwtauth.verifySession(req,res);
+    if(username != undefined){
+
+    let {eventLid, timeString, courseArray, userLid,basketLid} = req.body;  
+    console.log(JSON.stringify({eventLid, timeString, courseArray, userLid,basketLid}));
+
+    }else{
+      res.clearCookie("jwtauth");
+      return res.json({
+        status: "error",
+        redirectTo: "/elective/loginPage",
+      });
+    }
+    
+   } catch (error) {
+    console.log(err.message);
+    return res.json({status:'Error',redirectTo:'/elective/error'});
+   } 
   }
 };

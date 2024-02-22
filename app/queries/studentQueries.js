@@ -15,7 +15,7 @@ module.exports = class Student {
   static displayBasket(eventId, username) {
     let query = {
       text: `
-   select s.sub_id,bsk.basket_name,s.subject_name,be.basket_elective_no,be.event_lid,be.no_of_comp_sub,e.event_name from basket_subject bs inner join basket_event be on bs.basket_lid=be.basket_lid 
+   select bsk.id,s.sub_id,bsk.basket_name,s.subject_name,be.basket_elective_no,be.event_lid,be.no_of_comp_sub,e.event_name from basket_subject bs inner join basket_event be on bs.basket_lid=be.basket_lid 
    inner join subject_master s on bs.subject_lid = s.sub_id inner join basket bsk on bsk.id=be.basket_lid inner join event_master e on e.id=be.event_lid where be.basket_lid in 
    (select basket_lid 
    from basket_event 

@@ -37,6 +37,7 @@
     <%- include('sidebar.ejs') %>
         <%- include('header.ejs') %>
             <div id="mains">
+                <%- include('messageModal.ejs') %>
                 <h4 class="mt-4 ml-4">
                     <%= showBasket[0].event_name %>
                 </h4>
@@ -59,9 +60,9 @@
                                     Preference No.<%= index %>.
                                     </span><select class="selectSubject form-control">
                                         <option id ="defaultCourse" selected>Select Course</option>
-                                        <% showBasket.forEach(data=> { %>
-                                            <option data-subId="<%= data.sub_id %>" >
-                                                <%= data.subject_name %>
+                                        <% showBasket.forEach(datas=> { %>
+                                            <option class="subjectName" value="<%= datas.sub_id %>" >
+                                                <%= datas.subject_name %>
                                             </option>
                                             <% }) %>
                                                 <% yearBackSubjects.forEach(data=> { %>
@@ -96,24 +97,50 @@
   
  if(e.target.classList.contains('insertNext')){
     const currentTime = new Date();
-    const options = { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' };
-    const timeString = currentTime.toLocaleTimeString([], options);
+     const options = { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' };
+     const timeString = currentTime.toLocaleTimeString([], options);
+     const datestring = currentTime.toLocaleDateString([], options);
 
-    let compSub = "<%= showBasket[0].no_of_comp_sub %>";
+     console.log("timestring ",timeString ,datestring);
 
-    let selectSubject = document.querySelectorAll('.selectSubject');
-    let courseArray = [];
+     let compSub = "<%= showBasket[0].no_of_comp_sub %>";
+     let eventLid = "<%= showBasket[0].event_lid %>"
+     let userLid = "<%= module[0].id %>"
+     let basketLid = "<%= showBasket[0].id %>"
 
-    Array.from(selectSubject).forEach(data => {
-    let defaultCourse = data.querySelector('#defaultCourse');
-    let selectCourse = defaultCourse.innerText;
+     let courseArray = [];
 
-    if(selectCourse != data.value){
-     let subjectId = data.getAttribute('data-subId'); 
-     console.log(subjectId)
-    }
-    })
-    console.log(compSub)
+     let selectSubject = document.querySelectorAll('.selectSubject');
+     let counter = 1;
+     Array.from(selectSubject).forEach(data => {
+
+         let defaultCourse = data.querySelector('#defaultCourse');
+         let subjectName = data.options[data.selectedIndex].textContent.trim();
+
+         if (subjectName != data.value) {
+             courseArray.push({ subjectLid: data.value, preference: counter });
+             counter++;
+         }
+
+     })
+
+     console.log('comp sub and array ', compSub, JSON.stringify(courseArray));
+
+     if (courseArray.length >= compSub) {
+         let obj = { eventLid, timeString, courseArray, userLid,basketLid };
+         console.log(obj)
+
+         dynamicFetchApi('/elective/insertStudentCourses','POST',obj)
+         .then(response => {
+          console.log(response);
+         })
+
+     } else {
+         let modalBody = document.querySelector('#msgModal');
+         modalBody.innerHTML = `<h4 style="text-align:center;">Select Courses ${compSub} or more than ${compSub} !!</h4>`;
+         document.querySelector('[data-target="#messageModal"]').click();
+     }
+    
  }
 
 
