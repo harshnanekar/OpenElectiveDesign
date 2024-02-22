@@ -2,6 +2,7 @@ const studentQuery = require('../queries/studentQueries.js');
 const userQuery = require("../queries/user.js");
 const validationController = require("../controller/validation.js");
 const jwtauth = require("../middleware/request.js");
+const {redisDb} = require("../config/database.js");
 
 module.exports = {
 
