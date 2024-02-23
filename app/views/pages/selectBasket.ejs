@@ -38,12 +38,12 @@
         <%- include('header.ejs') %>
             <div id="mains">
                 <%- include('messageModal.ejs') %>
-                <h4 class="mt-4 ml-4">
+                <h4 id="eventName" class="mt-4 ml-4" data-eventLid="<%= showBasket[0].id %>">
                     <%= showBasket[0].event_name %>
                 </h4>
 
                 <div id="basketDiv">
-                    <h5 id="basketName">
+                    <h5 id="basketName" data-basketLid="<%= showBasket[0].basket_lid %>">
                         <%= showBasket[0].basket_name %>
                     </h5>
                     </br>
@@ -55,6 +55,7 @@
                         Subject To Change Order If Needed </p>
                     <div>
                         <% let index=1; %>
+                        <input id="basketData" type="text" data-userLid="<%= module[0].id %>" data-compSub = "<%= showBasket[0].no_of_comp_sub %>" hidden />
                             <% for(let i=1;i<=5;i++) {%>
                                 <div style="display: flex;align-items:center;"><span class="mr-2">
                                     Preference No.<%= index %>.
@@ -97,17 +98,16 @@
   
  if(e.target.classList.contains('insertNext')){
     const currentTime = new Date();
-     const options = { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' };
-     const timeString = currentTime.toLocaleTimeString([], options);
-     const datestring = currentTime.toLocaleDateString([], options);
+     const timeString = currentTime.toLocaleString('en-US', {hour12:false});
 
-     console.log("timestring ",timeString ,datestring);
+     console.log("timestring ",timeString);
 
-     let compSub = "<%= showBasket[0].no_of_comp_sub %>";
-     let eventLid = "<%= showBasket[0].event_lid %>"
-     let userLid = "<%= module[0].id %>"
-     let basketLid = "<%= showBasket[0].id %>"
+     let compSub = document.querySelector('#basketData').getAttribute('data-compSub');
+     let eventLid =  document.querySelector('#eventName').getAttribute('data-eventLid');
+     let userLid =  document.querySelector('#basketData').getAttribute('data-userLid');
+     let basketLid = document.querySelector('#basketName').getAttribute('data-basketLid')
 
+     console.log(compSub,eventLid,userLid,basketLid);
      let courseArray = [];
 
      let selectSubject = document.querySelectorAll('.selectSubject');

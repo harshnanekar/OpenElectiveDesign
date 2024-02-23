@@ -47,4 +47,12 @@ module.exports = class Student {
     };
     return pgPool.query(query);
   }
+
+  static insertStudentCourse(basketData){
+    let query = {
+      text:`select insert_student_course($1)`,
+      values:[basketData]
+    }
+    return pgPool.query(query)
+  }
 };
