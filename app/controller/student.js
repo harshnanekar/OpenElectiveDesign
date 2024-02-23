@@ -125,13 +125,15 @@ module.exports = {
     try {
       let username = jwtauth.verifySession(req, res);
       if (username != undefined) {
-
         let eventId = req.query.id;
         let getModules = await userQuery.getModules(username);
-        let viewElectedStudentBasket = await studentQuery.viewStudentElectedBasket(eventId);
-    
-        return res.render("viewAllocatedEvents",{module:getModules,electedEvent : viewElectedStudentBasket.rows});
+        let viewElectedStudentBasket =
+          await studentQuery.viewStudentElectedBasket(eventId);
 
+        return res.render("viewAllocatedEvents", {
+          module: getModules,
+          electedEvent: viewElectedStudentBasket.rows,
+        });
       } else {
         res.clearCookie("jwtauth");
         return res.redirect("/elective/loginPage#sessionTimeout");
@@ -139,6 +141,30 @@ module.exports = {
     } catch (error) {
       console.log(error.message);
       return res.redirect("/elective/error");
+    }
+  },
+
+  getElectedBasketSubject: async (req, res) => {
+    try {
+      let username = jwtauth.verifySession(req, res);
+      if (username != undefined) {
+        let { basketValue } = req.body;
+        let getElectedSubject = await studentQuery.viewStudentElectedSubject(
+          basketValue
+        );
+        if (getElectedSubject.rowCount > 0) {
+          return res.json({
+            status: "success",
+            subject: getElectedSubject.rows,
+          });
+        }
+      } else {
+        res.clearCookie("jwtauth");
+        return res.redirect("/elective/loginPage#sessionTimeout");
+      }
+    } catch (error) {
+      console.log(error.message);
+      return res.json({ status: "Error", redirectTo: "/elective/error" });
     }
   },
 };

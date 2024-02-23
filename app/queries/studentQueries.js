@@ -63,4 +63,13 @@ module.exports = class Student {
     };
     return pgPool.query(query);
   }
+
+  static viewStudentElectedSubject(basketId){
+    let query = {
+      text:`select s.subject_name from student_sub_allocation sm inner join subject_master s on sm.subject_lid=s.sub_id
+      where basket_lid =$1`,
+      values:[basketId]
+    }
+    return pgPool.query(query);
+  }
 };

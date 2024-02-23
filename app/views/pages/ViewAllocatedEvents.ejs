@@ -24,21 +24,26 @@
     <%- include('sidebar.ejs') %>
     <%- include('header.ejs')  %>
     <div id="main">
-        <div id="basketData">
-            <h2 style="text-align:center;">Elected Baskets</h2><br><br>
-            <% let index=1; %> 
-            <% electedEvent.forEach(data => { %>   
-                <div id="baskets" class="mb-4">
-                    <h4><%= index %>. <%= data.basket_name %></h4><br><br>
-                
+      <div id="basketData">
+        <h2 style="text-align:center;">Elected Baskets</h2><br><br>
+        <% let index=1; %> 
+        <% electedEvent.forEach(data => { %>   
+            <div id="baskets" class="mb-4">
+                <h4 class="basketId" ><%= index %>. <%= data.basket_name %></h4><br><br>
                 <% index++; %>
-                <details class="getSubjects">
-                    <summary>View Elected Subjects</summary>
-                    <p>Epcot is a theme park at Walt Disney World Resort featuring exciting attractions, international pavilions, award-winning fireworks and seasonal special events.</p>
-                  </details>
-                </div>
-            <% }); %>
-        </div>
+                
+                    <button class="btn btn-danger getSubjects" type="button" data-toggle="collapse" data-target="#collapse<%= data.id %>"  data-basketId="<%= data.id %>" aria-expanded="false" aria-controls="collapse<%= data.id %>">
+                        View Elected Subjects
+                    </button>
+                    <div id="collapse<%= data.id %>" class="collapse" aria-labelledby="heading<%= data.id %>" data-parent="#basketData">
+                        <div class="card card-body subjectDisplay">
+                           
+                        </div>
+                    </div>
+                
+            </div>
+        <% }); %>
+    </div>
     </div>
 </body>
 
@@ -46,17 +51,31 @@
 <script src= "../js/script.js" ></script>
 <script>
 
-let subjects =document.querySelectorAll('.getSubjects');
+  document.addEventListener('click',(e) => {
+    if(e.target.classList.contains){
+      let basketValue = e.target.getAttribute('data-basketId');
+      let obj = { basketValue };
+        dynamicFetchApi('/elective/getElectedBasketSubject', 'POST', obj)
+          .then(async response => {
+            if (response.status === 'error') {
+              window.location.href = `${response.redirectTo}`;
+            } else {
+            let sub = document.querySelectorAll('.subjectDisplay');  
+            let body = await `${response.subject.map((data, i) => `<p>${i + 1}.${data.subject_name}</p>`).join('')}`;
+            console.log(JSON.stringify(body),JSON.stringify(response.subject),sub);
 
-subjects.forEach(sub => {
+            Array.from(sub).forEach(s => {
+            s.innerHTML = '';
+            s.insertAdjacentHTML('beforeEnd', body);
+            })
+           
+            }
+          })
+    }
 
-    sub.addEventListener('toggle',(e) => {
-   if(sub.classList.contains('getSubjects') && sub.open){
-    console.log('Subject clicked')
-   }  
-})
- 
-})
+  })
+
+
 
 
 
