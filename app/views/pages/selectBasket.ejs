@@ -29,6 +29,12 @@
             #note {
                 margin-bottom: 50px;
             }
+            .insertNext :focus{
+              outline:none;
+            }
+            .reset :focus{
+              outline:none;
+            }
         </style>
 
 </head>
@@ -38,115 +44,154 @@
         <%- include('header.ejs') %>
             <div id="mains">
                 <%- include('messageModal.ejs') %>
-                <h4 id="eventName" class="mt-4 ml-4" data-eventLid="<%= showBasket[0].id %>">
-                    <%= showBasket[0].event_name %>
-                </h4>
+                    <h4 id="eventName" class="mt-4 ml-4" data-eventLid="<%= showBasket[0].event_lid %>">
+                        Event: <%= showBasket[0].event_name %>
+                    </h4>
 
-                <div id="basketDiv">
-                    <h5 id="basketName" data-basketLid="<%= showBasket[0].basket_lid %>">
-                        <%= showBasket[0].basket_name %>
-                    </h5>
-                    </br>
-                    <h5>
-                        Preference Order
-                    </h5>
-                    <p id="note" style="color:red;">*Please Check The Order Of Preferences Here As Selected From 1 To 5,
-                        Deselect and Reselect
-                        Subject To Change Order If Needed </p>
-                    <div>
-                        <% let index=1; %>
-                        <input id="basketData" type="text" data-userLid="<%= module[0].id %>" data-compSub = "<%= showBasket[0].no_of_comp_sub %>" hidden />
-                            <% for(let i=1;i<=5;i++) {%>
-                                <div style="display: flex;align-items:center;"><span class="mr-2">
-                                    Preference No.<%= index %>.
-                                    </span><select class="selectSubject form-control">
-                                        <option id ="defaultCourse" selected>Select Course</option>
-                                        <% showBasket.forEach(datas=> { %>
-                                            <option class="subjectName" value="<%= datas.sub_id %>" >
-                                                <%= datas.subject_name %>
-                                            </option>
-                                            <% }) %>
-                                                <% yearBackSubjects.forEach(data=> { %>
-                                                    <option style="color:grey;" disabled>
-                                                        <%= data.subject_name %>
-                                                    </option>
-                                                    <% }); %>
-                                    </select></div></br>
+                    <div id="basketDiv">
+                        <h3 style="text-align:center;" id="basketName" data-basketLid="<%= showBasket[0].id %>"
+                            data-compSub="<%= showBasket[0].no_of_comp_sub %>">
+                            Basket: <%= showBasket[0].basket_name %>
+                        </h3>
+                        </br>
+                        <h5>
+                            Preference Order
+                        </h5>
+                        <p id="note" style="color:red;">*Please Check The Order Of Preferences Here As Selected From 1
+                            To 5,
+                            Deselect and Reselect
+                            Subject To Change Order If Needed </p>
+                        <div>
+                            <% let index=1; %>
+                                <% for(let i=1;i<=5;i++) {%>
+                                    <div style="display: flex;align-items:center;"><span class="mr-2">
+                                            Preference No.<%= index %>.
+                                        </span><select class="selectSubject form-control">
+                                            <option id="defaultCourse" selected>Select Course</option>
+                                            <% showBasket.forEach(datas=> { %>
+                                                <option class="subjectName" value="<%= datas.sub_id %>">
+                                                    <%= datas.subject_name %>
+                                                </option>
+                                                <% }) %>
+                                                    <% yearBackSubjects.forEach(data=> { %>
+                                                        <option style="color:grey;" disabled>
+                                                            <%= data.subject_name %>
+                                                        </option>
+                                                        <% }); %>
+                                        </select></div></br>
 
-                                <% index++; %>
-                                    <% } %>
+                                    <% index++; %>
+                                        <% } %>
+                        </div>
+                        <div>
+                        </div>
+                        <button class="btn btn-primary ml-3 mt-4 reset">Reset</button><button
+                            class="btn btn-danger ml-3 mt-4 insertNext">Next</button>
                     </div>
-                    <div>
-                    </div>
-                    <button class="btn btn-primary ml-3 mt-4 reset">Reset</button><button
-                        class="btn btn-danger ml-3 mt-4 insertNext">Next</button>
-                </div>
             </div>
 </body>
 
 <%- include ('../partials/partial2') %>
-<script src= "../js/script.js" ></script>
-<script>
+    <script src="../js/script.js"></script>
+    <script>
 
- document.addEventListener('click',function(e){
+        document.addEventListener('click', function (e) {
 
- if(e.target.classList.contains('reset')){
-  let selectValue = document.querySelectorAll('.selectSubject');
-  let defaultCourse =document.querySelector('#defaultCourse');
+            if (e.target.classList.contains('reset')) {
+                let selectValue = document.querySelectorAll('.selectSubject');
+                let defaultCourse = document.querySelector('#defaultCourse');
 
-}
-  
- if(e.target.classList.contains('insertNext')){
-    const currentTime = new Date();
-     const timeString = currentTime.toLocaleString('en-US', {hour12:false});
+            }
 
-     console.log("timestring ",timeString);
+            if (e.target.classList.contains('insertNext')) {
+                const currentTime = new Date();
+                const time = currentTime.toLocaleString('en-US', { hour12: false });
+                const timeParts = time.split(',');
+                const timeString = timeParts[1].trim();
 
-     let compSub = document.querySelector('#basketData').getAttribute('data-compSub');
-     let eventLid =  document.querySelector('#eventName').getAttribute('data-eventLid');
-     let userLid =  document.querySelector('#basketData').getAttribute('data-userLid');
-     let basketLid = document.querySelector('#basketName').getAttribute('data-basketLid')
+                console.log("timestring ", timeString);
 
-     console.log(compSub,eventLid,userLid,basketLid);
-     let courseArray = [];
+                let compSub = document.querySelector('#basketName').getAttribute('data-compSub');
+                let eventLid = document.querySelector('#eventName').getAttribute('data-eventLid');
+                let userLid = "<%= module[0].id %>";
+                let basketLid = document.querySelector('#basketName').getAttribute('data-basketLid');
 
-     let selectSubject = document.querySelectorAll('.selectSubject');
-     let counter = 1;
-     Array.from(selectSubject).forEach(data => {
+                console.log(compSub, eventLid, userLid, basketLid);
+                let courseArray = [];
 
-         let defaultCourse = data.querySelector('#defaultCourse');
-         let subjectName = data.options[data.selectedIndex].textContent.trim();
+                let selectSubject = document.querySelectorAll('.selectSubject');
+                let counter = 1;
+                Array.from(selectSubject).forEach(data => {
 
-         if (subjectName != data.value) {
-             courseArray.push({ subjectLid: data.value, preference: counter });
-             counter++;
-         }
+                    let defaultCourse = data.querySelector('#defaultCourse');
+                    let subjectName = data.options[data.selectedIndex].textContent.trim();
 
-     })
+                    if (subjectName != data.value) {
+                        courseArray.push({ subjectLid: data.value, preference: counter });
+                        counter++;
+                    }
 
-     console.log('comp sub and array ', compSub, JSON.stringify(courseArray));
+                })
 
-     if (courseArray.length >= compSub) {
-         let obj = { eventLid, timeString, courseArray, userLid,basketLid };
-         console.log(obj)
+                if (courseArray.length >= compSub) {
+                    let obj = { eventLid, timeString, courseArray, userLid, basketLid };
+                    console.log(obj)
 
-         dynamicFetchApi('/elective/insertStudentCourses','POST',obj)
-         .then(response => {
-          console.log(response);
-         })
+                    dynamicFetchApi('/elective/insertStudentCourses', 'POST', obj)
+                        .then(response => {
+                            if (response.status === 'error') {
+                                window.location.href = `${response.redirectTo}`;
+                            } else {
 
-     } else {
-         let modalBody = document.querySelector('#msgModal');
-         modalBody.innerHTML = `<h4 style="text-align:center;">Select Courses ${compSub} or more than ${compSub} !!</h4>`;
-         document.querySelector('[data-target="#messageModal"]').click();
-     }
-    
- }
+                                if(response.basketData[0].insert_student_course.nextBasket != null){
+
+                                let eventName = document.querySelector('#eventName');
+                                let eventlid = response.basketData[0].insert_student_course.nextBasket[0].event_lid
+                                eventName.setAttribute('data-eventLid', eventlid);
+
+                                let basketName = document.querySelector('#basketName');
+                                basketName.innerText = `Basket: ${response.basketData[0].insert_student_course.nextBasket[0].basket_name}`;
+                                let basketId = response.basketData[0].insert_student_course.nextBasket[0].basket_id;
+                                let compSub = response.basketData[0].insert_student_course.nextBasket[0].no_of_comp_sub;
+                                basketName.setAttribute('data-basketLid', basketId)
+                                basketName.setAttribute('data-compSub', compSub)
+
+                                let subjectLid = response.basketData[0].insert_student_course.nextBasket;
+                                let yearBackSubject = response.yearBackSubjects;
+                                console.log('response subjects ', JSON.stringify(subjectLid));
+
+                                let s_lid = `<option id="defaultCourse" selected>Select Course</option>
+                            ${subjectLid.map(datas => `
+                                <option class="subjectName" value="${datas.subject_id}">
+                                    ${datas.subject_name}
+                                </option>`
+                                ).join('')}
+                            ${yearBackSubject.map(datas => `
+                                <option style="color:grey;" disabled>
+                                    ${datas.subject_name}
+                                </option>`
+                                ).join('')}`;
 
 
+                                let selectSubject = document.querySelectorAll('.selectSubject');
 
+                                Array.from(selectSubject).forEach(selectOption => {
+                                    selectOption.innerHTML = s_lid;
+                                })
+                             }else{
+                                window.location.href=`/elective/viewStudentElectedEvents?id=${eventLid}`;
+                             }   
+                            }
+                        })
 
- })
+                } else {
+                    let modalBody = document.querySelector('#msgModal');
+                    modalBody.innerHTML = `<h4 style="text-align:center;">Select Courses ${compSub} or more than ${compSub} !!</h4>`;
+                    document.querySelector('[data-target="#messageModal"]').click();
+                }
+
+            }
+        })
 
 </script>
 </html>

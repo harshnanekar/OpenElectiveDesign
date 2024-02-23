@@ -48,11 +48,19 @@ module.exports = class Student {
     return pgPool.query(query);
   }
 
-  static insertStudentCourse(basketData){
+  static insertStudentCourse(basketData) {
     let query = {
-      text:`select insert_student_course($1)`,
-      values:[basketData]
-    }
-    return pgPool.query(query)
+      text: `select insert_student_course($1)`,
+      values: [basketData],
+    };
+    return pgPool.query(query);
+  }
+
+  static viewStudentElectedBasket(eventId) {
+    let query = {
+      text: `select distinct b.id,b.basket_name from student_sub_allocation s inner join basket b on s.basket_lid=b.id where s.event_lid=$1`,
+      values: [eventId],
+    };
+    return pgPool.query(query);
   }
 };

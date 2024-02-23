@@ -9,6 +9,10 @@ const pgPool = new Pool({
     database: 'open_elective',
 });
 
-const redisDb = createClient();
+const redisDb = createClient({
+    host: 'localhost',
+    port: 6379,
+    password: 'yourpassword' 
+});
 
 module.exports = { pgPool,redisDb } ;

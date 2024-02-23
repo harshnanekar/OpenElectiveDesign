@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include ('../partials/partial') %>
+    <title>Allocated Events</title>
+    
+    <style>
+      body{
+        background-color: whitesmoke;
+      }  
+      #viewBaskets{
+        background-color: white;
+      }
+      #baskets{
+        background-color:white;
+        padding:20px;
+        border-radius: 10px;
+        width:1450px;
+      }
+    </style>
+
+</head>
+<body>
+    <%- include('sidebar.ejs') %>
+    <%- include('header.ejs')  %>
+    <div id="main">
+        <div id="basketData">
+            <h2 style="text-align:center;">Elected Baskets</h2><br><br>
+            <% let index=1; %> 
+            <% electedEvent.forEach(data => { %>   
+                <div id="baskets" class="mb-4">
+                    <h4><%= index %>. <%= data.basket_name %></h4><br><br>
+                
+                <% index++; %>
+                <details class="getSubjects">
+                    <summary>View Elected Subjects</summary>
+                    <p>Epcot is a theme park at Walt Disney World Resort featuring exciting attractions, international pavilions, award-winning fireworks and seasonal special events.</p>
+                  </details>
+                </div>
+            <% }); %>
+        </div>
+    </div>
+</body>
+
+<%- include ('../partials/partial2') %>
+<script src= "../js/script.js" ></script>
+<script>
+
+let subjects =document.querySelectorAll('.getSubjects');
+
+subjects.forEach(sub => {
+
+    sub.addEventListener('toggle',(e) => {
+   if(sub.classList.contains('getSubjects') && sub.open){
+    console.log('Subject clicked')
+   }  
+})
+ 
+})
+
+
+
+
+
+</script>
+</html>

@@ -88,11 +88,26 @@ module.exports = {
         let insertStudentBasket = await studentQuery.insertStudentCourse(
           JSON.stringify(basketObj)
         );
+
+        let nextBasketData = insertStudentBasket.rows;
+        let yearBackSubjects = await studentQuery.showYearBackSubjects(
+          username,
+          eventLid
+        );
+
         if (insertStudentBasket.rowCount > 0) {
           console.log(insertStudentBasket);
-          return res.json({ message: "Inserted success" });
+          return res.json({
+            status: "success",
+            basketData: nextBasketData,
+            yearBackSubjects: yearBackSubjects.rows,
+          });
         } else {
-          return res.json({ message: "failed to insert" });
+          let redisBasketData = await redisDb.get("basketData");
+          await studentQuery.insertStudentCourse(
+            JSON.stringify(redisBasketData)
+          );
+          return res.json({ message: "Failed to insert !!" });
         }
       } else {
         res.clearCookie("jwtauth");
@@ -104,6 +119,26 @@ module.exports = {
     } catch (error) {
       console.log(error.message);
       return res.json({ status: "Error", redirectTo: "/elective/error" });
+    }
+  },
+  viewStudentElectedEvents: async (req, res) => {
+    try {
+      let username = jwtauth.verifySession(req, res);
+      if (username != undefined) {
+
+        let eventId = req.query.id;
+        let getModules = await userQuery.getModules(username);
+        let viewElectedStudentBasket = await studentQuery.viewStudentElectedBasket(eventId);
+    
+        return res.render("viewAllocatedEvents",{module:getModules,electedEvent : viewElectedStudentBasket.rows});
+
+      } else {
+        res.clearCookie("jwtauth");
+        return res.redirect("/elective/loginPage#sessionTimeout");
+      }
+    } catch (error) {
+      console.log(error.message);
+      return res.redirect("/elective/error");
     }
   },
 };
