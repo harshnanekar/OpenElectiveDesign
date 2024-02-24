@@ -46,12 +46,12 @@
          <% let endate = edate.split('T')[0]; let etime= edate.split('T')[1] ;  let edtime= etime.split('.')[0] ; %>
          <td id="eventEnd"><%= endate %><%= " " %><%= edtime %></td>
          <td>
-         <a href="/elective/startCourseSelection?id=<%= eventRow.id %>"><i style="cursor:pointer;text-decoration:none;color: black;" class="fa-solid fa-hand-pointer" data-toggle="tooltip" title="Start Selection" ></i></a>   
+         <a href="/elective/viewStudentElectedEvents?id=<%= eventRow.id %>"><i style="cursor:pointer;color:black;" class="fa-solid fa-eye" data-toggle="tooltip" title="View Event" ></i></a>   
          </td>
         </tr>
         <% index++; %>
         <% }); %>
-        <% }else{ %>
+        <% } else { %>
           <h3 class="mt-3">----------------------------------------No Data Available------------------------------------------</h3>
           <%}%>
        </table>

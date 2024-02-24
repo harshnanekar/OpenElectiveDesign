@@ -2,20 +2,20 @@ const { pgPool } = require('../config/database.js');
 
 module.exports = class CourseQuery {
 
-static insertCourse(subjectName,departMentName,batchNo,maxCapacityPerBatch,campus,openPrograms,username){
+static insertCourse(subjectName,departMentName,batchNo,maxCapacityPerBatch,minCapacityperBatch,campus,openPrograms,username){
  let query = {
-    text : `insert into subject_master(subject_name,dept_name,batches,max_capacity_per_batch,campus_lid,open_to_allprograms,
-            createdby,created_date,modifiedby,modified_date,active) values ($1,$2,$3,$4,(select campus_id from campus where campus_name = $5),
-            $6,$7,now(),$8,now(),true)
+    text : `insert into subject_master(subject_name,dept_name,batches,max_capacity_per_batch,min_capacity_per_batch,campus_lid,open_to_allprograms,
+            createdby,created_date,modifiedby,modified_date,active) values ($1,$2,$3,$4,$5,(select campus_id from campus where campus_name = $6),
+            $7,$8,now(),$9,now(),true)
             returning sub_id;`,
-    values :[subjectName,departMentName,batchNo,maxCapacityPerBatch,campus,openPrograms,username,username]
+    values :[subjectName,departMentName,batchNo,maxCapacityPerBatch,minCapacityperBatch,campus,openPrograms,username,username]
  }   
  return pgPool.query(query);
 }
 
 static getCourses(username){
  let query={
-  text: `SELECT s.sub_id, s.subject_name,COALESCE(c.campus_name, 'No Campus Assigned') AS campus_name,s.open_to_allprograms,s.dept_name,s.max_capacity_per_batch,s.batches,s.campus_lid
+  text: `SELECT s.sub_id, s.subject_name,COALESCE(c.campus_name, 'No Campus Assigned') AS campus_name,s.open_to_allprograms,s.dept_name,s.max_capacity_per_batch,s.min_capacity_per_batch,s.batches,s.campus_lid
   FROM public.subject_master s LEFT JOIN campus c ON s.campus_lid = c.campus_id WHERE s.createdby =$1 AND s.active = true AND (c.active = true OR c.active IS NULL) 
   ORDER BY s.created_date DESC`,
   values:[username]  
@@ -75,12 +75,12 @@ static getAllCourseProgram(subId){
  return pgPool.query(query);   
 }
 
-static updateCourse(subName,deptName,batches,capacity,campus,username,subjectId){
+static updateCourse(subName,deptName,batches,capacity,minBatch,campus,username,subjectId){
  let query = {
   text: `update subject_master set subject_name= $1,dept_name=$2,batches=$3,max_capacity_per_batch=$4,
-  campus_lid=(select campus_id from campus where campus_name=$5),modifiedby=$6,modified_date=now()
-  where sub_id=$7`,
-  values:[subName,deptName,batches,capacity,campus,username,subjectId]
+  min_capacity_per_batch=$5,campus_lid=(select campus_id from campus where campus_name=$6),modifiedby=$7,modified_date=now()
+  where sub_id=$8`,
+  values:[subName,deptName,batches,capacity,minBatch,campus,username,subjectId]
  }  
  return pgPool.query(query); 
 }

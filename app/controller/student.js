@@ -121,6 +121,7 @@ module.exports = {
       return res.json({ status: "Error", redirectTo: "/elective/error" });
     }
   },
+
   viewStudentElectedEvents: async (req, res) => {
     try {
       let username = jwtauth.verifySession(req, res);
@@ -129,6 +130,7 @@ module.exports = {
         let getModules = await userQuery.getModules(username);
         let viewElectedStudentBasket =
           await studentQuery.viewStudentElectedBasket(eventId);
+          console.log(JSON.stringify(viewElectedStudentBasket.rows));
 
         return res.render("viewAllocatedEvents", {
           module: getModules,
@@ -144,27 +146,24 @@ module.exports = {
     }
   },
 
-  getElectedBasketSubject: async (req, res) => {
+  viewElectedEvents: async (req,res) => {
     try {
-      let username = jwtauth.verifySession(req, res);
-      if (username != undefined) {
-        let { basketValue } = req.body;
-        let getElectedSubject = await studentQuery.viewStudentElectedSubject(
-          basketValue
-        );
-        if (getElectedSubject.rowCount > 0) {
-          return res.json({
-            status: "success",
-            subject: getElectedSubject.rows,
-          });
-        }
-      } else {
-        res.clearCookie("jwtauth");
-        return res.redirect("/elective/loginPage#sessionTimeout");
-      }
+
+     let username = jwtauth.verifySession(req,res);
+     if(username != undefined){
+
+     let electedEvents = await studentQuery.viewStudentElectedEvent(username); 
+     let getModules = await userQuery.getModules(username);
+     return res.render('viewElectedEvent',{module:getModules,event:electedEvents.rows});
+
+     }else{
+      res.clearCookie("jwtauth");
+      return res.redirect("/elective/loginPage#sessionTimeout");
+     } 
+
     } catch (error) {
       console.log(error.message);
-      return res.json({ status: "Error", redirectTo: "/elective/error" });
+      return res.redirect("/elective/error");
     }
-  },
+  }
 };

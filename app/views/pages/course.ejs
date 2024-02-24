@@ -180,14 +180,18 @@
      </div>
      <div class="form-row">
      <div class="form-group col-md-6">
-      <label for="inputbatch">Enter No. of Batches</label>&ensp;&ensp;<span id="batchError"></span>
-      <input type="text" class="form-control" id="inputbatch" placeholder="No. of Batches">
+      <label for="inputMin">Enter Minimum Capacity Per Batch</label>&ensp;&ensp;<span id="minError"></span>
+      <input type="text" class="form-control" id="inputMin" placeholder="Minimum Capacity Per Batch">
      </div>
      <div class="form-group col-md-6">
       <label for="inputCapacity">Enter Maximum Capacity Per Batch</label>&ensp;&ensp;<span id="capacityError"></span>
       <input type="text" class="form-control" id="inputCapacity" placeholder="Maximum Capacity Per Batch">
      </div>
      </div>
+     <div class="form_group">
+      <label for="inputbatch">Enter No. of Batches</label>&ensp;&ensp;<span id="batchError"></span>
+      <input type="text" class="form-control" id="inputbatch" placeholder="No. of Batches">
+      </div>&ensp;
      <div class="form-group">
     <label for="inputCampus">Campus(Optional)</label>&ensp;&ensp;<span id="campusError"></span>
     <select id="inputCampus" class="form-control">
@@ -300,6 +304,7 @@
         let department = document.getElementById('deptName').value;
         let batches = document.getElementById('inputbatch').value;
         let batchCapacity = document.getElementById('inputCapacity').value;
+        let batchMinCapacity = document.getElementById('inputMin').value;
         let campus = document.getElementById('inputCampus').value;
         let radioTypeYes = document.getElementById('radioTypeYes');
         let radioTypeNo = document.getElementById('radioTypeNo');
@@ -307,6 +312,7 @@
         let subjectValidate = subjectValidater(subjectName);
         let departmentValidate = departmentValidater(department);
         let batchesValidate = batchesValidator(batches);
+        let minBatchValidator = minBatchValidation(batchMinCapacity);
         let batchCapacityValidate = batchCapacityValidator(batchCapacity);
         let campusValidate = campusValidator(campus);
 
@@ -319,8 +325,8 @@
           radioTypeValue = 'No';
         }
 
-        if (subjectValidate && departmentValidate && batchesValidate && batchCapacityValidate) {
-          let obj = { subjectName, department, batches, batchCapacity, campus, radioTypeValue };
+        if (subjectValidate && departmentValidate && batchesValidate && batchCapacityValidate && minBatchValidator) {
+          let obj = { subjectName, department, batches, batchCapacity,batchMinCapacity,campus, radioTypeValue };
           dynamicFetchApi('/elective/insertCourseManually', 'POST', obj)
             .then(response => {
               if (response.status === 'error') {
@@ -392,6 +398,7 @@
         let subName = tr.querySelector('.subjectName').textContent;
         let campus = tr.querySelector('.campus').textContent;
         let batches = tr.querySelector('.batches').textContent;
+        let minBatch = tr.querySelector('.minBatch').textContent;
         let capacity = tr.querySelector('.capacity').textContent;
         let dept = tr.querySelector('.dept').textContent;
 
@@ -411,14 +418,20 @@
 </div>
 <div class="form-row">
     <div class="form-group col-md-6">
-        <label for="inputbatch">Enter No. of Batches</label>&ensp;&ensp;<span id="batchError"></span>
-        <input type="text" value="${batches}" class="form-control" id="inputbatch" placeholder="No. of Batches">
+        <label for="inputMin">Enter Minimum Capacity Per Batch</label>&ensp;&ensp;<span id="minError"></span>
+        <input type="text" value="${minBatch}" class="form-control" id="inputMin" placeholder="Minimum Capacity Per Batch">
     </div>
     <div class="form-group col-md-6">
         <label for="inputCapacity">Enter Maximum Capacity Per Batch</label>&ensp;&ensp;<span id="capacityError"></span>
         <input type="text" value="${capacity}" class="form-control" id="inputCapacity" placeholder="Maximum Capacity Per Batch">
     </div>
 </div>
+<div class="form-group">
+  <div class="form-group">
+        <label for="inputbatch">Enter No. of Batches</label>&ensp;&ensp;<span id="batchError"></span>
+        <input type="text" value="${batches}" class="form-control" id="inputbatch" placeholder="No. of Batches">
+    </div>
+</div>  
 <div class="form-group">
     <label for="inputCampus">Campus</label>&ensp;&ensp;<span id="campusError"></span>
     <select id="campusInput" class="form-control">
@@ -469,9 +482,10 @@
         let campus = $(e.target).closest('div').prev().find('#campusInput').val();
         let programs = $(e.target).closest('div').prev().find('#coursePrograms').val();
         let subjectId = $(e.target).closest('div').prev().find('#inputSubId').val();
+        let minBatch = $(e.target).closest('div').prev().find('#inputMin').val();
 
         
-        let obj = { subjectId, subName, deptName, batch, capacity, campus, programs };
+        let obj = { subjectId, subName, deptName, batch,minBatch,capacity, campus, programs };
         console.log('edit course object ',obj);
 
         dynamicFetchApi('/elective/editCourse', 'POST', obj)
@@ -603,6 +617,7 @@
            <td class="campus" data-campusName=${data.campus_name}>${data.campus_name}</td>
            <td class="batches" data-batches=${data.batches} hidden>${data.batches}</td>
            <td class="capacity" data-capacity=${data.max_capacity_per_batch} hidden>${data.max_capacity_per_batch}</td>
+           <td class="minBatch" data-minBatch=${data.min_capacity_per_batch} hidden>${data.min_capacity_per_batch}</td>
            <td class="dept" data-dept=${data.dept_name} hidden>${data.dept_name}</td>
            <td colspan="4px">
            <i style="cursor:pointer;" data-id=${data.sub_id} data-toggle="modal" data-toggle='tooltip' data-target="#deletModal" class="fa-solid fa-trash deleteCourse"></i>&ensp;
@@ -682,6 +697,28 @@
         return false;
       }
 
+    }
+
+    function minBatchValidation(minValue){
+      let batchError = document.getElementById('minError');
+
+      if (minValue.length > 0) {
+
+        let minBatchValidation = NumberValidation(minValue);
+        console.log("batch validation :::: ", minBatchValidation);
+
+        if (minBatchValidation) {
+          batchError.innerText = '';
+          return true;
+        } else {
+          batchError.innerText = '*Invalid Input Field';
+          return false;
+        }
+
+      } else {
+        batchError.innerText = '*Required';
+        return false;
+      }
     }
 
     function batchCapacityValidator(capacity) {

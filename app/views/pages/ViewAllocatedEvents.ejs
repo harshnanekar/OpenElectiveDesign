@@ -37,10 +37,13 @@
                     </button>
                     <div id="collapse<%= data.id %>" class="collapse" aria-labelledby="heading<%= data.id %>" data-parent="#basketData">
                         <div class="card card-body subjectDisplay">
-                           
+                            <% let count=1; %>   
+                            <% data.subject_names.forEach(subName => { %>
+                                <p><%= count %>. <%= subName.subject_name %></p>
+                                <% count++; %>
+                            <% }); %>   
                         </div>
                     </div>
-                
             </div>
         <% }); %>
     </div>
@@ -49,37 +52,5 @@
 
 <%- include ('../partials/partial2') %>
 <script src= "../js/script.js" ></script>
-<script>
 
-  document.addEventListener('click',(e) => {
-    if(e.target.classList.contains){
-      let basketValue = e.target.getAttribute('data-basketId');
-      let obj = { basketValue };
-        dynamicFetchApi('/elective/getElectedBasketSubject', 'POST', obj)
-          .then(async response => {
-            if (response.status === 'error') {
-              window.location.href = `${response.redirectTo}`;
-            } else {
-            let sub = document.querySelectorAll('.subjectDisplay');  
-            let body = await `${response.subject.map((data, i) => `<p>${i + 1}.${data.subject_name}</p>`).join('')}`;
-            console.log(JSON.stringify(body),JSON.stringify(response.subject),sub);
-
-            Array.from(sub).forEach(s => {
-            s.innerHTML = '';
-            s.insertAdjacentHTML('beforeEnd', body);
-            })
-           
-            }
-          })
-    }
-
-  })
-
-
-
-
-
-
-
-</script>
 </html>

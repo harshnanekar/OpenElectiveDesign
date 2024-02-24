@@ -195,7 +195,7 @@ let controller = {
           let arrLength = getData.length;
           if (arrLength > 0) {
             getData.forEach(async (data) => {
-              let excelStudentUname = data.Username;
+              let excelStudentUname = new String(data.Username);
               let excelFirstName = data.FirstName;
               let excelLastName = data.LastName;
               let excelSession = data.Acad_Session;
@@ -211,8 +211,9 @@ let controller = {
               let campus = excelCampus!=undefined ? excelCampus.trim() : undefined;
               let rollNo = excelRoll!=undefined ? excelRoll.trim() : undefined;
 
+              let usernameValidation = studentUname!=undefined ? validation.NumberValidation(studentUname) : false;
               if (
-                studentUname != undefined &&
+                usernameValidation &&
                 studentFirstName != undefined &&
                 studentLastName != undefined &&
                 acadSession != undefined &&

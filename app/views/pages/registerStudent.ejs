@@ -117,7 +117,7 @@
           </div>
 
           <div>
-            <h4 id="nonInsertedMessage">Student's Data Not Inserted Due To Empty Input Fields</h4>
+            <h4 id="nonInsertedMessage">Student's Data Not Inserted Due To Invalid Input Fields</h4>
             <div id="nonInsertedStudents">
 
 
@@ -420,19 +420,25 @@
     //Username Validation
     function unameValidation(username) {
 
-      let unameError = document.getElementById('unameError');
+        let unameError = document.getElementById('unameError');
 
-      if (username.length > 0) {
+        if (username.length > 0) {
 
-        unameError.innerText = '';
-        return true;
+          let userValidation = NumberValidation(username);
+          unameError.innerText = '';
+          if (userValidation) {
+            return true;
+          } else {
+            unameError.innerText = '*Invalid Inputs'; 
+            return false;
+          }
 
-      } else {
+        } else {
 
-        unameError.innerText = '*Required';
-        return false;
+          unameError.innerText = '*Required';
+          return false;
 
-      }
+        }
 
     }
 

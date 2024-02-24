@@ -207,4 +207,13 @@ module.exports = class Validation {
       return false;
     }
   }
+
+  static batchMinValidator(input_text) {
+    if (input_text.length > 0) {
+      let capacityValidator = Validation.NumberValidation(input_text);
+      return capacityValidator;
+    } else {
+      return false;
+    }
+  }
 };

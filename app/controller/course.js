@@ -47,6 +47,7 @@ module.exports = {
               let campusName = data.Campus;
               let batches = new String(data.No_Of_Batches);
               let maxCapacity = new String(data.Max_Capacity_Per_Batch);
+              let minCapacity =new String(data.Min_Capacity_Per_Batch);
               let openToPrograms = data.Open_To_All_Programs;
 
               let subjectName = subName ? subName.trim() : undefined;
@@ -56,6 +57,9 @@ module.exports = {
               let maxCapacityPerBatch = maxCapacity
                 ? maxCapacity.trim()
                 : undefined;
+              let minCapacityperBatch = minCapacity
+                ? minCapacity.trim()
+                : undefined;  
               let openToAllPrograms = openToPrograms
                 ? openToPrograms.trim()
                 : undefined;
@@ -66,6 +70,7 @@ module.exports = {
                 departMentName != undefined &&
                 batchNo != undefined &&
                 maxCapacityPerBatch != undefined &&
+                minCapacityperBatch != undefined &&
                 openToAllPrograms != undefined
               ) {
                 openPrograms = openToAllPrograms === "Yes" ? "Y" : "N";
@@ -77,6 +82,7 @@ module.exports = {
                     departMentName,
                     batchNo,
                     maxCapacityPerBatch,
+                    minCapacityperBatch,
                     campus,
                     openPrograms,
                     username
@@ -167,6 +173,7 @@ module.exports = {
           department,
           batches,
           batchCapacity,
+          batchMinCapacity,
           campus,
           radioTypeValue,
         } = req.body;
@@ -175,12 +182,14 @@ module.exports = {
         let batchValidation = validation.batchValidater(batches);
         let batchCapacityValidation =
           validation.batchCapacityValidater(batchCapacity);
+        let batchMinValidation = validation.batchMinValidator(batchMinCapacity);
 
         if (
           subjectValidation &&
           departmentValidation &&
           batchValidation &&
-          batchCapacityValidation 
+          batchCapacityValidation &&
+          batchMinValidation
         ) {
           let radioYesNoValue = radioTypeValue === "Yes" ? "Y" : "N";
 
@@ -190,6 +199,7 @@ module.exports = {
               department,
               batches,
               batchCapacity,
+              batchMinCapacity,
               campus,
               radioYesNoValue,
               username
@@ -360,6 +370,7 @@ module.exports = {
           deptName,
           batch,
           capacity,
+          minBatch,
           campus,
           programs,
         } = req.body;
@@ -367,6 +378,7 @@ module.exports = {
         let departmentValidation = Validation.departmentValidator(deptName);
         let capacityValidation = Validation.batchCapacityValidater(capacity);
         let batchValidation = Validation.batchValidater(batch);
+        let minBatchValidation =Validation.batchMinValidator(minBatch);
 
         console.log(
           "subid>>>>> ",
@@ -382,6 +394,7 @@ module.exports = {
           departmentValidation &&
           batchValidation &&
           capacityValidation &&
+          minBatchValidation &&
           programs.length > 0
         ) {
           if (role === "Role_Admin") {
@@ -390,6 +403,7 @@ module.exports = {
               deptName,
               batch,
               capacity,
+              minBatch,
               campus,
               username,
               subjectId

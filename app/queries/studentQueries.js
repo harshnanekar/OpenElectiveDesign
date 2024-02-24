@@ -4,9 +4,9 @@ module.exports = class Student {
   static getStudentEvent(username) {
     let query = {
       text: `select e.id,e.event_name,e.startdate,e.end_date from event_master e inner join session_master s on e.session_lid=s.sem_id
-   where s.current_session in (select s.next_session from session_master s inner join student_info si on s.sem_id = si.acad_session 
-   inner join user_info u on u.id=si.user_lid where u.username =$1 and s.active=true and si.active=true and u.active=true) and e.active=true
-   and e.is_published='Y'`,
+      where s.current_session in (select s.next_session from session_master s inner join student_info si on s.sem_id = si.acad_session 
+      inner join user_info u on u.id=si.user_lid where u.username =$1 and s.active=true and si.active=true and u.active=true) and e.active=true
+      and e.is_published='Y' and (e.end_date = now() or e.end_date > CURRENT_DATE)`,
       values: [username],
     };
     return pgPool.query(query);
@@ -58,17 +58,28 @@ module.exports = class Student {
 
   static viewStudentElectedBasket(eventId) {
     let query = {
-      text: `select distinct b.id,b.basket_name from student_sub_allocation s inner join basket b on s.basket_lid=b.id where s.event_lid=$1`,
-      values: [eventId],
+      text: `SELECT b.id, b.basket_name, (
+        SELECT json_agg(row_to_json(s))
+        FROM (
+            SELECT s.subject_name
+            FROM student_sub_allocation sm 
+            INNER JOIN subject_master s ON s.sub_id = sm.subject_lid 
+            WHERE sm.event_lid = $1 AND sm.basket_lid = b.id and s.active=true
+        ) s
+    ) AS subject_names
+    FROM student_sub_allocation sm 
+    INNER JOIN basket b ON sm.basket_lid = b.id 
+    WHERE sm.active=true and b.active=true and sm.event_lid = $2 group by b.id,b.basket_name`,
+      values: [eventId,eventId],
     };
     return pgPool.query(query);
   }
 
-  static viewStudentElectedSubject(basketId){
-    let query = {
-      text:`select s.subject_name from student_sub_allocation sm inner join subject_master s on sm.subject_lid=s.sub_id
-      where basket_lid =$1`,
-      values:[basketId]
+  static viewStudentElectedEvent(username){
+    let query={
+      text:`select distinct e.id,e.event_name,e.startdate,e.end_date from student_sub_allocation s inner join user_info u on s.user_lid=u.id 
+      inner join event_master e on e.id=s.event_lid where u.username=$1 and s.active=true and e.active`,
+      values:[username]
     }
     return pgPool.query(query);
   }
