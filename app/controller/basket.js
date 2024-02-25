@@ -337,5 +337,31 @@ module.exports = {
       return res.json({ status: "error", redirectTo: "/elective/error" });
     }
        
+  },
+
+  assignedBasketCourse: async (req,res) => {
+
+    try{
+
+    let username =jwtauth.verifySession(req,res);
+    if(username != undefined){
+
+      let {basketId} = req.body;
+      let basketCourse = await basket.assignedBasketCourse(basketId);
+
+      if(basketCourse.rowCount > 0){
+      return res.json({status:'success',basket:basketCourse.rows});
+      }else{
+      return res.json({message:'No Courses Found !!'});
+      }
+
+    }else{
+
+    }
+  }catch(error){
+    console.log(error);
+    return res.json({ status: "error", redirectTo: "/elective/error" });
+  }
+
   }
 };

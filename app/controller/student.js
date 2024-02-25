@@ -129,7 +129,7 @@ module.exports = {
         let eventId = req.query.id;
         let getModules = await userQuery.getModules(username);
         let viewElectedStudentBasket =
-          await studentQuery.viewStudentElectedBasket(eventId);
+          await studentQuery.viewStudentElectedBasket(eventId,username);
           console.log(JSON.stringify(viewElectedStudentBasket.rows));
 
         return res.render("viewAllocatedEvents", {
