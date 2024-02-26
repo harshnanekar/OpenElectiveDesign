@@ -91,4 +91,12 @@ static checkAbbr(abbr){
  return pgPool.query(query); 
 }
 
+static assignedBasketCourse(basketId){
+  let query = {
+    text:`select s.subject_name,b.basket_name from basket_subject bs inner join subject_master s on bs.subject_lid=s.sub_id inner join basket b on
+    b.id=bs.basket_lid where bs.basket_lid=$1 and bs.active=true and s.active=true and b.active=true`,
+    values:[basketId]
+  }
+  return pgPool.query(query);
+}
 } 

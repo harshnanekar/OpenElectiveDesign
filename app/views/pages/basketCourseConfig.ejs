@@ -86,7 +86,10 @@
             <td>
             <i class="fa-solid fa-trash-arrow-up deleteIcon" data-toggle='modal'
             data-toggle='tooltip' data-target="#deletModal" title='Delete Basket'
-             width="2%" style="cursor:pointer;"></i>  
+             width="2%" style="cursor:pointer;"></i>&ensp;
+             <i class="fa-solid fa-eye viewCourseIcon" 
+             data-toggle='tooltip'  title='View Courses'
+              width="2%" style="cursor:pointer;"></i>  
             </td>
         </tr>
         <% index++ %>
@@ -194,6 +197,43 @@
 
                 if(e.target.classList.contains('okModal')){
                     window.location.reload();
+                }
+
+                if(e.target.classList.contains('viewCourseIcon')){
+                    let basketId = e.target.closest('tr').getAttribute('data-basketId');
+                    let obj ={basketId};
+
+                    dynamicFetchApi('/elective/assignedBasketCourse','POST',obj)
+                    .then(response => {
+                        if(response.status === 'error'){
+                          window.location.href=`${response.redirectTo}`;
+                        }else{
+                            console.log(response)
+                            let msgModal = document.querySelector('#msgModal');
+                            if(response.status == 'success'){
+     
+                            let viewForm = `<div class="form-group">
+                                <label for="formGroupExampleInput2">Basket Name</label>
+                                <div style=" border: 1px solid lightgrey;padding: 10px;">${response.basket[0].basket_name} </div>
+                                </div>
+                                <div class="form-group">
+                                    <div style="border:lightgrey 1px;" class="form-group">
+                                        <label for="formGroupExampleInput2">Course Name</label>
+                                            <div style=" border: 1px solid lightgrey;padding: 20px;">
+                                                ${response.basket.map((data,index) => `<p>${index + 1}. ${data.subject_name}</p>`).join('')}
+                                            </div>    
+                                        
+                                </div>`   
+                              msgModal.innerHTML = viewForm;   
+
+
+                            }else{
+                              msgModal.innerHTML =`<div><h4 style="text-align:center;">${response.message}</h4></div>`;  
+                            }
+                            document.querySelector('[data-target="#messageModal"]').click();
+                            
+                        }
+                    })
                 }
 
                 if(e.target.classList.contains('deleteIcon')){

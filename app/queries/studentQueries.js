@@ -56,7 +56,7 @@ module.exports = class Student {
     return pgPool.query(query);
   }
 
-  static viewStudentElectedBasket(eventId) {
+  static viewStudentElectedBasket(eventId,username) {
     let query = {
       text: `SELECT b.id, b.basket_name, (
         SELECT json_agg(row_to_json(s))
@@ -65,12 +65,13 @@ module.exports = class Student {
             FROM student_sub_allocation sm 
             INNER JOIN subject_master s ON s.sub_id = sm.subject_lid 
             WHERE sm.event_lid = $1 AND sm.basket_lid = b.id and s.active=true
+            and sm.user_lid in (select id from user_info where username = $2 )
         ) s
     ) AS subject_names
     FROM student_sub_allocation sm 
     INNER JOIN basket b ON sm.basket_lid = b.id 
-    WHERE sm.active=true and b.active=true and sm.event_lid = $2 group by b.id,b.basket_name`,
-      values: [eventId,eventId],
+    WHERE sm.active=true and b.active=true and sm.event_lid = $3 group by b.id,b.basket_name`,
+      values: [eventId,username,eventId],
     };
     return pgPool.query(query);
   }
