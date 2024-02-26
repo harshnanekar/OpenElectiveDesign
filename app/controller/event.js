@@ -59,14 +59,14 @@ let controller = {
         let { eventName, semester, acad_year, campus, start_date, end_date } =
           req.body;
 
+          let eventValidation = validation.NotNumberValidation(eventName);
           let campusValidate = validation.campusValidation(campus);
-          let sessionValidate = validation.acadSessionValidation(res, semester);
+          let sessionValidate = validation.acadSessionValidation(semester);
           let acadYearValidation = validation.newAcadYearValidation(
-            res,
             acad_year
           ); 
 
-        if(eventName != undefined && start_date != undefined && end_date != undefined && campusValidate && sessionValidate && acadYearValidation ){  
+        if(eventValidation && start_date != undefined && end_date != undefined && campusValidate && sessionValidate && acadYearValidation ){  
 
         let startDate = start_date.split("T")[0];
         let endDate = end_date.split("T")[0];
@@ -239,7 +239,9 @@ let controller = {
               let sessionValidation = acadSession!=undefined ? validation.acadSessionValidation(acadSession) : false;
               let yearValidation = acadYear!=undefined ? validation.newAcadYearValidation(acadYear) : false;
               let campusValidation = campus != undefined ? validation.campusValidation(campus) : false;
-              let rollValidation = rollNo != undefined ? validation.characterValidation(rollNo) : false;    
+              let rollValidation = rollNo != undefined ? validation.rollNoValidation(rollNo) : false;  
+              
+              console.log('validations ',yearValidation)
              
               if (
                 usernameValidation &&
@@ -335,13 +337,13 @@ let controller = {
         } = req.body;
 
         const validationPromises = [
-          validation.fnameValidation(res, fname),
-          validation.lnameValidation(res, lname),
-          validation.rollNoValidation(res, rollNo),
-          validation.campusValidation(res, campus),
-          validation.newAcadYearValidation(res, acadYear),
-          validation.acadSessionValidation(res, acadSession),
-          validation.UsernameValidation(res, studUsername),
+          validation.fnameValidation(fname),
+          validation.lnameValidation(lname),
+          validation.rollNoValidation(rollNo),
+          validation.campusValidation(campus),
+          validation.newAcadYearValidation(acadYear),
+          validation.acadSessionValidation(acadSession),
+          validation.UsernameValidation(studUsername),
         ];
 
         const [
@@ -421,13 +423,12 @@ let controller = {
           }
         } else {
           return res.json({
-            status: "error",
             message: "Invalid Credentials !!",
           });
         }
       } else {
         res.clearCookie("jwtauth");
-        return res.redirect("/elective/loginPage#sessionTimeout");
+        return res.json({status:'error',redirectTo:"/elective/loginPage#sessionTimeout"});
       }
     } catch (error) {
       console.log(error.message);

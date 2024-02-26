@@ -316,6 +316,7 @@
         }
 
       }
+
     });
 
 
@@ -389,6 +390,16 @@
         if (rollNoVal) {
 
           inputrollNo.innerText = '';
+          for (let i = 0; rollNo.length; i++) {
+            let roll = rollNo.charAt(i);
+            if (rollNo >= 0 && rollNo <= 9) {
+              inputrollNo.innerText = '';
+              return true;
+            } else {
+              inputrollNo.innerText = '*Roll No Must Contain Numbers Also'
+              return false;
+            }
+          }
           return rollNoVal;
 
         } else {

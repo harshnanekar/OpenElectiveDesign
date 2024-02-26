@@ -84,6 +84,7 @@ module.exports = {
                 : undefined;
               let openPrograms;  
 
+              let subjectValidation = subjectName ? Validation.NotNumberValidation(subjectName) : false;
               let departmentValidation = departMentName ? Validation.alphabetValidation(departMentName) : false;
               let campusValidation = campus ? Validation.campusValidation(campus) : false ;
               let batchValidation = batchNo ? Validation.NumberValidation(batchNo) : false;
@@ -91,7 +92,7 @@ module.exports = {
               let minValidation = minCapacityperBatch ? Validation.NumberValidation(minCapacityperBatch) : false;
 
               if (
-                subjectName != undefined &&
+                subjectValidation &&
                 departmentValidation &&
                 batchValidation &&
                 maxValidation &&

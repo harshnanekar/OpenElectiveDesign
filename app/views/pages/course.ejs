@@ -655,8 +655,19 @@
       let subjectError = document.getElementById('SubnameError');
 
       if (subject.length > 0) {
-        subjectError.innerText = '';
+
+        for(let i=0;i < subject.length ;i++){
+          let subName = subject.charAt(i);
+        if (subName >= 0 && subName <= 9) {
+          subjectError.innerText = '*Invalid Input Field';
+          return false;
+        } else {
+          subjectError.innerText = '';
+        }
+
         return true;
+      }
+
       } else {
         subjectError.innerText = '*Required';
         return false;
