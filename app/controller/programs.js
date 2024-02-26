@@ -62,29 +62,46 @@ module.exports = {
         console.log("File " + JSON.stringify(file));
 
         if (file != undefined) {
-          let excelData = excelController.readExcelFile(file);
-          let firstRow = excelData[0];
+          let programColumn = 'Program';
+          let campusColumn = 'Campus';
+          let idColumn = 'ProgramId';
+          let programJson = {programColumn,campusColumn,idColumn};
 
-          console.log("program keys " , Object.keys(firstRow))
+          let excelData = excelController.readExcelFile(file);
           let programArray = excelData.length;
 
           if (programArray > 0) {
+
+            let firstRow = excelData[0];
+            let excelHeader = Object.keys(firstRow);
+
+            for (let data of excelHeader) {
+  
+              if (!Object.values(programJson).includes(data)) {
+                  return res.json({ status: 'fileError', message: 'Malformed Excel File !!' });
+              }
+            }
+
             let programArray = [];
             let nonInsertedPrograms = [];
 
             excelData.forEach(async (prg) => {
-              let programName = prg.Program;
-              let campusName = prg.Campus;
+          
+              let programName = new String(prg.Program);
+              let campusName = new String(prg.Campus);
               let program_id = new String(prg.ProgramId);
 
               let program = programName ? programName.trim() : undefined;
               let campus = campusName ? campusName.trim() : undefined;
               let programId = program_id ? program_id.trim() : undefined;
 
+              let campusValidation = campus!=undefined ? validationController.campusValidation(campus) : false;
+              let idValidation = programId!=undefined ? validationController.NumberValidation(programId) : false;
+
               if (
                 program != undefined &&
-                campus != undefined &&
-                programId != undefined
+                campusValidation &&
+                idValidation
               ) {
                 programArray.push({ program, campus, programId, username });
               } else {

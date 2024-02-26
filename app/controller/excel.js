@@ -53,8 +53,6 @@ module.exports =class Excel {
   let excelSheets = excelFile.Sheets[excelFile.SheetNames[0]];
   let excelJson = excel.utils.sheet_to_json(excelSheets);
  
-  console.log("column header " , excelJson[0]);
-
    return excelJson;
  }
 

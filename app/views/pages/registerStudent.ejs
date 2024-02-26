@@ -251,6 +251,13 @@
               console.log('Error Response: ', response.nonInserted);
               if (response.status === 'error') {
                 window.location.href = response.redirectTo;
+              } else if (response.status === 'fileError') {
+
+                let msg = document.getElementById('msgModal');
+                let modalPage = `<div><h4 style="text-align:center;">${response.message}</h4></div>`
+                msg.innerHTML = modalPage;
+                document.querySelector('[data-target="#messageModal"]').click();
+
               } else {
                 fileMessage(response);
               }

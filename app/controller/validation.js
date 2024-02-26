@@ -1,8 +1,8 @@
 const query = require('../queries/eventQueries');
 
 module.exports = class Validation {
-  static fnameValidation(res, fname) {
-    try {
+  static fnameValidation(fname) {
+   
       console.log("fname>>>>> ", fname);
       if (fname.length > 0) {
         let validateCharacters = Validation.alphabetValidation(fname);
@@ -10,39 +10,30 @@ module.exports = class Validation {
       } else {
         return false;
       }
-    } catch (error) {
-      console.log(error.message);
-      return res.redirect("/elective/error");
-    }
+    
   }
 
-  static lnameValidation(res, lname) {
+  static lnameValidation(lname) {
     console.log("lname>>>>> ", lname);
-    try {
+  
       if (lname.length > 0) {
         let validateCharacters = Validation.alphabetValidation(lname);
         return validateCharacters;
       } else {
         return false;
       }
-    } catch (error) {
-      console.log(error.message);
-      return res.redirect("/elective/error");
-    }
+   
   }
 
-  static rollNoValidation(res, rollNo) {
-    try {
+  static rollNoValidation(rollNo) {
+   
       if (rollNo.length > 0) {
         let validateCharacters = Validation.characterValidation(rollNo);
         return validateCharacters;
       } else {
         return false;
       }
-    } catch (error) {
-      console.log(error.message);
-      return res.redirect("/elective/error");
-    }
+  
   }
 
   static alphabetValidation(input_text) {
@@ -83,7 +74,7 @@ module.exports = class Validation {
   }
 
   static campusValidation(input_text) {
-    try {
+   
       let campusData = query.getAllCampus();
 
       for (let i = 0; i < campusData.length; i++) {
@@ -92,15 +83,12 @@ module.exports = class Validation {
         }
       }
       return true;
-    } catch (error) {
-      console.log(error.message);
-      return res.redirect("/elective/error");
-    }
+   
   }
 
-  static async newAcadYearValidation(res, acadYear) {
+  static async newAcadYearValidation(acadYear) {
     console.log("new acad year ", acadYear);
-    try {
+    
       let date = new Date();
       let year = date.getFullYear();
 
@@ -118,14 +106,11 @@ module.exports = class Validation {
         }
       }
       return false;
-    } catch (error) {
-      console.log(error.message);
-      return res.redirect("/elective/error");
-    }
+ 
   }
 
-  static acadSessionValidation(res, input_text) {
-    try {
+  static acadSessionValidation(input_text) {
+ 
       let sessionData = query.getAllSessions();
 
       for (let i = 0; i < sessionData.length; i++) {
@@ -134,27 +119,21 @@ module.exports = class Validation {
         }
       }
       return true;
-    } catch (error) {
-      console.log(error.message);
-      return res.redirect("/elective/error");
-    }
+ 
   }
 
-  static UsernameValidation(res, userData) {
-    try {
+  static UsernameValidation(userData) {
+   
       if (userData.length > 0) {
         return true;
       } else {
         return false;
       }
-    } catch (error) {
-      console.log(error.message);
-      return res.redirect("/elective/error");
-    }
+ 
   }
 
-  static programIdValidation(res, programId) {
-    try {
+  static programIdValidation(programId) {
+   
       console.log("program id:::::: ", programId);
       if (programId.length > 0) {
         let programIdValidater = Validation.characterValidation(programId);
@@ -164,9 +143,7 @@ module.exports = class Validation {
         console.log("Invalid length");
         return false;
       }
-    } catch (error) {
-      return res.redirect("/elective/error");
-    }
+ 
   }
 
   static departmentValidator(input_text) {

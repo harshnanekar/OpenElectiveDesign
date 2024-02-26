@@ -96,7 +96,7 @@
      </div>
 
      <div id="nonInsertedData">
-     <h4 id="nonInsertedPrgMessage">Program's Data Not Inserted Due To Empty Input Fields</h4>
+     <h4 id="nonInsertedPrgMessage">Program's Data Not Inserted Due To Invalid Input Fields</h4>
      <div id="nonInsertedPrograms">
       
 
@@ -194,11 +194,19 @@
 
      dynamicExcelUploadFetch('/elective/insertProgramsViaExcel','POST',formData)
      .then(response => {
-        if(response.status === 'error'){
-        window.location.href = `${response.redirectTo}`;
-        }else{
-         messageDisplay(response);   
-        }  
+         if (response.status === 'error') {
+           window.location.href = `${response.redirectTo}`;
+
+         } else if (response.status === 'fileError') {
+
+           let msg = document.getElementById('msgModal');
+           let modalPage = `<div><h4 style="text-align:center;">${response.message}</h4></div>`
+           msg.innerHTML = modalPage;
+           document.querySelector('[data-target="#messageModal"]').click();
+
+         } else {
+           messageDisplay(response);
+         }  
      });
 
      }else{

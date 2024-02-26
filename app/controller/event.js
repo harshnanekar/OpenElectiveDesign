@@ -191,16 +191,38 @@ let controller = {
           let studentArray = [];
           let emptyStudentArray = [];
 
+          let studentUserColumn = 'Username';
+          let studentFirstNameColumn = 'FirstName';
+          let studentLastNameColumn = 'LastName';
+          let studentSession = 'Acad_Session';
+          let studentYear = 'Acad_Year';
+          let studentCampus ='Campus';
+          let studentRoll = 'RollNo';
+
+          let programJson = {studentUserColumn,studentFirstNameColumn,studentLastNameColumn,studentSession,studentYear,studentCampus,studentRoll};    
+
           let getData = excelController.readExcelFile(file);
           let arrLength = getData.length;
+
           if (arrLength > 0) {
+           
+            let excelKeys = getData[0];
+            let excelHeader = Object.keys(excelKeys);
+          
+            for (let data of excelHeader) {
+  
+              if (!Object.values(programJson).includes(data)) {
+                  return res.json({ status: 'fileError', message: 'Malformed Excel File !!' });
+              }
+            }
+
             getData.forEach(async (data) => {
               let excelStudentUname = new String(data.Username);
-              let excelFirstName = data.FirstName;
-              let excelLastName = data.LastName;
-              let excelSession = data.Acad_Session;
-              let excelYear = data.Acad_Year;
-              let excelCampus = data.Campus;
+              let excelFirstName = new String(data.FirstName);
+              let excelLastName = new String(data.LastName);
+              let excelSession = new String(data.Acad_Session);
+              let excelYear = new String(data.Acad_Year);
+              let excelCampus = new String(data.Campus);
               let excelRoll = new String(data.RollNo);
 
               let studentUname = excelStudentUname!=undefined ? excelStudentUname.trim() : undefined;
@@ -212,14 +234,21 @@ let controller = {
               let rollNo = excelRoll!=undefined ? excelRoll.trim() : undefined;
 
               let usernameValidation = studentUname!=undefined ? validation.NumberValidation(studentUname) : false;
+              let firstNameValidation = studentFirstName!=undefined ? validation.fnameValidation(studentFirstName) : false;
+              let lastNameValidation = studentLastName!=undefined ? validation.lnameValidation(studentLastName) : false;
+              let sessionValidation = acadSession!=undefined ? validation.acadSessionValidation(acadSession) : false;
+              let yearValidation = acadYear!=undefined ? validation.newAcadYearValidation(acadYear) : false;
+              let campusValidation = campus != undefined ? validation.campusValidation(campus) : false;
+              let rollValidation = rollNo != undefined ? validation.characterValidation(rollNo) : false;    
+             
               if (
                 usernameValidation &&
-                studentFirstName != undefined &&
-                studentLastName != undefined &&
-                acadSession != undefined &&
-                acadYear != undefined &&
-                campus != undefined &&
-                rollNo != undefined
+                firstNameValidation &&
+                lastNameValidation &&
+                sessionValidation &&
+                yearValidation &&
+                campusValidation &&
+                rollValidation
               ) {
                 studentArray.push({
                   studentUname,

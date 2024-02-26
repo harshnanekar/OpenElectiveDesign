@@ -38,17 +38,36 @@ module.exports = {
       if (username != undefined) {
         let file = req.file;
         if (file != undefined) {
-          let excelData = excel.readExcelFile(file);
-
+           let subjectColumn = 'Subject_Name';
+           let departmentColumn = 'Department_Name';
+           let campusColumn = 'Campus';
+           let batchColumn = 'No_Of_Batches';
+           let maxcapacityColumn = 'Max_Capacity_Per_Batch';
+           let mincapacityColumn = 'Min_Capacity_Per_Batch';
+           let openColumn = 'Open_To_All_Programs';
+        
+           let courseExcel= {subjectColumn,departmentColumn,campusColumn,batchColumn,maxcapacityColumn,mincapacityColumn,openColumn};
+           let excelData = excel.readExcelFile(file);
+      
           if (excelData.length > 0) {
+           
+           let excelHeaderKeys = excelData[0];
+           let excelHeader =Object.keys(excelHeaderKeys);
+
+           for (let data of excelHeader) {
+            if (!Object.values(courseExcel).includes(data)) {
+                return res.json({ status: 'fileError', message: 'Malformed Excel File !!' });
+            }
+          }
+
             excelData.forEach(async (data) => {
-              let subName = data.Subject_Name;
-              let deptName = data.Department_Name;
-              let campusName = data.Campus;
+              let subName = new String(data.Subject_Name);
+              let deptName = new String(data.Department_Name);
+              let campusName = new String(data.Campus);
               let batches = new String(data.No_Of_Batches);
               let maxCapacity = new String(data.Max_Capacity_Per_Batch);
               let minCapacity =new String(data.Min_Capacity_Per_Batch);
-              let openToPrograms = data.Open_To_All_Programs;
+              let openToPrograms = new String(data.Open_To_All_Programs);
 
               let subjectName = subName ? subName.trim() : undefined;
               let departMentName = deptName ? deptName.trim() : undefined;
@@ -65,12 +84,18 @@ module.exports = {
                 : undefined;
               let openPrograms;  
 
+              let departmentValidation = departMentName ? Validation.alphabetValidation(departMentName) : false;
+              let campusValidation = campus ? Validation.campusValidation(campus) : false ;
+              let batchValidation = batchNo ? Validation.NumberValidation(batchNo) : false;
+              let maxValidation = maxCapacityPerBatch ? Validation.NumberValidation(maxCapacityPerBatch) : false;
+              let minValidation = minCapacityperBatch ? Validation.NumberValidation(minCapacityperBatch) : false;
+
               if (
                 subjectName != undefined &&
-                departMentName != undefined &&
-                batchNo != undefined &&
-                maxCapacityPerBatch != undefined &&
-                minCapacityperBatch != undefined &&
+                departmentValidation &&
+                batchValidation &&
+                maxValidation &&
+                minValidation &&
                 openToAllPrograms != undefined
               ) {
                 openPrograms = openToAllPrograms === "Yes" ? "Y" : "N";
@@ -122,6 +147,8 @@ module.exports = {
                     redirectTo: "/elective/loginPage",
                   });
                 }
+              }else{
+                return res.json({message:'Invalid Input Fields !!'})
               }
             });
           } else {
