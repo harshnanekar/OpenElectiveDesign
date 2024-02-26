@@ -63,6 +63,9 @@ module.exports = {
 
         if (file != undefined) {
           let excelData = excelController.readExcelFile(file);
+          let firstRow = excelData[0];
+
+          console.log("program keys " , Object.keys(firstRow))
           let programArray = excelData.length;
 
           if (programArray > 0) {
