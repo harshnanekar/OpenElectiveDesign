@@ -29,7 +29,19 @@ module.exports = class Validation {
    
       if (rollNo.length > 0) {
         let validateCharacters = Validation.characterValidation(rollNo);
-        return validateCharacters;
+        if(validateCharacters){
+         
+        for(let i= 0; i< rollNo.length;i++){
+          let roll = rollNo.charAt(i);
+         if(!(roll >= 0) && !(roll <= 9)){
+          return false;
+         }
+        }  
+
+        }else{
+         return false;
+        }
+       
       } else {
         return false;
       }
@@ -86,7 +98,7 @@ module.exports = class Validation {
    
   }
 
-  static async newAcadYearValidation(acadYear) {
+  static  newAcadYearValidation(acadYear) {
     console.log("new acad year ", acadYear);
     
       let date = new Date();
@@ -101,7 +113,7 @@ module.exports = class Validation {
 
       for (let i = 0; i < yearArray.length; i++) {
         console.log("Year data>> ", yearArray[i]);
-        if (acadYear == yearArray[i]) {
+        if (acadYear === yearArray[i]) {
           return true;
         }
       }
@@ -163,6 +175,16 @@ module.exports = class Validation {
       } else {
         return false;
       }
+    }
+    return true;
+  }
+
+  static NotNumberValidation(input_text){
+    for (let i = 0; i < input_text.length; i++) {
+      let chars = input_text.charAt(i);
+      if (chars >= 0 && chars <= 9) {
+       return false;
+      } 
     }
     return true;
   }

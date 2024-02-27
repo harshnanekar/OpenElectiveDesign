@@ -341,7 +341,14 @@
             let abbrError = document.getElementById('BasketAbbrError');
 
             if (basketAbbr.length > 0) {
-                return true;
+                let basket = alphabetsValidation(basketAbbr)
+                if(basket){
+                    abbrError.innerText = '';
+                    return true;
+                }else{
+                    abbrError.innerText = '*Invalid Inputs';
+                    return false;
+                }
             } else {
                 abbrError.innerText = '*Required';
                 return false;

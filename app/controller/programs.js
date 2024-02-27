@@ -165,11 +165,9 @@ module.exports = {
         console.log("request body:: ", program, campus, programId);
 
         let campusValidation = validationController.campusValidation(
-          res,
           campus
         );
         let programIdValidation = validationController.programIdValidation(
-          res,
           programId
         );
 
