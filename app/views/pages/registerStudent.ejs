@@ -443,9 +443,14 @@
         if (username.length > 0) {
 
           let userValidation = NumberValidation(username);
-          unameError.innerText = '';
           if (userValidation) {
-            return true;
+            if(username.length == 11){
+              unameError.innerText = '';
+              return true;
+            }else{
+              unameError.innerText = '*Username should be of 11 digits only ';
+              return false;
+            }
           } else {
             unameError.innerText = '*Invalid Inputs'; 
             return false;
