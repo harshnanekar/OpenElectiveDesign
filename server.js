@@ -11,6 +11,11 @@ redisDb.connect();
 
 require("dotenv").config();
 
+app.use((req, res, next) => {
+  res.locals.BASE_URL = process.env.BASE_URL;
+  next();
+})
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -21,11 +26,11 @@ app.set("view engine", "ejs");
 app.set("views", "app/views/pages");
 
 
-app.use(cookieParser("a98dbd38-68c4-4d74-b36a-2e5bbdc7ecdd"));
+app.use(cookieParser(process.env.COOKIE_SECRET));
 
 app.use(
   session({
-    secret: "cvekg-cvekvgwk-vwvgw-vwgv-cwhv",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
     cookie: { maxAge: 24 * 60 * 60 * 1000 },
