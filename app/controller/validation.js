@@ -223,4 +223,24 @@ module.exports = class Validation {
       return false;
     }
   }
+
+  static programValidator(program){
+    if(program.length > 0){
+     let count =0;
+     for(let i=0;i<program.length;i++){
+      let prg = program.charAt(i);
+      if(prg >= 0 && prg <= 9){
+        count++;
+      }
+     }
+
+     if(count == program.length){
+       return false;
+     }else{
+       return true;
+     }
+    }else{
+      return false;
+    }
+  }
 };

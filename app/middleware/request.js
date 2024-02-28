@@ -41,13 +41,5 @@ module.exports = {
     }
   },
 
-  verifySession : (req,res) => {
-    let username = (req.session.modules != undefined ) ? req.session.modules : undefined;
-    return username;
-  },
 
-  verifySessionRole : (req,res) => {
-    let role = (req.session.userRole != undefined) ? req.session.userRole : undefined;
-    return role;
-  }
 };

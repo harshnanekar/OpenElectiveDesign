@@ -1,15 +1,15 @@
 const query = require("../queries/eventQueries.js");
 const userQuery = require("../queries/user.js");
 const programQuery = require("../queries/programQueries.js");
-let excelController = require("../controller/excel.js");
-let validationController = require("../controller/validation.js");
-const jwtauth = require("../middleware/request.js");
+const excelController = require("../controller/excel.js");
+const validationController = require("../controller/validation.js");
+const {redisDb} = require("../config/database.js");
 
 
 module.exports = {
   programs: async (req, res) => {
     try {
-      let username = jwtauth.verifySession(req, res);
+      let username = await redisDb.get('user');
 
       if (username != undefined) {
         let getmodules = await userQuery.getModules(username);
@@ -30,7 +30,7 @@ module.exports = {
 
   addPrograms: async (req, res) => {
     try {
-      let username = jwtauth.verifySession(req, res);
+      let username = await redisDb.get('user');
 
       if (username != undefined) {
         let getmodules = await userQuery.getModules(username);
@@ -53,8 +53,8 @@ module.exports = {
   insertProgramsViaExcel: async (req, res) => {
     try {
       console.log("Function called for excel");
-      let username = jwtauth.verifySession(req, res);
-      let role = jwtauth.verifySessionRole(req, res);
+      let username = await redisDb.get('user');
+      let role = await redisDb.get('role');
 
       if (username != undefined) {
         let file = req.file;
@@ -95,11 +95,12 @@ module.exports = {
               let campus = campusName ? campusName.trim() : undefined;
               let programId = program_id ? program_id.trim() : undefined;
 
+              let programValidation = program!=undefined ? validationController.programValidator(program): false;
               let campusValidation = campus!=undefined ? validationController.campusValidation(campus) : false;
               let idValidation = programId!=undefined ? validationController.NumberValidation(programId) : false;
 
               if (
-                program != undefined &&
+                programValidation &&
                 campusValidation &&
                 idValidation
               ) {
@@ -156,8 +157,8 @@ module.exports = {
     try {
       console.log("function called");
 
-      let username = jwtauth.verifySession(req, res);
-      let userRole = jwtauth.verifySessionRole(req, res);
+      let username = await redisDb.get('user');
+      let userRole = await redisDb.get('role');
 
       if (username != undefined) {
         let { program, campus, programId } = req.body;
@@ -185,6 +186,7 @@ module.exports = {
               return res.json({
                 status: "success",
                 message: "Program Uploaded Successfully !!",
+                redirectTo :`${res.locals.BASE_URL}elective/viewPrograms`
               });
             } else {
               return res.json({ message: "Failed To Upload Program !!" });
@@ -211,7 +213,7 @@ module.exports = {
 
   viewPrograms: async (req, res) => {
     try {
-      let username = jwtauth.verifySession(req, res);
+      let username = await redisDb.get('user');
 
       if (username != undefined) {
         let getmodules = await userQuery.getModules(username);
@@ -237,7 +239,7 @@ module.exports = {
 
   getAllProgramsList: async (req, res) => {
     try {
-      let username = jwtauth.verifySession(req, res);
+      let username = await redisDb.get('user');
 
       if (username != undefined) {
         let getmodules = await userQuery.getModules(username);
@@ -257,8 +259,8 @@ module.exports = {
 
   deleteProgram: async (req, res) => {
     try {
-      let username = jwtauth.verifySession(req, res);
-      let role = jwtauth.verifySessionRole(req, res);
+      let username = await redisDb.get('user');
+      let role = await redisDb.get('role');
 
       if (username != undefined) {
         let { programId } = req.body;

@@ -3,6 +3,8 @@ const { get } = require("../router/route.js");
 const jwt = require("jsonwebtoken");
 const jwtauth = require("../middleware/request.js");
 const passwordClass = require('../middleware/password.js');
+const {redisDb} = require("../config/database.js");
+
 
 module.exports = {
   loginPage: async function (req, res) {
@@ -52,6 +54,11 @@ module.exports = {
 
           req.session.modules = querydata[0].username;
 
+          let redisUser = querydata[0].username;
+          let redisRole = getUserRole[0].role_name
+          redisDb.set('user',redisUser);
+          redisDb.set('role',redisRole);
+
           const user = querydata[0].username;
           const secretkey = process.env.JWT_SECRETKEY;
 
@@ -95,14 +102,14 @@ module.exports = {
   },
 
   errorPage: async function (req, res) {
-    let username = jwtauth.verifySession(req, res);
+    let username =  await redisDb.get('user');
     let getModules = await query.getModules(username);
     return res.render("500", { module: getModules });
   },
 
   dashboard: async function (req, res, next) {
     try {
-      let usermodules = req.session.modules;
+      let usermodules = await redisDb.get('user');
 
       if (usermodules != null) {
         let getModules = await query.getModules(usermodules);

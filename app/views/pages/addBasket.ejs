@@ -329,7 +329,21 @@
             let basketError = document.getElementById('BasketError');
 
             if (basketName.length > 0) {
+            let count =0;
+            for(let i=0;i < basketName.length;i++){
+                let basket = basketName.charAt(i);
+                if(basket >=0 && basket <= 9){
+                    count++;
+                }
+            }
+
+            if(count == basketName.length){
+                basketError.innerText = '*Basket Name Must Contain Alphabets Also';
+                return false;
+            }else{
+                basketError.innerText = '';
                 return true;
+            }
             } else {
                 basketError.innerText = '*Required';
                 return false;
