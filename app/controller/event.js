@@ -234,6 +234,16 @@ let controller = {
               let rollNo = excelRoll!=undefined ? excelRoll.trim() : undefined;
 
               let usernameValidation = studentUname!=undefined ? validation.NumberValidation(studentUname) : false;
+
+               if(usernameValidation){
+                if(studentUname.length == 11){
+                  usernameValidation =  true;
+                }else{
+                  usernameValidation = false;
+                }
+               
+              }
+                
               let firstNameValidation = studentFirstName!=undefined ? validation.fnameValidation(studentFirstName) : false;
               let lastNameValidation = studentLastName!=undefined ? validation.lnameValidation(studentLastName) : false;
               let sessionValidation = acadSession!=undefined ? validation.acadSessionValidation(acadSession) : false;
