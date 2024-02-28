@@ -149,13 +149,16 @@
       let startValidation = startValidator(start_date);
       let endValidation = endValidator(end_date);
 
+      console.log('button clicked ');
+      console.log(eventValidation,sessionValidation,yearValidation,campusValidation,startValidation,endValidation);
+
       if(eventValidation && sessionValidation && yearValidation && campusValidation && startValidation && endValidation){
 
       let obj = { eventName, semester, acad_year, campus, start_date, end_date };
       dynamicFetchApi('/elective/eventData', 'POST', obj)
         .then(response => {
           console.log('Error ', response.message);
-          if (response.message === 'error') {
+          if (response.status === 'error') {
             window.location.href = '/elective/loginPage';
           } else {
 
@@ -184,7 +187,7 @@
           }
         }
         eventError.innerText = '';
-        return false;
+        return true;
       } else {
         eventError.innerText = '*Required';
         return false;

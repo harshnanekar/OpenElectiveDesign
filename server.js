@@ -39,7 +39,7 @@ app.use(
 
 app.use(nocache());
 
-app.use("/elective", indexRouter);
+app.use('/elective',indexRouter);
 
 app.use("*",function(req, res) { 
   return res.status(404).render('404');

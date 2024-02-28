@@ -56,6 +56,8 @@ let controller = {
 
     try {
       if (username != null) {
+
+        console.log('event query')
         let { eventName, semester, acad_year, campus, start_date, end_date } =
           req.body;
 
@@ -95,7 +97,6 @@ let controller = {
               });
             } else {
               return res.json({
-                status: "error",
                 message: "Failed To Create Event !!",
               });
             }
@@ -108,7 +109,6 @@ let controller = {
           }
         } else {
           return res.json({
-            status: "error",
             message: "Invalid Date Input !!",
           });
         }
