@@ -11,16 +11,14 @@ redisDb.connect();
 
 require("dotenv").config();
 
+app.use(express.static("public"));
 app.use((req, res, next) => {
   res.locals.BASE_URL = process.env.BASE_URL;
   next();
 })
 
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-app.use(express.static("public"));
 
 app.set("view engine", "ejs");
 app.set("views", "app/views/pages");
@@ -46,4 +44,4 @@ app.use("*",function(req, res) {
  });
 
 
-app.listen(8080);
+app.listen(8000);

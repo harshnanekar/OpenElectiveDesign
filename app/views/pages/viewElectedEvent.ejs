@@ -46,7 +46,7 @@
          <% let endate = edate.split('T')[0]; let etime= edate.split('T')[1] ;  let edtime= etime.split('.')[0] ; %>
          <td id="eventEnd"><%= endate %><%= " " %><%= edtime %></td>
          <td>
-         <a href="/elective/viewStudentElectedEvents?id=<%= eventRow.id %>"><i style="cursor:pointer;color:black;" class="fa-solid fa-eye" data-toggle="tooltip" title="View Event" ></i></a>   
+         <a href="<%- BASE_URL %>elective/viewStudentElectedEvents?id=<%= eventRow.id %>"><i style="cursor:pointer;color:black;" class="fa-solid fa-eye" data-toggle="tooltip" title="View Event" ></i></a>   
          </td>
         </tr>
         <% index++; %>

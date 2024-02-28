@@ -130,7 +130,7 @@
 
               basketError.innerText = '';  
 
-            dynamicFetchApi('/elective/getBasketSubject', 'POST', obj)
+            dynamicFetchApi(`<%- BASE_URL %>elective/getBasketSubject`, 'POST', obj)
                 .then(response => {
                     if (response.status === 'error') {
                         window.location.href = `${response.redirectTo}`;
@@ -176,7 +176,7 @@
 
                         let obj = { basketId, basketCourses, compulsorySub };
                         
-                       dynamicFetchApi('/elective/insertBasketCourses', 'POST', obj)
+                       dynamicFetchApi(`<%- BASE_URL %>elective/insertBasketCourses`, 'POST', obj)
                             .then(response => {
                                 if (response.status === 'error') {
                                     window.location.href = `${response.redirectTo}`;
@@ -203,7 +203,7 @@
                     let basketId = e.target.closest('tr').getAttribute('data-basketId');
                     let obj ={basketId};
 
-                    dynamicFetchApi('/elective/assignedBasketCourse','POST',obj)
+                    dynamicFetchApi(`<%- BASE_URL %>elective/assignedBasketCourse`,'POST',obj)
                     .then(response => {
                         if(response.status === 'error'){
                           window.location.href=`${response.redirectTo}`;
@@ -248,7 +248,7 @@
                  let basketId = e.target.getAttribute('data-basketId');
                  let obj = {basketId};
 
-                 dynamicFetchApi('/elective/deletEventBasket','POST',obj)
+                 dynamicFetchApi(`<%- BASE_URL %>elective/deletEventBasket`,'POST',obj)
                  .then(response => {
                     if(response.status === 'error'){
                      window.location.href=`${response.redirectTo}`;

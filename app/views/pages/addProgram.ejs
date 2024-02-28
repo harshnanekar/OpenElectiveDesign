@@ -192,7 +192,7 @@
      const formData = new FormData();
      formData.append("programFile",fileData);
 
-     dynamicExcelUploadFetch('/elective/insertProgramsViaExcel','POST',formData)
+     dynamicExcelUploadFetch(`<%- BASE_URL %>elective/insertProgramsViaExcel`,'POST',formData)
      .then(response => {
          if (response.status === 'error') {
            window.location.href = `${response.redirectTo}`;
@@ -285,7 +285,7 @@
 
        let obj = {program,campus,programId};
 
-       dynamicFetchApi('/elective/insertprogramManually','POST', obj)
+       dynamicFetchApi(`<%- BASE_URL %>elective/insertprogramManually`,'POST', obj)
       .then(responseData => {
        if(responseData.status === 'error'){
         window.location.href= `${responseData.redirectTo}`;  
@@ -347,7 +347,7 @@
 
     document.addEventListener('click',(e) => {
       if(e.target.classList.contains('excelDataCancel')){
-      cancelButtonRedirect('/elective/dashboard');
+      cancelButtonRedirect(`<%- BASE_URL %>elective/dashboard`);
       }
     });
     

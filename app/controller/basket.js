@@ -33,10 +33,10 @@ module.exports = {
         }
       } else {
         res.clearCookie("jwtauth");
-        return res.redirect("/elective/loginPage");
+        return res.redirect(`${res.locals.BASE_URL}elective/loginPage`);
       }
     } catch (error) {
-      return res.redirect("/elective/error");
+      return res.redirect(`${res.locals.BASE_URL}elective/error`);
     }
   },
 
@@ -74,7 +74,7 @@ module.exports = {
             res.clearCookie("jwtauth");
             return res.json({
               status: "error",
-              redirectTo: "/elective/loginPage",
+              redirectTo: `${res.locals.BASE_URL}elective/loginPage`,
             });
           }
         } else {
@@ -82,11 +82,11 @@ module.exports = {
         }
       } else {
         res.clearCookie("jwtauth");
-        return res.json({ status: "error", redirectTo: "/elective/loginPage" });
+        return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/loginPage` });
       }
     } catch (error) {
       console.log("create basket ", error);
-      return res.json({ status: "error", redirectTo: "/elective/error" });
+      return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/error` });
     }
   },
 
@@ -114,16 +114,16 @@ module.exports = {
           res.clearCookie("jwtauth");
           return res.json({
             status: "error",
-            redirectTo: "/elective/loginPage",
+            redirectTo: `${res.locals.BASE_URL}/elective/loginPage`,
           });
         }
       } else {
         res.clearCookie("jwtauth");
-        return res.json({ status: "error", redirectTo: "/elective/loginPage" });
+        return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/loginPage` });
       }
     } catch (error) {
       console.log(error);
-      return res.json({ status: "error", redirectTo: "/elective/error" });
+      return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/error`});
     }
   },
 
@@ -156,7 +156,7 @@ module.exports = {
             res.clearCookie("jwtauth");
             return res.json({
               status: "error",
-              redirectTo: "/elective/loginPage",
+              redirectTo: `${res.locals.BASE_URL}elective/loginPage`,
             });
           }
         } else {
@@ -164,11 +164,11 @@ module.exports = {
         }
       } else {
         res.clearCookie("jwtauth");
-        return res.json({ status: "error", redirectTo: "/elective/loginPage" });
+        return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/loginPage` });
       }
     } catch (error) {
       console.log("basket error ", error);
-      return res.json({ status: "error", redirectTo: "/elective/error" });
+      return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/error` });
     }
   },
 
@@ -189,11 +189,11 @@ module.exports = {
           dispBasket: displayBaskets.rows,
         });
       } else {
-        return res.redirect("/elective/loginPage");
+        return res.redirect(`${res.locals.BASE_URL}elective/loginPage`);
       }
     } catch (error) {
       console.log(error);
-      return res.redirect("/elective/error");
+      return res.redirect(`${res.locals.BASE_URL}elective/error`);
     }
   },
 
@@ -209,11 +209,11 @@ module.exports = {
         }
       } else {
         res.clearCookie("jwtauth");
-        return res.json({ status: "error", redirectTo: "/elective/loginPage" });
+        return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/loginPage`});
       }
     } catch (error) {
       console.log(error);
-      return res.json({ status: "error", redirectTo: "/elective/error" });
+      return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/error` });
     }
   },
 
@@ -257,7 +257,7 @@ module.exports = {
             res.clearCookie("jwtauth");
             return res.json({
               status: "error",
-              redirectTo: "/elective/loginPage",
+              redirectTo: `${res.locals.BASE_URL}elective/loginPage`,
             });
           }
         } else {
@@ -265,11 +265,11 @@ module.exports = {
         }
       } else {
         res.clearCookie("jwtauth");
-        return res.json({ status: "error", redirectTo: "/elective/loginPage" });
+        return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/loginPage` });
       }
     } catch (error) {
       console.log(error);
-      return res.json({ status: "error", redirectTo: "/elective/error" });
+      return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/error` });
     }
   },
 
@@ -296,16 +296,16 @@ module.exports = {
           res.clearCookie("jwtauth");
           return res.json({
             status: "error",
-            redirectTo: "/elective/loginPage",
+            redirectTo: `${res.locals.BASE_URL}elective/loginPage`,
           });
         }
       } else {
         res.clearCookie("jwtauth");
-        return res.json({ status: "error", redirectTo: "/elective/loginPage" });
+        return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/loginPage` });
       }
     } catch (error) {
       console.log(error);
-      return res.json({ status: "error", redirectTo: "/elective/error" });
+      return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/error` });
     }
   },
 
@@ -329,12 +329,12 @@ module.exports = {
 
       }else{
         res.clearCookie("jwtauth");
-        return res.json({ status: "error", redirectTo: "/elective/loginPage" }); 
+        return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/loginPage` }); 
       }
       
     } catch (error) {
       console.log(error);
-      return res.json({ status: "error", redirectTo: "/elective/error" });
+      return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/error` });
     }
        
   },
@@ -360,7 +360,7 @@ module.exports = {
     }
   }catch(error){
     console.log(error);
-    return res.json({ status: "error", redirectTo: "/elective/error" });
+    return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/error` });
   }
 
   }

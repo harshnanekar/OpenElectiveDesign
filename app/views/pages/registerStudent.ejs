@@ -246,7 +246,7 @@
           const formData = new FormData();
           formData.append('studentDetails', fileData);
 
-          dynamicExcelUploadFetch('/elective/uploadStudentData', 'POST', formData)
+          dynamicExcelUploadFetch(`<%- BASE_URL %>elective/uploadStudentData`, 'POST', formData)
             .then(response => {
               console.log('Error Response: ', response.nonInserted);
               if (response.status === 'error') {
@@ -300,7 +300,7 @@
         if (fnameVal && lnameVal && rollNoVal && campusVal && unameVal && yearVal && sessionVal) {
 
           let obj = { fname, lname, rollNo, campus, studUsername, acadYear, acadSession };
-          dynamicFetchApi('/elective/registerStudentManually', 'POST', obj)
+          dynamicFetchApi(`<%- BASE_URL %>elective/registerStudentManually`, 'POST', obj)
             .then(responseData => {
               console.log('response----- ', responseData.status);
               if (responseData.status === 'error') {
@@ -388,20 +388,24 @@
         let rollNoVal = specialCharacterValidation(rollNo);
 
         if (rollNoVal) {
+       
+         let hasNumber = 0;
 
+        for (let i = 0; i < rollNo.length; i++) {
+          let char = rollNo[i];
+          let asciiValue = rollNo.charCodeAt(i)
+          if (asciiValue >= 65 && asciiValue <= 90 || asciiValue >= 97 && asciiValue <= 122 ) {
+            hasNumber++;
+          } 
+        }
+
+        if (hasNumber == rollNo.length) {
+          inputrollNo.innerText = '*Roll number must contain both letters and numbers';
+          return false;
+        } else {
           inputrollNo.innerText = '';
-          for (let i = 0; rollNo.length; i++) {
-            let roll = rollNo.charAt(i);
-            if (rollNo >= 0 && rollNo <= 9) {
-              inputrollNo.innerText = '';
-              return true;
-            } else {
-              inputrollNo.innerText = '*Roll No Must Contain Numbers Also'
-              return false;
-            }
-          }
-          return rollNoVal;
-
+          return true;
+        }
         } else {
 
           inputrollNo.innerText = '*Invalid Input Field';
@@ -448,7 +452,7 @@
               unameError.innerText = '';
               return true;
             }else{
-              unameError.innerText = '*Username should be of 11 digits only ';
+              unameError.innerText = '*Username must contain 11 digits only ';
               return false;
             }
           } else {
@@ -560,7 +564,7 @@
 
     document.addEventListener('click', (e) => {
       if (e.target.classList.contains('excelDataCancel')) {
-        cancelButtonRedirect('/elective/dashboard');
+        cancelButtonRedirect(`<%- BASE_URL %>elective/dashboard`);
       }
     })
 

@@ -134,7 +134,7 @@
                 if (basketValidation && basketAbbrValidation) {
 
                     let basketobj = { basketAbbr };
-                    dynamicFetchApi('/elective/checkBasketAbbr', 'POST', basketobj)
+                    dynamicFetchApi(`<%- BASE_URL %>elective/checkBasketAbbr`, 'POST', basketobj)
                         .then(response => {
                             if (response.status === 'error') {
                                 window.location.href = `${response.redirectTo}`;
@@ -151,7 +151,7 @@
                                     let eventId = fetchValue.get('id');
 
                                     let obj = { basketName, basketAbbr, eventId };
-                                    dynamicFetchApi('/elective/createBasket', 'POST', obj)
+                                    dynamicFetchApi(`<%- BASE_URL %>elective/createBasket`, 'POST', obj)
                                         .then(async response => {
                                             console.log('response:::: ', response.message);
                                             if (response.status === 'error') {
@@ -190,7 +190,7 @@
 
                 let obj = { basketId };
                 console.log('basket delete id ', obj)
-                dynamicFetchApi('/elective/deleteBasket', 'POST', obj)
+                dynamicFetchApi(`<%- BASE_URL %>elective/deleteBasket`, 'POST', obj)
                     .then(response => {
                         if (response.status === 'error') {
                             window.location.href = `${response.redirectTo}`;
@@ -285,7 +285,7 @@
 
                 let obj = { basket_id, basketName, basket_abbr, eventId };
 
-                dynamicFetchApi('/elective/editBasket', 'POST', obj)
+                dynamicFetchApi(`<%- BASE_URL %>elective/editBasket`, 'POST', obj)
                     .then(response => {
                         if (response.status === 'error') {
                             window.location.href = `${response.redirectTo}`;

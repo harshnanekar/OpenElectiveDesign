@@ -155,11 +155,11 @@
       if(eventValidation && sessionValidation && yearValidation && campusValidation && startValidation && endValidation){
 
       let obj = { eventName, semester, acad_year, campus, start_date, end_date };
-      dynamicFetchApi('/elective/eventData', 'POST', obj)
+      dynamicFetchApi(`<%- BASE_URL %>elective/eventData`, 'POST', obj)
         .then(response => {
           console.log('Error ', response.message);
           if (response.status === 'error') {
-            window.location.href = '/elective/loginPage';
+            window.location.href = `<%- BASE_URL %>elective/loginPage`;
           } else {
 
             if (response.status === 'success') {

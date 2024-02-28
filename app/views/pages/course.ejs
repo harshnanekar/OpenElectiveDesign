@@ -138,7 +138,7 @@
 
 
     function showAllCourses() {
-      dynamicGetFetch('/elective/getAllCourses', 'GET')
+      dynamicGetFetch(`<%- BASE_URL %>elective/getAllCourses`, 'GET')
         .then(response => {
           console.log("Response::::: ", response);
           if (response.status === 'error') {
@@ -244,7 +244,7 @@
         } else {
 
           let obj = { courseArray };
-          dynamicFetchApi('/elective/commonDelete', 'POST', obj)
+          dynamicFetchApi(`<%- BASE_URL %>elective/commonDelete`, 'POST', obj)
             .then(async response => {
 
               if (response.status === 'error') {
@@ -294,7 +294,7 @@
       }
 
       if (e.target.classList.contains('excelDataCancel')) {
-        cancelButtonRedirect('/elective/loginPage');
+        cancelButtonRedirect(`<%- BASE_URL %>elective/loginPage`);
       }
 
       //Manual Submit
@@ -327,7 +327,7 @@
 
         if (subjectValidate && departmentValidate && batchesValidate && batchCapacityValidate && minBatchValidator) {
           let obj = { subjectName, department, batches, batchCapacity,batchMinCapacity,campus, radioTypeValue };
-          dynamicFetchApi('/elective/insertCourseManually', 'POST', obj)
+          dynamicFetchApi(`<%- BASE_URL %>elective/insertCourseManually`, 'POST', obj)
             .then(response => {
               if (response.status === 'error') {
                 window.location.href = `${response.redirectTo}`;
@@ -366,7 +366,7 @@
           let formData = new FormData();
           formData.append('courseDetails', file);
 
-          dynamicExcelUploadFetch('/elective/insertCourseViaExcel', 'POST', formData)
+          dynamicExcelUploadFetch(`<%- BASE_URL %>elective/insertCourseViaExcel`, 'POST', formData)
             .then(async response => {
               if (response.status === 'error') {
                 window.location.href = `${response.redirectTo}`;
@@ -458,7 +458,7 @@
         cmp.value = campus;
 
         let obj = { subId };
-        dynamicFetchApi('/elective/getAllCoursePrograms', 'POST', obj)
+        dynamicFetchApi(`<%- BASE_URL %>elective/getAllCoursePrograms`, 'POST', obj)
           .then(response => {
             if (response.status === 'error') {
               window.location.href = `${response.redirectTo}`;
@@ -495,7 +495,7 @@
         let obj = { subjectId, subName, deptName, batch,minBatch,capacity, campus, programs };
         console.log('edit course object ',obj);
 
-        dynamicFetchApi('/elective/editCourse', 'POST', obj)
+        dynamicFetchApi(`<%- BASE_URL %>elective/editCourse`, 'POST', obj)
           .then(response => {
             if (response.status === 'error') {
               window.location.href = `${response.redirectTo}`;
@@ -535,7 +535,7 @@
 
         let obj = { subjectId };
 
-        dynamicFetchApi('/elective/deleteCourse', 'POST', obj)
+        dynamicFetchApi(`<%- BASE_URL %>elective/deleteCourse`, 'POST', obj)
           .then(response => {
             if (response.status === 'error') {
               window.location.href = `${response.redirectTo}`;

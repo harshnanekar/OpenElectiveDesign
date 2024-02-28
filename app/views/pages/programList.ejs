@@ -115,7 +115,7 @@
 
       let obj = { programArray };
 
-      dynamicFetchApi('/elective/allocatePrograms', 'POST', obj)
+      dynamicFetchApi(`<%- BASE_URL %>elective/allocatePrograms`, 'POST', obj)
         .then(response => {
           if (response.status === 'error') {
             window.location.href = `${response.redirectTo}`;

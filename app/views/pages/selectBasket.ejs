@@ -148,7 +148,7 @@
                     let obj = { eventLid, timeString, courseArray, userLid, basketLid };
                     console.log(obj)
 
-                    dynamicFetchApi('/elective/insertStudentCourses', 'POST', obj)
+                    dynamicFetchApi(`<%- BASE_URL %>elective/insertStudentCourses`, 'POST', obj)
                         .then(response => {
                             if (response.status === 'error') {
                                 window.location.href = `${response.redirectTo}`;
@@ -190,7 +190,7 @@
                                     selectOption.innerHTML = s_lid;
                                 })
                              }else{
-                                window.location.href=`/elective/viewStudentElectedEvents?id=${eventLid}`;
+                                window.location.href=`<%- BASE_URL %>elective/viewStudentElectedEvents?id=${eventLid}`;
                              }   
                             }
                         })

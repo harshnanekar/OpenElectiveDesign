@@ -62,8 +62,8 @@
                <i class="fa-solid fa-file-arrow-down" data-toggle='tooltip' title = 'Download Allocation Report' width="2%" ></i>&ensp;
                <i style="cursor:pointer;" class="fa-solid fa-book publishEvent" data-toggle="modal" data-toggle='tooltip' data-target="#publishModal" title = 'Publish' width="20%" ></i>&ensp;
                <i class="fa-solid fa-download" data-toggle='tooltip' title = 'Download Preferences' width="2%" ></i>&ensp;
-               <a style="text-decoration: none;color:black" href="/elective/addBasketPage?id=<%= event.id %>"><i class="fa-solid fa-cart-plus addBasket" data-toggle='tooltip' title = 'Add Basket' width="2%"></i></a>&ensp;
-               <a style="text-decoration:none;color:black;" href="/elective/basketCourseConfig?id=<%= event.id %>" ><i class="fa-solid fa-book-bible" data-toggle='tooltip' width="2%" title="Add Basket Courses"></i></a>
+               <a style="text-decoration: none;color:black" href="<%- BASE_URL %>elective/addBasketPage?id=<%= event.id %>"><i class="fa-solid fa-cart-plus addBasket" data-toggle='tooltip' title = 'Add Basket' width="2%"></i></a>&ensp;
+               <a style="text-decoration:none;color:black;" href="<%- BASE_URL %>elective/basketCourseConfig?id=<%= event.id %>" ><i class="fa-solid fa-book-bible" data-toggle='tooltip' width="2%" title="Add Basket Courses"></i></a>
             </td>     
             </tr>
            <% count++ %>
@@ -129,7 +129,7 @@ document.addEventListener('click',(e) => {
         let eventId = document.querySelector('.confirmDelete').getAttribute('data-eventId');
         let obj = { eventId };
 
-        dynamicFetchApi('/elective/deleteEvent', 'POST', obj)
+        dynamicFetchApi(`${res.locals.BASE_URL}elective/deleteEvent`, 'POST', obj)
             .then(response => {
             if(response.status === 'error'){
              window.location.href= `${response.redirectTo}`;   
@@ -275,7 +275,7 @@ document.addEventListener('click',(e) => {
 
        let obj = {eventId,eventName,campus,startDate,endDate,semester,acad_year};
 
-       dynamicFetchApi('/elective/editEvent','POST',obj)
+       dynamicFetchApi(`${res.locals.BASE_URL}elective/editEvent`,'POST',obj)
        .then(response => {
 
         if(response.status === 'error'){
@@ -308,7 +308,7 @@ document.addEventListener('click',(e) => {
 
     let obj = { eventId };
 
-    dynamicFetchApi('/elective/publishEvent', 'POST', obj)
+    dynamicFetchApi(`<%- BASE_URL %>elective/publishEvent`, 'POST', obj)
       .then(response => {
         if (response.status === 'error') {
           window.location.href = `${response.redirectTo}`;

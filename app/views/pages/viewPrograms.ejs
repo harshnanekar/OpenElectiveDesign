@@ -84,7 +84,7 @@
                 let programId = e.target.getAttribute('data-id');
                 let obj = { programId };
 
-                dynamicFetchApi('/elective/deleteProgram', 'POST', obj)
+                dynamicFetchApi(`<%- BASE_URL %>elective/deleteProgram`, 'POST', obj)
                     .then(response => {
                         if (response.status === 'error') {
                             window.location.href = `${response.redirectTo}`;

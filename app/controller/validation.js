@@ -31,12 +31,20 @@ module.exports = class Validation {
         let validateCharacters = Validation.characterValidation(rollNo);
         if(validateCharacters){
          
-        for(let i= 0; i< rollNo.length;i++){
-          let roll = rollNo.charAt(i);
-         if(!(roll >= 0) && !(roll <= 9)){
-          return false;
-         }
-        }  
+          let hasNumber = 0;
+
+          for (let i = 0; i < rollNo.length; i++) {
+            let asciiValue = rollNo.charCodeAt(i)
+            if (asciiValue >= 65 && asciiValue <= 90 || asciiValue >= 97 && asciiValue <= 122 ) {
+              hasNumber++;
+            } 
+          }
+  
+          if (hasNumber == rollNo.length) {
+            return false;
+          } else {
+            return true;
+          }
 
         }else{
          return false;

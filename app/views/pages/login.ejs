@@ -134,7 +134,7 @@ font-family: 'Poppins', sans-serif;
      
         let obj = {username , password};
 
-        dynamicFetchApi('/elective/login','POST',obj)
+        dynamicFetchApi(`<%- BASE_URL %>elective/login`,'POST',obj)
         .then(responseData => {
         if(responseData.status === 'Error'){
          window.location.href=`${responseData.redirectTo}`;
@@ -164,7 +164,7 @@ font-family: 'Poppins', sans-serif;
      
      let obj = {username , password};
 
-     dynamicFetchApi('/elective/login','POST',obj)
+     dynamicFetchApi(`<%- BASE_URL %>elective/login`,'POST',obj)
      .then(responseData => {
         if(responseData.status === 'Error'){
          window.location.href=`${responseData.redirectTo}`;

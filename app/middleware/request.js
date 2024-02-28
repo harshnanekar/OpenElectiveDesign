@@ -16,7 +16,7 @@ module.exports = {
         return verified;
       } catch (error) {
         res.clearCookie("jwtauth");
-        return res.redirect("/elective/loginPage");
+        return res.redirect(`${res.locals.BASE_URL}elective/loginPage`);
       }
     }
   },
@@ -33,11 +33,11 @@ module.exports = {
       if (verified) {
         next();
       } else {
-        return res.redirect("/elective/loginPage");
+        return res.redirect(`${res.locals.BASE_URL}elective/loginPage`);
       }
     } catch (error) {
       res.clearCookie("jwtauth");
-      return res.redirect("/elective/loginPage");
+      return res.redirect(`${res.locals.BASE_URL}elective/loginPage`);
     }
   },
 

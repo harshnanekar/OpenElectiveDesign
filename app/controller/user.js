@@ -21,11 +21,11 @@ module.exports = {
           req.session.userRoles
         );
 
-        return res.redirect("/elective/dashboard");
+        return res.redirect(`${res.locals.BASE_URL}elective/dashboard`);
       }
     } catch (err) {
       console.log(err.message);
-      return res.redirect("/elective/error");
+      return res.redirect(`${res.locals.BASE_URL}elective/error`);
     }
   },
 
@@ -70,13 +70,13 @@ module.exports = {
           });
           return res.json({
             status: "success",
-            redirectTo: "/elective/dashboard",
+            redirectTo: `${res.locals.BASE_URL}elective/dashboard`,
           });
         } else {
           console.log("Unauthenticated");
           return res.json({
             status: "error",
-            redirectTo: "/elective/loginPage",
+            redirectTo: `${res.locals.BASE_URL}elective/loginPage`,
             message: "Invalid Password!!",
           });
         }
@@ -84,13 +84,13 @@ module.exports = {
         console.log("Invalid username");
         return res.json({
           status: "error",
-          redirectTo: "/elective/loginPage",
+          redirectTo: `${res.locals.BASE_URL}elective/loginPage`,
           message: "Invalid Username!!",
         });
       }
     } catch (err) {
       console.log(err.message);
-      return res.json({ status: "Error", redirectTo: "/elective/error" });
+      return res.json({ status: "Error", redirectTo: `${res.locals.BASE_URL}elective/error` });
     }
   },
 
@@ -109,10 +109,10 @@ module.exports = {
         return res.render("dashboard", { module: getModules });
       } else {
         res.clearCookie("jwtauth");
-        return res.redirect("/elective/loginPage#sessionTimeout");
+        return res.redirect(`${res.locals.BASE_URL}elective/loginPage#sessionTimeout`);
       }
     } catch (err) {
-      return res.redirect("/elective/error");
+      return res.redirect(`${res.locals.BASE_URL}elective/error`);
     }
   },
 
@@ -121,10 +121,10 @@ module.exports = {
       req.session.destroy();
       res.clearCookie("jwtauth");
 
-      return res.redirect("/elective/loginPage");
+      return res.redirect(`${res.locals.BASE_URL}elective/loginPage`);
     } catch (err) {
       console.log(err.message);
-      return res.redirect("/elective/error");
+      return res.redirect(`${res.locals.BASE_URL}elective/error`);
     }
   },
 };

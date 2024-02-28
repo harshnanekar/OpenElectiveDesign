@@ -15,13 +15,13 @@
     </div>
 
     <ul>
-<li id="module_name"><img src="../images/dashboard.png" width="25px">&ensp;</img><a id="module_list" href= '/elective/dashboard' >Dashboard</a></li>
+<li id="module_name"><img src="../images/dashboard.png" width="25px">&ensp;</img><a id="module_list" href= '<%- BASE_URL %>elective/dashboard' >Dashboard</a></li>
   <hr/>
 <% module.forEach(data => { %>
   <li id="module_name"><img src="<%= data.photo %>" width="25px">&ensp;</img><a id="module_list" href= '<%= data.url %>' ><%= data.module_name %></a></li>
   <hr/>
 <% }); %> 
-<li  id="module_name"><img src="../images/logout1.png" width="30px">&ensp;</img><a id="module_list" href= '/elective/logout' >Logout</a></li>
+<li  id="module_name"><img src="../images/logout1.png" width="30px">&ensp;</img><a id="module_list" href= '<%- BASE_URL %>elective/logout' >Logout</a></li>
 <hr/>    
 </ul>  
 </div>

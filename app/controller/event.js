@@ -19,11 +19,11 @@ let controller = {
         });
       } else {
         res.clearCookie("jwtauth");
-        return res.redirect("/elective/loginPage#sessionTimeout");
+        return res.redirect(`${res.locals.BASE_URL}elective/loginPage#sessionTimeout`);
       }
     } catch (err) {
       console.log("Error " + err.message);
-      return res.redirect("/elective/error");
+      return res.redirect(`${res.locals.BASE_URL}elective/error`);
     }
   },
 
@@ -42,11 +42,11 @@ let controller = {
         });
       } else {
         res.clearCookie("jwtauth");
-        return res.redirect("/elective/loginPage#sessionTimeout");
+        return res.redirect(`${res.locals.BASE_URL}elective/loginPage#sessionTimeout`);
       }
     } catch (err) {
       console.log(err.message);
-      return res.redirect("/elective/error");
+      return res.redirect(`${res.locals.BASE_URL}elective/error`);
     }
   },
 
@@ -93,7 +93,7 @@ let controller = {
             if (query.rowCount > 0) {
               return res.json({
                 status: "success",
-                redirectTo: "/elective/viewEvent",
+                redirectTo: `${res.locals.BASE_URL}elective/viewEvent`,
               });
             } else {
               return res.json({
@@ -104,7 +104,7 @@ let controller = {
             res.clearCookie("jwtauth");
             return res.json({
               status: "error",
-              redirectTo: "/elective/loginPage",
+              redirectTo: `${res.locals.BASE_URL}elective/loginPage`,
             });
           }
         } else {
@@ -116,12 +116,12 @@ let controller = {
 
       } else {
         res.clearCookie("jwtauth");
-        return res.json({ status: "error", redirectTo: "/elective/loginPage" });
+        return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/loginPage` });
       }
 
     } catch (error) {
       console.log(error.message);
-      return res.json({ status: "error", redirectTo: "/elective/error" });
+      return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/error` });
     }
   },
 
@@ -146,11 +146,11 @@ let controller = {
         });
       } else {
         res.clearCookie("jwtauth");
-        return res.redirect("/elective/loginPage#sessionTimeout");
+        return res.redirect(`${res.locals.BASE_URL}elective/loginPage#sessionTimeout`);
       }
     } catch (err) {
       console.log("Error " + err.message);
-      return res.redirect("/elective/error");
+      return res.redirect(`${res.locals.BASE_URL}elective/error`);
     }
   },
 
@@ -169,11 +169,11 @@ let controller = {
         });
       } else {
         res.clearCookie("jwtauth");
-        return res.redirect("/elective/loginPage#sessionTimeout");
+        return res.redirect(`${res.locals.BASE_URL}elective/loginPage#sessionTimeout`);
       }
     } catch (err) {
       console.log(err.message);
-      return res.redirect("/elective/error");
+      return res.redirect(`${res.locals.BASE_URL}elective/error`);
     }
   },
 
@@ -310,7 +310,7 @@ let controller = {
               res.clearCookie("jwtauth");
               return res.json({
                 status: "error",
-                redirectTo: "/elective/loginPage",
+                redirectTo: `${res.locals.BASE_URL}elective/loginPage`,
               });
             }
           } else {
@@ -322,11 +322,11 @@ let controller = {
         }
       } else {
         res.clearCookie("jwtauth");
-        return res.json({ status: "error", redirectTo: "/elective/loginPage" });
+        return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/loginPage` });
       }
     } catch (err) {
       console.log(err.message);
-      return res.json({ status: "error", redirectTo: "/elective/error" });
+      return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/error` });
     }
   },
 
@@ -428,7 +428,7 @@ let controller = {
             res.clearCookie("jwtauth");
             return res.json({
               status: "error",
-              redirectTo: "/elective/loginPage",
+              redirectTo: `${res.locals.BASE_URL}elective/loginPage`,
             });
           }
         } else {
@@ -438,11 +438,11 @@ let controller = {
         }
       } else {
         res.clearCookie("jwtauth");
-        return res.json({status:'error',redirectTo:"/elective/loginPage#sessionTimeout"});
+        return res.json({status:'error',redirectTo:`${res.locals.BASE_URL}elective/loginPage#sessionTimeout`});
       }
     } catch (error) {
       console.log(error.message);
-      return res.json({ status: "error", redirectTo: "/elective/error" });
+      return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/error` });
     }
   },
 
@@ -468,16 +468,16 @@ let controller = {
           res.clearCookie("jwtauth");
           return res.json({
             status: "error",
-            redirectTo: "/elective/loginPage",
+            redirectTo: `${res.locals.BASE_URL}elective/loginPage`,
           });
         }
       } else {
         res.clearCookie("jwtauth");
-        return res.json({ status: "error", redirectTo: "/elective/loginPage" });
+        return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/loginPage` });
       }
     } catch (error) {
       console.log(error);
-      return res.json({ status: "error", redirectTo: "/elective/error" });
+      return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/error` });
     }
   },
 
@@ -549,7 +549,7 @@ let controller = {
             res.clearCookie("jwtauth");
             return res.json({
               status: "error",
-              redirectTo: "/elective/loginPage",
+              redirectTo: `${res.locals.BASE_URL}elective/loginPage`,
             });
           }
         } else {
@@ -557,11 +557,11 @@ let controller = {
         }
       } else {
         res.clearCookie("jwtauth");
-        return res.json({ status: "error", redirectTo: "/elective/loginPage" });
+        return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/loginPage` });
       }
     } catch (error) {
       console.log(error);
-      return res.json({ status: "error", redirectTo: "/elective/error" });
+      return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/error` });
     }
   },
 
@@ -586,16 +586,16 @@ let controller = {
 
       }else{
         res.clearCookie("jwtauth");
-        return res.json({ status: "error", redirectTo: "/elective/loginPage" }); 
+        return res.json({ status: "error", redirectTo:`${res.locals.BASE_URL}elective/loginPage` }); 
       }
       }else{
         res.clearCookie("jwtauth");
-        return res.json({ status: "error", redirectTo: "/elective/loginPage" }); 
+        return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/loginPage` }); 
       }
       
     } catch (error) {
       console.log(error);
-      return res.json({ status: "error", redirectTo: "/elective/error" });
+      return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/error` });
     }
   }
 };
