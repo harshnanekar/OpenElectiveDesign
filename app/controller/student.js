@@ -104,7 +104,7 @@ module.exports = {
 
   viewStudentElectedEvents: async (req, res) => {
     try {
-      let username = await redisDb.get('user');
+        let username = await redisDb.get('user');
     
         let eventId = req.query.id;
         let getModules = await userQuery.getModules(username);
@@ -112,7 +112,7 @@ module.exports = {
           await studentQuery.viewStudentElectedBasket(eventId,username);
           console.log(JSON.stringify(viewElectedStudentBasket.rows));
 
-        return res.render("viewAllocatedEvents", {
+        return res.render("ViewAllocatedEvents", {
           module: getModules,
           electedEvent: viewElectedStudentBasket.rows,
         });
