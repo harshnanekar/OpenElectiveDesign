@@ -275,13 +275,14 @@
       let campus = document.getElementById('inputCampus').value;
       let programId = document.getElementById('inputProgramId').value;
 
+      let programNameValidation = programValidator(program);
       let campusValidation =  campusValidator(campus);
       let programIdValidation = programIdValidatior(programId); 
 
       console.log('campus------ ' , campusValidation);
       console.log('program id validation:: ',programIdValidation);
 
-      if(campusValidation && programIdValidation){
+      if(programNameValidation && campusValidation && programIdValidation){
 
        let obj = {program,campus,programId};
 
@@ -291,11 +292,14 @@
         window.location.href= `${responseData.redirectTo}`;  
        }else{
 
+        if(responseData.status === 'success'){
+          window.location.href= `${responseData.redirectTo}`;  
+        }else{
         let msg = document.getElementById('msgModal');
         let modalPage = `<div><h4 style="text-align:center;">${responseData.message}</h4></div>`
         msg.innerHTML = modalPage;
         document.querySelector('[data-target="#messageModal"]').click();
-    
+        }
        }
       });
       }
@@ -320,6 +324,34 @@
       campusError.innerText = '';
       return true;
     
+    }
+
+    function programValidator(program){
+      let prgError = document.getElementById('ProgramnameError');
+      if(program.length > 0){
+  
+       prgError.innerText = '';
+       let count =0;
+       for(let i =0; i<program.length;i++){
+        let prg = program.charAt(i);
+        if(prg >= 0 && prg <= 9){
+          count++;
+        }
+       } 
+
+       if(count == program.length){
+        prgError.innerText = '*Program Name Must Contain Alphabets Also';
+        return false;
+       }else{
+        prgError.innerText = '';
+        return true;
+       }
+
+
+      }else{
+        prgError.innerText = '*Required';
+        return false;
+      }
     }
 
     function programIdValidatior(programId){

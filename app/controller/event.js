@@ -2,13 +2,15 @@ const query = require("../queries/user.js");
 const eventQuery = require("../queries/eventQueries.js");
 const validation = require("../controller/validation.js");
 const excelController = require("../controller/excel.js");
-const jwtauth = require("../middleware/request.js");
+const {redisDb} = require("../config/database.js");
+
 
 let controller = {
   event: async (req, res) => {
     try {
-      let username = jwtauth.verifySession(req, res);
-      
+      let username = await redisDb.get('user');
+      console.log('redis user ' ,username)
+
       if (username != undefined) {
         let getmodules = await query.getModules(username);
         let childmodules = await eventQuery.getChildModules(username, "Event");
@@ -29,7 +31,8 @@ let controller = {
 
   addEvent: async (req, res) => {
     try {
-      let username = jwtauth.verifySession(req, res);
+      let username = await redisDb.get('user');
+            
       if (username != undefined) {
         let modules = await query.getModules(username);
         let campus = await eventQuery.getCampus();
@@ -51,8 +54,8 @@ let controller = {
   },
 
   eventData: async function (req, res) {
-    let username = jwtauth.verifySession(req, res);
-    let user_role = jwtauth.verifySessionRole(req, res);
+    let username = await redisDb.get('user');
+    let user_role = await redisDb.get('role');
 
     try {
       if (username != null) {
@@ -127,7 +130,7 @@ let controller = {
 
   viewEvent: async function (req, res) {
     try {
-      let username = jwtauth.verifySession(req, res);
+      let username = await redisDb.get('user');
 
       if (username != undefined) {
         let getmodules = await query.getModules(username);
@@ -156,7 +159,7 @@ let controller = {
 
   registerStudent: async (req, res) => {
     try {
-      let username = jwtauth.verifySession(req, res);
+      let username = await redisDb.get('user');
       if (username != undefined) {
         let getmodules = await query.getModules(username);
         let campus = await eventQuery.getCampus();
@@ -180,8 +183,8 @@ let controller = {
   uploadStudentData: async (req, res) => {
     try {
       console.log("File function called");
-      let username = jwtauth.verifySession(req, res);
-      let user_role = jwtauth.verifySessionRole(req, res);
+      let username = await redisDb.get('user');
+      let user_role = await redisDb.get('role');
 
       if (username != undefined) {
         let file = req.file;
@@ -332,8 +335,8 @@ let controller = {
 
   registerStudentManually: async (req, res) => {
     try {
-      let username = jwtauth.verifySession(req, res);
-      let user_role = jwtauth.verifySessionRole(req, res);
+      let username = await redisDb.get('user');
+      let user_role = await redisDb.get('role');
 
       if (username != undefined) {
         let {
@@ -448,8 +451,8 @@ let controller = {
 
   deleteEvent: async (req, res) => {
     try {
-      let username = jwtauth.verifySession(req, res);
-      let role = jwtauth.verifySessionRole(req, res);
+      let username = await redisDb.get('user');
+      let role = await redisDb.get('role');
 
       if (username != undefined) {
         let { eventId } = req.body;
@@ -483,8 +486,8 @@ let controller = {
 
   editEvent: async (req, res) => {
     try {
-      let username = jwtauth.verifySession(req, res);
-      let role = jwtauth.verifySessionRole(req, res);
+      let username = await redisDb.get('user');
+      let role = await redisDb.get('role');
 
       if (username != undefined) {
         let {
@@ -569,8 +572,8 @@ let controller = {
 
     try {
 
-      let username = jwtauth.verifySession(req,res);
-      let role = jwtauth.verifySessionRole(req,res);
+      let username = await redisDb.get('user');
+      let role = await redisDb.get('role');
 
       if(username != undefined){
 

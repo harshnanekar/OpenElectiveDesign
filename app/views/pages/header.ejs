@@ -50,7 +50,11 @@ box-sizing: border-box;
 
 <div class="dropdown show profiledropdown">
     <a style="text-decoration: none;" class= "dropdown-toggle togglebutton" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      <img src="../images/user1.png" > Hii <%= module[0].firstname%> <%= module[0].lastname%> !</img>
+     <% if(module[0].role_name === 'Role_Admin') { %>
+      <img src="../images/user1.png" > Hii Admin!</img>
+      <% }else{ %>
+        <img src="../images/user1.png" > Hii User!</img>
+      <% } %>  
     </a>
   
     <div style="position:relative;top:10%;" class="dropdown-menu" aria-labelledby="dropdownMenuLink">
