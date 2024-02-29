@@ -3,12 +3,13 @@ const query = require("../queries/user.js");
 const eventQuery = require("../queries/eventQueries.js");
 const validation = require("../controller/validation.js");
 const courseQuery = require("../queries/courseQuery.js");
-const jwtauth = require("../middleware/request.js");
+const {redisDb} = require("../config/database.js");
+
 
 module.exports = {
   addBasketPage: async (req, res) => {
     try {
-      let username = jwtauth.verifySession(req,res);
+      let username = await redisDb.get('user');
       if (username != undefined) {
         let eventId = req.query.id;
         console.log("eventId ", eventId);
@@ -42,8 +43,8 @@ module.exports = {
 
   createBasket: async (req, res) => {
     try {
-      let username = jwtauth.verifySession(req,res);
-      let role = jwtauth.verifySessionRole(req,res);
+      let username = await redisDb.get('user');
+      let role = await redisDb.get('role');
 
       if (username != undefined) {
         let { basketName, basketAbbr, eventId } = req.body;
@@ -92,8 +93,8 @@ module.exports = {
 
   deleteBasket: async (req, res) => {
     try {
-      let username = jwtauth.verifySession(req,res);
-      let role = jwtauth.verifySessionRole(req,res);
+      let username = await redisDb.get('user');
+      let role = await redisDb.get('role');
 
       if (username != undefined) {
         let { basketId } = req.body;
@@ -129,8 +130,8 @@ module.exports = {
 
   editBasket: async (req, res) => {
     try {
-      let username = jwtauth.verifySession(req,res);
-      let role = jwtauth.verifySessionRole(req,res);
+      let username = await redisDb.get('user');
+      let role = await redisDb.get('role');
 
       if (username != undefined) {
         let { basket_id, basketName, basket_abbr, eventId } = req.body;
@@ -174,7 +175,7 @@ module.exports = {
 
   basketCourseConfig: async (req, res) => {
     try {
-      let username = jwtauth.verifySession(req,res);
+      let username = await redisDb.get('user');
       let eventLid = req.query.id;
       if (username != undefined) {
         let getModules = await query.getModules(username);
@@ -199,7 +200,7 @@ module.exports = {
 
   getBasketSubject: async (req, res) => {
     try {
-      let user = jwtauth.verifySession(req, res);
+      let user = await redisDb.get('user');
       if (user != undefined) {
         let { basketId } = req.body;
         let basketCourses = await basket.getBasketCourses(basketId);
@@ -219,8 +220,8 @@ module.exports = {
 
   insertBasketCourses: async (req, res) => {
     try {
-      let username = jwtauth.verifySession(req, res);
-      let role = jwtauth.verifySessionRole(req, res);
+      let username = await redisDb.get('user');
+      let role = await redisDb.get('role');
 
       if (username != undefined && role != undefined) {
         let { basketId, basketCourses, compulsorySub } = req.body;
@@ -275,8 +276,8 @@ module.exports = {
 
   deleteEventBasket: async (req, res) => {
     try {
-      let username = jwtauth.verifySession(req, res);
-      let role = jwtauth.verifySessionRole(req, res);
+      let username = await redisDb.get('user');
+      let role = await redisDb.get('role');
 
       if (username != undefined) {
         let { basketId } = req.body;
@@ -313,7 +314,7 @@ module.exports = {
 
     try {
 
-      let username = jwtauth.verifySession(req,res);
+      let username = await redisDb.get('user');
 
       if(username != undefined){
        let {basketAbbr} = req.body;
@@ -343,8 +344,8 @@ module.exports = {
 
     try{
 
-    let username =jwtauth.verifySession(req,res);
-    if(username != undefined){
+      let username = await redisDb.get('user');
+      if(username != undefined){
 
       let {basketId} = req.body;
       let basketCourse = await basket.assignedBasketCourse(basketId);
