@@ -190,9 +190,11 @@ module.exports = class Validation {
   static NotNumberValidation(input_text){
     for (let i = 0; i < input_text.length; i++) {
       let chars = input_text.charAt(i);
+      if (chars != ' ') { 
       if (chars >= 0 && chars <= 9) {
        return false;
-      } 
+      }
+      }
     }
     return true;
   }
@@ -242,5 +244,25 @@ module.exports = class Validation {
     }else{
       return false;
     }
+  }
+
+  static courseNameValidator(course){
+    if(course.length > 0){
+      let count =0;
+      for(let i=0;i<course.length;i++){
+       let prg = course.charAt(i);
+       if(prg >= 0 && prg <= 9){
+         count++;
+       }
+      }
+ 
+      if(count == course.length){
+        return false;
+      }else{
+        return true;
+      }
+     }else{
+       return false;
+     }
   }
 };

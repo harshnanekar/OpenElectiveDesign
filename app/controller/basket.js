@@ -25,7 +25,7 @@ module.exports = {
           campus: campusData.rows,
         });
       } else {
-        return res.render("addbasket", {
+        return res.render("addBasket", {
           module: getmodules,
           basket: [],
           campus: campusData.rows,
