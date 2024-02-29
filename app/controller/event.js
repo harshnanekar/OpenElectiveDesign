@@ -8,7 +8,7 @@ let controller = {
   event: async (req, res) => {
     try {
       let username = jwtauth.verifySession(req, res);
-
+      
       if (username != undefined) {
         let getmodules = await query.getModules(username);
         let childmodules = await eventQuery.getChildModules(username, "Event");
