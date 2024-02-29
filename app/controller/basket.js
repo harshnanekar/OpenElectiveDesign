@@ -357,7 +357,8 @@ module.exports = {
       }
 
     }else{
-
+      res.clearCookie("jwtauth");
+      return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/loginPage` }); 
     }
   }catch(error){
     console.log(error);
