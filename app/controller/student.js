@@ -1,15 +1,12 @@
 const studentQuery = require('../queries/studentQueries.js');
 const userQuery = require("../queries/user.js");
 const validationController = require("../controller/validation.js");
-const jwtauth = require("../middleware/request.js");
 const {redisDb} = require("../config/database.js");
 
 module.exports = {
   viewStudentEvents: async (req, res) => {
     try {
-      let username = await redisDb.get('user');
-
-      if (username != undefined) {
+        let username = await redisDb.get('user');
         let getStudentEvent = await studentQuery.getStudentEvent(username);
         let getmodules = await userQuery.getModules(username);
 
@@ -17,10 +14,6 @@ module.exports = {
           module: getmodules,
           event: getStudentEvent.rows,
         });
-      } else {
-        res.clearCookie("jwtauth");
-        return res.redirect(`${res.locals.BASE_URL}elective/loginPage#sessionTimeout`);
-      }
     } catch (error) {
       console.log(error.message);
       return res.redirect(`${res.locals.BASE_URL}elective/error`);
@@ -30,8 +23,6 @@ module.exports = {
   startCourseSelection: async (req, res) => {
     try {
       let username = await redisDb.get('user');
-
-      if (username != undefined) {
         let eventId = req.query.id;
 
         console.log(eventId, username);
@@ -47,10 +38,6 @@ module.exports = {
           showBasket: displayBasket.rows,
           yearBackSubjects: showYearBackSubjects.rows,
         });
-      } else {
-        res.clearCookie("jwtauth");
-        return res.redirect(`${res.locals.BASE_URL}elective/loginPage#sessionTimeout`);
-      }
     } catch (error) {
       console.log(error.message);
       return res.redirect(`${res.locals.BASE_URL}elective/error`);
@@ -60,7 +47,7 @@ module.exports = {
   insertStudentCourses: async (req, res) => {
     try {
       let username = await redisDb.get('user');
-      if (username != undefined) {
+    
         let { eventLid, timeString, courseArray, userLid, basketLid } =
           req.body;
         let basketObj = {
@@ -109,13 +96,6 @@ module.exports = {
           );
           return res.json({ message: "Failed to insert !!" });
         }
-      } else {
-        res.clearCookie("jwtauth");
-        return res.json({
-          status: "error",
-          redirectTo: `${res.locals.BASE_URL}elective/loginPage`,
-        });
-      }
     } catch (error) {
       console.log(error.message);
       return res.json({ status: "Error", redirectTo: `${res.locals.BASE_URL}elective/error` });
@@ -125,7 +105,7 @@ module.exports = {
   viewStudentElectedEvents: async (req, res) => {
     try {
       let username = await redisDb.get('user');
-      if (username != undefined) {
+    
         let eventId = req.query.id;
         let getModules = await userQuery.getModules(username);
         let viewElectedStudentBasket =
@@ -136,10 +116,6 @@ module.exports = {
           module: getModules,
           electedEvent: viewElectedStudentBasket.rows,
         });
-      } else {
-        res.clearCookie("jwtauth");
-        return res.redirect(`${res.locals.BASE_URL}elective/loginPage#sessionTimeout`);
-      }
     } catch (error) {
       console.log(error.message);
       return res.redirect(`${res.locals.BASE_URL}elective/error`);
@@ -149,17 +125,11 @@ module.exports = {
   viewElectedEvents: async (req,res) => {
     try {
 
-      let username = await redisDb.get('user');
-     if(username != undefined){
+     let username = await redisDb.get('user');
 
      let electedEvents = await studentQuery.viewStudentElectedEvent(username); 
      let getModules = await userQuery.getModules(username);
      return res.render('viewElectedEvent',{module:getModules,event:electedEvents.rows});
-
-     }else{
-      res.clearCookie("jwtauth");
-      return res.redirect(`${res.locals.BASE_URL}elective/loginPage#sessionTimeout`);
-     } 
 
     } catch (error) {
       console.log(error.message);

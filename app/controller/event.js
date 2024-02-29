@@ -8,10 +8,9 @@ const {redisDb} = require("../config/database.js");
 let controller = {
   event: async (req, res) => {
     try {
-      let username = await redisDb.get('user');
-      console.log('redis user ' ,username)
+        let username = await redisDb.get('user');
+        console.log('redis user ' ,username)
 
-      if (username != undefined) {
         let getmodules = await query.getModules(username);
         let childmodules = await eventQuery.getChildModules(username, "Event");
 
@@ -19,10 +18,7 @@ let controller = {
           module: getmodules,
           childModules: childmodules.rows,
         });
-      } else {
-        res.clearCookie("jwtauth");
-        return res.redirect(`${res.locals.BASE_URL}elective/loginPage#sessionTimeout`);
-      }
+  
     } catch (err) {
       console.log("Error " + err.message);
       return res.redirect(`${res.locals.BASE_URL}elective/error`);
@@ -33,7 +29,6 @@ let controller = {
     try {
       let username = await redisDb.get('user');
             
-      if (username != undefined) {
         let modules = await query.getModules(username);
         let campus = await eventQuery.getCampus();
         let acadSession = await eventQuery.getacadSession();
@@ -43,10 +38,7 @@ let controller = {
           campus: campus.rows,
           acadSession: acadSession.rows,
         });
-      } else {
-        res.clearCookie("jwtauth");
-        return res.redirect(`${res.locals.BASE_URL}elective/loginPage#sessionTimeout`);
-      }
+     
     } catch (err) {
       console.log(err.message);
       return res.redirect(`${res.locals.BASE_URL}elective/error`);
@@ -54,11 +46,10 @@ let controller = {
   },
 
   eventData: async function (req, res) {
-    let username = await redisDb.get('user');
-    let user_role = await redisDb.get('role');
-
     try {
-      if (username != null) {
+
+      let username = await redisDb.get('user');
+      let user_role = await redisDb.get('role');
 
         console.log('event query')
         let { eventName, semester, acad_year, campus, start_date, end_date } =
@@ -117,11 +108,6 @@ let controller = {
         }
       }
 
-      } else {
-        res.clearCookie("jwtauth");
-        return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/loginPage` });
-      }
-
     } catch (error) {
       console.log(error.message);
       return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/error` });
@@ -132,7 +118,6 @@ let controller = {
     try {
       let username = await redisDb.get('user');
 
-      if (username != undefined) {
         let getmodules = await query.getModules(username);
         let eventData = await eventQuery.getAllEventData(username);
         let campus = await eventQuery.getCampus();
@@ -147,10 +132,7 @@ let controller = {
           acadSession: acadSessions.rows,
           dataRows:dataRows
         });
-      } else {
-        res.clearCookie("jwtauth");
-        return res.redirect(`${res.locals.BASE_URL}elective/loginPage#sessionTimeout`);
-      }
+   
     } catch (err) {
       console.log("Error " + err.message);
       return res.redirect(`${res.locals.BASE_URL}elective/error`);
@@ -160,7 +142,7 @@ let controller = {
   registerStudent: async (req, res) => {
     try {
       let username = await redisDb.get('user');
-      if (username != undefined) {
+    
         let getmodules = await query.getModules(username);
         let campus = await eventQuery.getCampus();
         let acadSession = await eventQuery.getacadSession();
@@ -170,10 +152,7 @@ let controller = {
           campus: campus.rows,
           acadSession: acadSession.rows,
         });
-      } else {
-        res.clearCookie("jwtauth");
-        return res.redirect(`${res.locals.BASE_URL}elective/loginPage#sessionTimeout`);
-      }
+
     } catch (err) {
       console.log(err.message);
       return res.redirect(`${res.locals.BASE_URL}elective/error`);
@@ -186,7 +165,6 @@ let controller = {
       let username = await redisDb.get('user');
       let user_role = await redisDb.get('role');
 
-      if (username != undefined) {
         let file = req.file;
 
         console.log("File found ", file);
@@ -323,10 +301,7 @@ let controller = {
         } else {
           return res.json({ status: "File Not Found !!" });
         }
-      } else {
-        res.clearCookie("jwtauth");
-        return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/loginPage` });
-      }
+
     } catch (err) {
       console.log(err.message);
       return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/error` });
@@ -338,7 +313,6 @@ let controller = {
       let username = await redisDb.get('user');
       let user_role = await redisDb.get('role');
 
-      if (username != undefined) {
         let {
           fname,
           lname,
@@ -439,10 +413,7 @@ let controller = {
             message: "Invalid Credentials !!",
           });
         }
-      } else {
-        res.clearCookie("jwtauth");
-        return res.json({status:'error',redirectTo:`${res.locals.BASE_URL}elective/loginPage#sessionTimeout`});
-      }
+
     } catch (error) {
       console.log(error.message);
       return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/error` });
@@ -451,10 +422,8 @@ let controller = {
 
   deleteEvent: async (req, res) => {
     try {
-      let username = await redisDb.get('user');
       let role = await redisDb.get('role');
 
-      if (username != undefined) {
         let { eventId } = req.body;
 
         if (role === "Role_Admin") {
@@ -474,10 +443,7 @@ let controller = {
             redirectTo: `${res.locals.BASE_URL}elective/loginPage`,
           });
         }
-      } else {
-        res.clearCookie("jwtauth");
-        return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/loginPage` });
-      }
+     
     } catch (error) {
       console.log(error);
       return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/error` });
@@ -489,7 +455,7 @@ let controller = {
       let username = await redisDb.get('user');
       let role = await redisDb.get('role');
 
-      if (username != undefined) {
+     
         let {
           eventId,
           eventName,
@@ -558,10 +524,7 @@ let controller = {
         } else {
           return res.json({ message: `Invalid Inputs !!` });
         }
-      } else {
-        res.clearCookie("jwtauth");
-        return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/loginPage` });
-      }
+   
     } catch (error) {
       console.log(error);
       return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/error` });
@@ -572,11 +535,7 @@ let controller = {
 
     try {
 
-      let username = await redisDb.get('user');
       let role = await redisDb.get('role');
-
-      if(username != undefined){
-
       let {eventId} = req.body;
       if(role === 'Role_Admin'){
 
@@ -590,10 +549,6 @@ let controller = {
       }else{
         res.clearCookie("jwtauth");
         return res.json({ status: "error", redirectTo:`${res.locals.BASE_URL}elective/loginPage` }); 
-      }
-      }else{
-        res.clearCookie("jwtauth");
-        return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/loginPage` }); 
       }
       
     } catch (error) {

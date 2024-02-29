@@ -11,17 +11,12 @@ module.exports = {
     try {
       let username = await redisDb.get('user');
 
-      if (username != undefined) {
         let getmodules = await userQuery.getModules(username);
         let modules = await query.getChildModules(username, "Programs");
         return res.render("program", {
           module: getmodules,
           childModules: modules.rows,
         });
-      } else {
-        res.clearCookie("jwtauth");
-        return res.redirect(`${res.locals.BASE_URL}elective/loginPage#sessionTimeout`);
-      }
     } catch (error) {
       console.log(error.message);
       return res.redirect(`${res.locals.BASE_URL}elective/error`);
@@ -30,9 +25,7 @@ module.exports = {
 
   addPrograms: async (req, res) => {
     try {
-      let username = await redisDb.get('user');
-
-      if (username != undefined) {
+        let username = await redisDb.get('user');
         let getmodules = await userQuery.getModules(username);
         let campus = await query.getCampus();
 
@@ -40,10 +33,6 @@ module.exports = {
           module: getmodules,
           campus: campus.rows,
         });
-      } else {
-        res.clearCookie("jwtauth");
-        return res.redirect(`${res.locals.BASE_URL}elective/loginPage#sessionTimeout`);
-      }
     } catch (error) {
       console.log(error.message);
       return res.redirect(`${res.locals.BASE_URL}elective/error`);
@@ -56,8 +45,7 @@ module.exports = {
       let username = await redisDb.get('user');
       let role = await redisDb.get('role');
 
-      if (username != undefined) {
-        let file = req.file;
+      let file = req.file;
 
         console.log("File " + JSON.stringify(file));
 
@@ -143,10 +131,6 @@ module.exports = {
         } else {
           return res.json({ message: "File Not Found !!" });
         }
-      } else {
-        res.clearCookie("jwtauth");
-        return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/loginPage` });
-      }
     } catch (error) {
       console.log("Error in file", error.message);
       return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/error` });
@@ -159,8 +143,6 @@ module.exports = {
 
       let username = await redisDb.get('user');
       let userRole = await redisDb.get('role');
-
-      if (username != undefined) {
         let { program, campus, programId } = req.body;
 
         console.log("request body:: ", program, campus, programId);
@@ -201,10 +183,6 @@ module.exports = {
         } else {
           return res.json({ message: "Invalid Inputs !!" });
         }
-      } else {
-        res.clearCookie("jwtauth");
-        return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/loginPage` });
-      }
     } catch (error) {
       console.log(error);
       return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/error` });
@@ -215,7 +193,6 @@ module.exports = {
     try {
       let username = await redisDb.get('user');
 
-      if (username != undefined) {
         let getmodules = await userQuery.getModules(username);
         let programData = await programQuery.viewPrograms(username);
         let campus = await query.getCampus();
@@ -227,10 +204,7 @@ module.exports = {
           dataRows: dataRows,
           campus: campus.rows,
         });
-      } else {
-        res.clearCookie("jwtauth");
-        return res.redirect(`${res.locals.BASE_URL}elective/loginPage#sessionTimeout`);
-      }
+   
     } catch (error) {
       console.log(error);
       return res.redirect(`${res.locals.BASE_URL}elective/error`);
@@ -239,19 +213,14 @@ module.exports = {
 
   getAllProgramsList: async (req, res) => {
     try {
-      let username = await redisDb.get('user');
-
-      if (username != undefined) {
+        let username = await redisDb.get('user');
         let getmodules = await userQuery.getModules(username);
         let programList = await programQuery.getAllProgramsList(username);
         return res.render("programList", {
           programs: programList.rows,
           module: getmodules,
         });
-      } else {
-        res.clearCookie("jwtauth");
-        return res.redirect(`${res.locals.BASE_URL}elective/loginPage#sessionTimeout`);
-      }
+  
     } catch (error) {
       return res.redirect(`${res.locals.BASE_URL}elective/error`);
     }
@@ -259,10 +228,8 @@ module.exports = {
 
   deleteProgram: async (req, res) => {
     try {
-      let username = await redisDb.get('user');
       let role = await redisDb.get('role');
 
-      if (username != undefined) {
         let { programId } = req.body;
         console.log("delete program ", programId);
 
@@ -283,10 +250,6 @@ module.exports = {
             redirectTo: `${res.locals.BASE_URL}elective/loginPage`,
           });
         }
-      } else {
-        res.clearCookie("jwtauth");
-        return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/loginPage` });
-      }
     } catch (error) {
       console.log(error);
       return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/error` });

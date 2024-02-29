@@ -106,13 +106,9 @@ module.exports = {
     try {
       let usermodules = await redisDb.get('user');
 
-      if (usermodules != null) {
         let getModules = await query.getModules(usermodules);
         return res.render("dashboard", { module: getModules });
-      } else {
-        res.clearCookie("jwtauth");
-        return res.redirect(`${res.locals.BASE_URL}elective/loginPage#sessionTimeout`);
-      }
+        
     } catch (err) {
       return res.redirect(`${res.locals.BASE_URL}elective/error`);
     }

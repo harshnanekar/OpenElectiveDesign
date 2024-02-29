@@ -13,17 +13,13 @@ module.exports = {
     try {
       let username = await redisDb.get('user');
 
-      if (username != undefined) {
         let getmodules = await userQuery.getModules(username);
         let campus = await query.getCampus();
         return res.render("course", {
           module: getmodules,
           campus: campus.rows,
         });
-      } else {
-        res.clearCookie("jwtauth");
-        return res.redirect(`${res.locals.BASE_URL}/elective/loginPage#sessionTimeout`);
-      }
+   
     } catch (error) {
       console.log(error);
       return res.redirect(`${res.locals.BASE_URL}elective/error`);
@@ -35,7 +31,7 @@ module.exports = {
       let username = await redisDb.get('user');
       let role = await redisDb.get('role');
 
-      if (username != undefined) {
+     
         let file = req.file;
         if (file != undefined) {
            let subjectColumn = 'Subject_Name';
@@ -159,10 +155,7 @@ module.exports = {
         } else {
           return res.json({ message: "File Not Found" });
         }
-      } else {
-        res.clearCookie("jwtauth");
-        return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/loginPage` });
-      }
+    
     } catch (error) {
       console.log(error);
       return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/error` });
@@ -172,7 +165,7 @@ module.exports = {
   getAllCourses: async (req, res) => {
     try {
       let username = await redisDb.get('user');
-      if (username != undefined) {
+     
         let courseData = await courseQuery.getCourses(username);
 
         if (courseData.rowCount > 0) {
@@ -180,10 +173,7 @@ module.exports = {
         } else {
           return res.json({ courseData: [] });
         }
-      } else {
-        res.clearCookie("jwtauth");
-        return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/loginPage` });
-      }
+
     } catch (error) {
       console.log(error);
       return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/error` });
@@ -195,7 +185,6 @@ module.exports = {
       let username = await redisDb.get('user');
       let role = await redisDb.get('role');
 
-      if (username != undefined) {
         let {
           subjectName,
           department,
@@ -272,10 +261,7 @@ module.exports = {
         } else {
           return res.json({ message: "Invalid Inputs !!" });
         }
-      } else {
-        res.clearCookie("jwtauth");
-        return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/loginPage` });
-      }
+    
     } catch (error) {
       return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/error` });
     }
@@ -286,7 +272,6 @@ module.exports = {
       let username = await redisDb.get('user');
       let role = await redisDb.get('role');
 
-      if (username != undefined) {
         let { programArray } = req.body;
         console.log("program array::: ", programArray);
 
@@ -319,10 +304,6 @@ module.exports = {
             redirectTo: `${res.locals.BASE_URL}elective/loginPage`,
           });
         }
-      } else {
-        res.clearCookie("jwtauth");
-        return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/loginPage` });
-      }
     } catch (error) {
       return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/error` });
     }
@@ -330,10 +311,8 @@ module.exports = {
 
   commonCourseDelete: async (req, res) => {
     try {
-      let username = await redisDb.get('user');
       let role = await redisDb.get('role');
 
-      if (username != undefined) {
         let { courseArray } = req.body;
 
         if (role === "Role_Admin") {
@@ -353,10 +332,7 @@ module.exports = {
             redirectTo: `${res.locals.BASE_URL}elective/loginPage`,
           });
         }
-      } else {
-        res.clearCookie("jwtauth");
-        return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/loginPage` });
-      }
+  
     } catch (error) {
       return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/error` });
     }
@@ -365,8 +341,7 @@ module.exports = {
   getAllCoursePrograms: async (req, res) => {
     try {
       let username = await redisDb.get('user');
-      
-      if (username != undefined) {
+    
         let { subId } = req.body;
         let coursePrograms = await courseQuery.getAllCourseProgram(subId);
 
@@ -376,10 +351,6 @@ module.exports = {
           let allPrograms = await programQuery.getAllProgramsList(username);
           return res.json({ coursePrograms: allPrograms.rows });
         }
-      } else {
-        res.clearCookie("jwtauth");
-        return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/loginPage` });
-      }
     } catch (error) {
       console.log("programs error ", error);
       return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/error` });
@@ -391,7 +362,7 @@ module.exports = {
       let username = await redisDb.get('user');
       let role = await redisDb.get('role');
 
-      if (username != undefined) {
+
         console.log("function called");
         let {
           subjectId,
@@ -523,10 +494,6 @@ module.exports = {
         } else {
           return res.json({ message: "Invalid Inputs !!" });
         }
-      } else {
-        res.clearCookie("jwtauth");
-        return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/loginPage` });
-      }
     } catch (error) {
       console.log("error in course programs ", error);
       return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/error` });
@@ -535,12 +502,10 @@ module.exports = {
 
   deleteCourse: async (req, res) => {
     try {
-      let username = await redisDb.get('user');
       let role = await redisDb.get('role');
 
       console.log('delete api called')
 
-      if (username != undefined) {
         if (role === "Role_Admin") {
           let { subjectId } = req.body;
           let deleteCourseProgram = await courseQuery.deleteCourseMapping(
@@ -563,10 +528,6 @@ module.exports = {
             redirectTo: `${res.locals.BASE_URL}elective/loginPage`,
           });
         }
-      } else {
-        res.clearCookie("jwtauth");
-        return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/loginPage` });
-      }
     } catch {
       return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/error` });
     }
