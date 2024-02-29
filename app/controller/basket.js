@@ -256,7 +256,6 @@ module.exports = {
 
   deleteEventBasket: async (req, res) => {
     try {
-      let username = await redisDb.get("user");
       let role = await redisDb.get("role");
 
       let { basketId } = req.body;
