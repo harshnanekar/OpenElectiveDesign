@@ -19,7 +19,7 @@ module.exports = {
       console.log("campus>>> ", campusData.rowCount, basketData.rowCount);
 
       if (basketData.rowCount > 0) {
-        return res.render("addbasket", {
+        return res.render("addBasket", {
           module: getmodules,
           basket: basketData.rows,
           campus: campusData.rows,
