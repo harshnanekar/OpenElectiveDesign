@@ -265,4 +265,24 @@ module.exports = class Validation {
        return false;
      }
   }
+
+  static eventvalidator(eventName){
+    if(eventName.length > 0){
+      let count =0;
+      for(let i=0;i<eventName.length;i++){
+       let prg = eventName.charAt(i);
+       if(prg >= 0 && prg <= 9){
+         count++;
+       }
+      }
+ 
+      if(count == eventName.length){
+        return false;
+      }else{
+        return true;
+      }
+     }else{
+       return false;
+     }
+  }
 };

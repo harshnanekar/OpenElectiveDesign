@@ -79,6 +79,24 @@ const query = class EventQuery{
    return pgPool.query(query);  
   }
 
+  static viewPreference(eventId){
+   let query = {
+    text:`select distinct s.basket_lid,b.basket_name from student_sub_allocation s inner join basket b on b.id=s.basket_lid where event_lid =$1`,
+    values:[eventId]
+   } 
+   return pgPool.query(query);
+  }
+
+  static getBasketPreference(basketId){
+   let query ={
+    text:`select sm.subject_name,u.username,s.sub_pref as preference from student_sub_allocation s inner join subject_master sm on s.subject_lid=sm.sub_id inner join user_info u on s.user_lid=u.id where s.basket_lid = $1
+    and s.active=true and sm.active=true and u.active=true order by s.id asc`,
+    values:[basketId]
+   }
+   return pgPool.query(query); 
+
+  }
+
 
 }
 

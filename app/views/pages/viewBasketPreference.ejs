@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include ('../partials/partial') %>
+    <title>Programs</title>
+    
+    <style>
+      body{
+        background-color: whitesmoke;
+      }  
+      th{
+    background-color: #e6f7ff;
+    width:480px;
+      }
+    tr:nth-child(odd) {
+    background-color: #e6f7ff;
+    }
+    tr:nth-child(even) {
+    background-color: white;
+    }
+    </style>
+
+</head>
+<body>
+    <%- include('sidebar.ejs') %>
+    <%- include('header.ejs')  %>
+    <div id="main">
+        <table class="table table-bordered text-center table-responsive-lg ">
+            <tr>
+                <th>Sr No.</th>
+                <th>Basket Name</th>
+                <th>Actions</th>
+            </tr>
+            <% let index=1; %>
+              <% if(basketPreference.length > 0){ %>
+                <% basketPreference.forEach(data=> { %>
+                    <tr>
+                        <td>
+                            <%= index %>    
+                        </td>
+                        <td data-basketId="<%= data.basket_lid %>">
+                            <%= data.basket_name %>
+                        </td>
+                        <td>
+                            <a style="cursor:pointer; color:black" href="<%- BASE_URL %>elective/viewBasketPreference?id=<%= data.basket_lid %>"><i
+                                    class="fa-solid fa-eye" data-toggle="tooltip" title="View Basket Preference"></i></a>&nbsp;
+                            <a style="cursor:pointer; color:black" href="<%- BASE_URL %>elective/createExcelPreference?id=<%= data.basket_lid %>"><i class="fa-solid fa-download" data-toggle="tooltip" title="Download Preference"></i>
+                            </a>
+                        </td>
+                    </tr>
+    
+                    <% index++; %>
+                        <% }); %>
+                        <% }else{ %>
+                            <tr><td colspan="3px">--------------------------No Data Available-----------------------</td></tr>
+                            <% } %>
+        </table>
+    </div>
+</body>
+
+<%- include ('../partials/partial2') %>
+<script src= "../js/script.js" ></script>
+</html>

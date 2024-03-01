@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include ('../partials/partial') %>
+    <title>Programs</title>
+    
+    <style>
+      body{
+        background-color: whitesmoke;
+      }  
+      th{
+    background-color: #e6f7ff;
+    width:380px;
+      }
+    tr:nth-child(odd) {
+    background-color: #e6f7ff;
+    }
+    tr:nth-child(even) {
+    background-color: white;
+    }
+    </style>
+
+</head>
+<body>
+    <%- include('sidebar.ejs') %>
+    <%- include('header.ejs')  %>
+    <div id="main">
+        <table class="table table-bordered text-center table-responsive-lg ">
+            <tr>
+                <th>Sr No.</th>
+                <th>Username</th>
+                <th>Subject Name</th>
+                <th>Preference No.</th>
+            </tr>
+            <% let index=1; %>
+            <% if(basketUser.length > 0 ){ %>
+                <% basketUser.forEach(data=> { %>
+                    <tr>
+                        <td>
+                            <%= index %>
+                        </td>
+                        <td >
+                            <%= data.username %>
+                        </td>
+                        <td>
+                           <%= data.subject_name %>
+                        </td>
+                        <td>
+                           <%= data.preference %> 
+                        </td>
+                    </tr>
+    
+                    <% index++; %>
+                        <% }); %>
+                        <% }else{ %>
+                        <tr><td colspan="4px">--------------------------No Data Available-----------------------</td></tr>
+                        <% } %>
+        </table>
+    </div>
+</body>
+
+<%- include ('../partials/partial2') %>
+<script src= "../js/script.js" ></script>
+</html>
