@@ -86,13 +86,18 @@ module.exports = {
               let batchValidation = batchNo ? Validation.NumberValidation(batchNo) : false;
               let maxValidation = maxCapacityPerBatch ? Validation.NumberValidation(maxCapacityPerBatch) : false;
               let minValidation = minCapacityperBatch ? Validation.NumberValidation(minCapacityperBatch) : false;
+              let checkMinCapacity; 
+
+              if(minValidation){
+                checkMinCapacity = (minCapacityperBatch < maxCapacityPerBatch) ? true : false;
+              }
 
               if (
                 subjectValidation &&
                 departmentValidation &&
                 batchValidation &&
                 maxValidation &&
-                minValidation &&
+                checkMinCapacity &&
                 openToAllPrograms != undefined
               ) {
                 openPrograms = openToAllPrograms === "Yes" ? "Y" : "N";

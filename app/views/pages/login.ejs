@@ -110,7 +110,8 @@ font-family: 'Poppins', sans-serif;
 
    <i class="fi fi-rr-user" ></i><input name="username" id="user" style="margin-bottom:40px;width:66%;" placeholder="LoginId" type="text"/></br>
 
-   <i class="fi fi-rr-lock" ></i><input name="password" id="pass" placeholder="Password" type="password" style="width:66%;"/></br>
+   <i class="fi fi-rr-lock" ></i><input name="password" id="pass" placeholder="Password" type="password" style="width:66%;"/>
+   <i class="fa-solid fa-eye" id="passIcon"></i></br>
 
    <a href="#"  data-toggle="modal" data-target="#passwordModal" style="position:absolute; right:25%; font-size:18px; color:red; width:20%; text-decoration:none;" id="forgotPass" >Forgot?</a>
 
@@ -249,7 +250,7 @@ font-family: 'Poppins', sans-serif;
   
     })
 
-    document.getElementById('passIcon')?.addEventListener('click', () =>{
+    document.getElementById('passIcon').addEventListener('click', () =>{
       console.log('Icon clicked');
 
       let passwordIcon = document.getElementById('passIcon');

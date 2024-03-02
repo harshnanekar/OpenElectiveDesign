@@ -175,15 +175,17 @@
         });
       }
     });
-    
+
     function eventValidator(eventName) {
         let eventError = document.getElementById('eventError');
       if (eventName.length > 0) {
         for (let i = 0; i < eventName.length; i++) {
           let event = eventName.charAt(i);
+          if(event != ' '){
           if (event >= 0 && event <= 9) {
             eventError.innerText = '*Invalid Input Field';
             return false;
+          }
           }
         }
         eventError.innerText = '';

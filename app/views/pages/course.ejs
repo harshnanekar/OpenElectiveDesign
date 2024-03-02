@@ -91,7 +91,7 @@
             <h3>Upload Course</h3>
             <hr />
             <input type="radio" name="uploadCourse" id="uploadViaExcel" checked /> Upload Via Excel</br>
-            <input type="radio" name="uploadCourse" id="uploadViaManually" /> Upload Via Manually</br>
+            <input type="radio" name="uploadCourse" id="uploadViaManually" /> Upload Manually</br>
           </div>
 
           <div id="uploadFormat">
@@ -717,7 +717,7 @@
 
     }
 
-    function minBatchValidation(minValue){
+    function minBatchValidation(minValue,capacity){
       let batchError = document.getElementById('minError');
 
       if (minValue.length > 0) {
@@ -726,8 +726,13 @@
         console.log("batch validation :::: ", minBatchValidation);
 
         if (minBatchValidation) {
+          if(minValue < capacity){
           batchError.innerText = '';
           return true;
+          }else{
+          batchError.innerText = '*Minimum Capacity Must Be Smaller Than MaxCapacity';
+          return false; 
+          }
         } else {
           batchError.innerText = '*Invalid Input Field';
           return false;

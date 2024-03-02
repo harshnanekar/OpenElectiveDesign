@@ -506,8 +506,8 @@ let controller = {
       } = req.body;
 
       let campusValidate = validation.campusValidation(campus);
-      let sessionValidate = validation.acadSessionValidation(res, semester);
-      let acadYearValidation = validation.newAcadYearValidation(res, acad_year);
+      let sessionValidate = validation.acadSessionValidation(semester);
+      let acadYearValidation = validation.newAcadYearValidation(acad_year);
 
       console.log(
         "event validation ",
