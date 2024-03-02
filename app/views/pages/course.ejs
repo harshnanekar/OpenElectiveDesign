@@ -312,7 +312,7 @@
         let subjectValidate = subjectValidater(subjectName);
         let departmentValidate = departmentValidater(department);
         let batchesValidate = batchesValidator(batches);
-        let minBatchValidator = minBatchValidation(batchMinCapacity);
+        let minBatchValidator = minBatchValidation(batchMinCapacity,batchCapacity);
         let batchCapacityValidate = batchCapacityValidator(batchCapacity);
         let campusValidate = campusValidator(campus);
 
@@ -730,7 +730,7 @@
           batchError.innerText = '';
           return true;
           }else{
-          batchError.innerText = '*Minimum Capacity Must Be Smaller Than MaxCapacity';
+          batchError.innerText = '*Minimum Capacity Must Be Less Than Max Capacity';
           return false; 
           }
         } else {
