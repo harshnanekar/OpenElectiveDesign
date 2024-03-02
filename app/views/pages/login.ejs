@@ -103,7 +103,7 @@ font-family: 'Poppins', sans-serif;
    </div>
    
    <div style="position:relative;right:60px;" class="col-xs-8 col-sm-8 col-md-8 col-lg-8 col-xl-8" >
-   <h2 style="margin-left: 50px; margin-top: 15px;">Welcome</h2>
+   <h2 style="margin-left:50px; margin-top: 15px;">Welcome</h2>
   
    <div style="margin-top:15%;" class="col-xs-8 col-sm-8 col-md-8 col-lg-8 col-xl-8" >
    
@@ -112,14 +112,35 @@ font-family: 'Poppins', sans-serif;
 
    <i class="fi fi-rr-lock" ></i><input name="password" id="pass" placeholder="Password" type="password" style="width:66%;"/></br>
 
-   <a href="#" style="position:absolute; right:25%; font-size:18px; color:red; width:20%; text-decoration:none;" >Forgot?</a>
+   <a href="#"  data-toggle="modal" data-target="#passwordModal" style="position:absolute; right:25%; font-size:18px; color:red; width:20%; text-decoration:none;" id="forgotPass" >Forgot?</a>
 
-   <button style="padding:5px; margin-top: 60px; font-weight:bold; border:0; border-radius:10px; background-color: red; color:white; width:70%; left:30px; top:80px; outline: none;" id="login" type="submit" >Login</button>
+   <button style="padding:5px; margin-top: 80px; font-weight:bold; border:0; border-radius:10px; background-color: red; color:white;position: relative; width:70%; left:20px; top:10px; outline: none;" id="login" type="submit" >Login</button>
      
      </div>
 
    </div>
  </div>
+</div>
+
+<div class="modal fade" id="passwordModal" tabindex="-1" role="dialog" aria-labelledby="passwordModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="passwordModalLabel">Reset Password</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h5>Enter the Username</h5>&nbsp;
+        <input id="inputUser" type="text" class="form-control" placeholder="Username" />
+        <hr>
+        <div id="submitBtn">
+        <buttton id="submitUser" class="btn btn-primary float-right">Submit</buttton>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
    
 </body>
@@ -189,7 +210,17 @@ font-family: 'Poppins', sans-serif;
         });
 
     });
-    
+
+    document.getElementById('submitUser').addEventListener('click',() => {
+     let username = document.getElementById('inputUser').value;
+     let obj = {username};
+
+     dynamicFetchApi('/elective/checkUsernameForOtp','POST',obj)
+     .then(response => {
+      console.log(response);
+     })
+    });
+
     errormessage();
     
     //Displaying Error Message
@@ -218,7 +249,7 @@ font-family: 'Poppins', sans-serif;
   
     })
 
-    document.getElementById('passIcon').addEventListener('click', () =>{
+    document.getElementById('passIcon')?.addEventListener('click', () =>{
       console.log('Icon clicked');
 
       let passwordIcon = document.getElementById('passIcon');
