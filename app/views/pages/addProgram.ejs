@@ -382,6 +382,11 @@
       cancelButtonRedirect(`<%- BASE_URL %>elective/dashboard`);
       }
     });
+
+
+    window.onbeforeunload = () => {
+      window.location.reload(true);
+    }
     
 
 
