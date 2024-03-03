@@ -14,19 +14,14 @@ module.exports = {
       if (jwtreturn === "invalid") {
         res.render("login");
       } else {
-        req.session.modules = jwtreturn.username;
-        req.session.userRole = jwtreturn.role[0].role_name;
-        console.log(
-          "username and role ",
-          req.session.modules,
-          " ",
-          req.session.userRoles
-        );
+
+        redisDb.set('user',jwtreturn.username,'EX', 86400);
+        redisDb.set('role',jwtreturn.role[0].role_name,'EX', 86400);
 
         return res.redirect(`${res.locals.BASE_URL}elective/dashboard`);
       }
     } catch (err) {
-      console.log(err.message);
+      console.log('error in login ',err.message);
       return res.redirect(`${res.locals.BASE_URL}elective/error`);
     }
   },
@@ -56,8 +51,8 @@ module.exports = {
 
           let redisUser = querydata[0].username;
           let redisRole = getUserRole[0].role_name
-          redisDb.set('user',redisUser);
-          redisDb.set('role',redisRole);
+          redisDb.set('user',redisUser, 'EX', 86400);
+          redisDb.set('role',redisRole, 'EX', 86400);
 
           const user = querydata[0].username;
           const secretkey = process.env.JWT_SECRETKEY;
@@ -111,13 +106,9 @@ module.exports = {
     try {
       let usermodules = await redisDb.get('user');
 
-      if (usermodules != null) {
         let getModules = await query.getModules(usermodules);
         return res.render("dashboard", { module: getModules });
-      } else {
-        res.clearCookie("jwtauth");
-        return res.redirect(`${res.locals.BASE_URL}elective/loginPage#sessionTimeout`);
-      }
+        
     } catch (err) {
       return res.redirect(`${res.locals.BASE_URL}elective/error`);
     }
@@ -127,6 +118,8 @@ module.exports = {
     try {
       req.session.destroy();
       res.clearCookie("jwtauth");
+      redisDb.del('user');
+      redisDb.del('role');
 
       return res.redirect(`${res.locals.BASE_URL}elective/loginPage`);
     } catch (err) {

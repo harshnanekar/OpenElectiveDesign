@@ -30,6 +30,9 @@ apiRouter.get('/viewStudentEvents',middleware.verifyRequest,studentController.vi
 apiRouter.get('/startCourseSelection',middleware.verifyRequest,studentController.startCourseSelection);
 apiRouter.get('/viewStudentElectedEvents',middleware.verifyRequest,studentController.viewStudentElectedEvents);
 apiRouter.get('/viewElectedEvents',middleware.verifyRequest,studentController.viewElectedEvents);
+apiRouter.get('/viewPreferences',middleware.verifyRequest,eventController.viewPreferences);
+apiRouter.get('/viewBasketPreference',middleware.verifyRequest,eventController.viewBasketPreference);
+apiRouter.get('/createExcelPreference',middleware.verifyRequest,eventController.createExcelPreference);
 
 
 //Post Requests

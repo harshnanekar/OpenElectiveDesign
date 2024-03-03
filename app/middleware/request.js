@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const controller = require("../controller/user.js");
+const { redisDb } = require("../config/database.js");
 
 module.exports = {
   verifyLogin: (cookietoken, res) => {
@@ -21,7 +22,7 @@ module.exports = {
     }
   },
 
-  verifyRequest: (req, res, next) => {
+  verifyRequest: async (req, res, next) => {
     try {
       let token = process.env.JWT_SECRETKEY;
       let cookietoken = req.signedCookies.jwtauth || undefined;
@@ -29,10 +30,13 @@ module.exports = {
       console.log("request cookie", cookietoken);
 
       let verified = jwt.verify(cookietoken, token);
+      let username = await redisDb.get("user");
+      let role = await redisDb.get("role");
 
-      if (verified) {
+      if (verified && username != undefined && role != undefined) {
         next();
       } else {
+        res.clearCookie("jwtauth");
         return res.redirect(`${res.locals.BASE_URL}elective/loginPage`);
       }
     } catch (error) {
@@ -40,6 +44,4 @@ module.exports = {
       return res.redirect(`${res.locals.BASE_URL}elective/loginPage`);
     }
   },
-
-
 };

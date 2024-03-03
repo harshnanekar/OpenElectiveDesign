@@ -49,19 +49,19 @@
                <td id="eventSession"><%= event.current_session %></td>
                <td id="eventYear"><%= event.acad_year %></td>
                <td id="eventCampus"><%= event.campus_name %></td>
-               <% let sdate = event.startdate.toISOString(); %>
-               <% let date = sdate.split('T')[0]; let time= sdate.split('T')[1] ;  let stime= time.split('.')[0] ; %>
-               <td id="eventStart"><%= date %><%= " " %><%= stime %></td>
-               <% let edate = event.end_date.toISOString(); %>
-               <% let endate = edate.split('T')[0]; let etime= edate.split('T')[1] ;  let edtime= etime.split('.')[0] ; %>
-               <td id="eventEnd"><%= endate %><%= " " %><%= edtime %></td>
+               <% let sdate = event.startdate %>
+               <% const date = sdate.toISOString().slice(0, 10); const time = sdate.toTimeString().slice(0, 8); %>
+               <td id="eventStart"><%= date %> <%= time%></td>
+               <% let edate = event.end_date; %>
+               <% const dates = edate.toISOString().slice(0, 10); const times = edate.toTimeString().slice(0, 8); %>
+               <td id="eventEnd"><%= dates %> <%= times%></td>
                <td id="eventPublish"><%= event.is_published %></td>  
                <td ><i style="cursor:pointer;" class="fa-solid fa-trash-arrow-up deleteModal"  data-toggle='modal' data-toggle='tooltip' data-target="#deletModal" title = 'Delete' width="2%" ></i>&ensp;
                <i style="cursor:pointer;" class="fa-solid fa-pencil editEventModal" data-toggle='modal' data-toggle='tooltip' data-target='#exampleModalCenter' title = 'Edit' width="2%"></i>&ensp;
                <i class="fa-solid fa-file-export" data-toggle='tooltip' title = 'Allocate Event Users' width="2%" ></i>&ensp;
                <i class="fa-solid fa-file-arrow-down" data-toggle='tooltip' title = 'Download Allocation Report' width="2%" ></i>&ensp;
                <i style="cursor:pointer;" class="fa-solid fa-book publishEvent" data-toggle="modal" data-toggle='tooltip' data-target="#publishModal" title = 'Publish' width="20%" ></i>&ensp;
-               <i class="fa-solid fa-download" data-toggle='tooltip' title = 'Download Preferences' width="2%" ></i>&ensp;
+               <a style="color:black;" href="<%- BASE_URL %>elective/viewPreferences?id=<%= event.id %>"><i class="fa-solid fa-eye" data-toggle='tooltip' title = 'View Preferences' width="2%" ></i></a>&ensp;
                <a style="text-decoration: none;color:black" href="<%- BASE_URL %>elective/addBasketPage?id=<%= event.id %>"><i class="fa-solid fa-cart-plus addBasket" data-toggle='tooltip' title = 'Add Basket' width="2%"></i></a>&ensp;
                <a style="text-decoration:none;color:black;" href="<%- BASE_URL %>elective/basketCourseConfig?id=<%= event.id %>" ><i class="fa-solid fa-book-bible" data-toggle='tooltip' width="2%" title="Add Basket Courses"></i></a>
             </td>     
@@ -129,7 +129,7 @@ document.addEventListener('click',(e) => {
         let eventId = document.querySelector('.confirmDelete').getAttribute('data-eventId');
         let obj = { eventId };
 
-        dynamicFetchApi(`${res.locals.BASE_URL}elective/deleteEvent`, 'POST', obj)
+        dynamicFetchApi(`<%- BASE_URL %>elective/deleteEvent`, 'POST', obj)
             .then(response => {
             if(response.status === 'error'){
              window.location.href= `${response.redirectTo}`;   
@@ -275,7 +275,7 @@ document.addEventListener('click',(e) => {
 
        let obj = {eventId,eventName,campus,startDate,endDate,semester,acad_year};
 
-       dynamicFetchApi(`${res.locals.BASE_URL}elective/editEvent`,'POST',obj)
+       dynamicFetchApi(`<%- BASE_URL %>elective/editEvent`,'POST',obj)
        .then(response => {
 
         if(response.status === 'error'){
@@ -284,6 +284,7 @@ document.addEventListener('click',(e) => {
         let editmodal =document.getElementById('successModal');
         editmodal.innerHTML = `<div><h4 style="text-align:center;">${response.message}</h4></div>`;
 
+        console.log(response);
         document.querySelector('[data-target="#exampleModal"]').click();
         }
 
