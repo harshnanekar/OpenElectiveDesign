@@ -37,4 +37,11 @@ module.exports = class ProgramQuery {
     }
     return pgPool.query(query);
   }
+  static checkProgramId(programId){
+    let query ={
+      text:`select program_id from program_master where program_id=$1`,
+      values:[programId]
+    }
+    return pgPool.query(query);
+  }
 };

@@ -3,6 +3,10 @@
 <head>
     <title>Add Programs</title>
     <%- include ('../partials/partial') %>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
+
     <style>
         body{
          background-color: whitesmoke;
@@ -269,123 +273,148 @@
   
     document.addEventListener('click', (e) => {
 
-      if(e.target.classList.contains('btnSubmit')){
-      
-      let program = document.getElementById('inputProgramName').value;
-      let campus = document.getElementById('inputCampus').value;
-      let programId = document.getElementById('inputProgramId').value;
+        if (e.target.classList.contains('btnSubmit')) {
 
-      let programNameValidation = programValidator(program);
-      let campusValidation =  campusValidator(campus);
-      let programIdValidation = programIdValidatior(programId); 
+          let program = document.getElementById('inputProgramName').value;
+          let campus = document.getElementById('inputCampus').value;
+          let programId = document.getElementById('inputProgramId').value;
 
-      console.log('campus------ ' , campusValidation);
-      console.log('program id validation:: ',programIdValidation);
+          let programNameValidation = programValidator(program);
+          let campusValidation = campusValidator(campus);
+          let programIdValidation = programIdValidatior(programId);
 
-      if(programNameValidation && campusValidation && programIdValidation){
+          console.log('campus------ ', campusValidation);
+          console.log('program id validation:: ', programIdValidation);
 
-       let obj = {program,campus,programId};
+          if (programNameValidation && campusValidation && programIdValidation) {
 
-       dynamicFetchApi(`<%- BASE_URL %>elective/insertprogramManually`,'POST', obj)
-      .then(responseData => {
-       if(responseData.status === 'error'){
-        window.location.href= `${responseData.redirectTo}`;  
-       }else{
+            let programObj = { programId };
 
-        if(responseData.status === 'success'){
-          window.location.href= `${responseData.redirectTo}`;  
-        }else{
-        let msg = document.getElementById('msgModal');
-        let modalPage = `<div><h4 style="text-align:center;">${responseData.message}</h4></div>`
-        msg.innerHTML = modalPage;
-        document.querySelector('[data-target="#messageModal"]').click();
+            dynamicFetchApi(`<%- BASE_URL %>elective/checkProgramId`, 'POST', programObj)
+              .then(response => {
+                console.log(response)
+                if (response.status === 'error') {
+                  window.location.href = `${response.redirectTo}`;
+                } else {
+                  let programError = document.getElementById('ProgramIdError');
+                  if (response.message != undefined) {
+                    programError.innerText = response.message;
+                  } else {
+                    programError.innerText = '';
+
+                    let obj = { program, campus, programId };
+
+                    dynamicFetchApi(`<%- BASE_URL %>elective/insertprogramManually`, 'POST', obj)
+                      .then(responseData => {
+                        if (responseData.status === 'error') {
+                          window.location.href = `${responseData.redirectTo}`;
+                        } else {
+
+                          if (responseData.status === 'success') {
+                            window.location.href = `${responseData.redirectTo}`;
+                          } else {
+                            let msg = document.getElementById('msgModal');
+                            let modalPage = `<div><h4 style="text-align:center;">${responseData.message}</h4></div>`
+                            msg.innerHTML = modalPage;
+                            document.querySelector('[data-target="#messageModal"]').click();
+                          }
+                        }
+                      });
+                  }
+                }
+              });
+          }
         }
-       }
-      });
-      }
-    }
-    })
-    
+      })
 
 
-    function campusValidator(campus){
-     
-      let campusData = document.querySelectorAll('#inputCampus');
-      let campusError = document.getElementById('campusError');
-  
-      let campusName = campusData[0][0].innerText;
-    
-      if(campusName == campus){
-      campusError.innerText = '*Invalid Input Field';  
-      console.log('Invalid campus');
-      return false;
-      }
 
-      campusError.innerText = '';
-      return true;
-    
-    }
+      function campusValidator(campus) {
 
-    function programValidator(program){
-      let prgError = document.getElementById('ProgramnameError');
-      if(program.length > 0){
-  
-       prgError.innerText = '';
-       let count =0;
-       for(let i =0; i<program.length;i++){
-        let prg = program.charAt(i);
-        if(prg >= 0 && prg <= 9){
-          count++;
+        let campusData = document.querySelectorAll('#inputCampus');
+        let campusError = document.getElementById('campusError');
+
+        let campusName = campusData[0][0].innerText;
+
+        if (campusName == campus) {
+          campusError.innerText = '*Invalid Input Field';
+          console.log('Invalid campus');
+          return false;
         }
-       } 
 
-       if(count == program.length){
-        prgError.innerText = '*Program Name Must Contain Alphabets Also';
-        return false;
-       }else{
-        prgError.innerText = '';
+        campusError.innerText = '';
         return true;
-       }
 
-
-      }else{
-        prgError.innerText = '*Required';
-        return false;
-      }
-    }
-
-    function programIdValidatior(programId){
-
-      let programError = document.getElementById('ProgramIdError');
-
-      if(programId.length > 0){
-        
-      let programIdValidate = specialCharacterValidation(programId);
-
-      if(programIdValidate){
-        programError.innerText = '';
-        return true; 
-
-      }else{
-       programError.innerText = '*Invalid Input Field'; 
-       return false;
       }
 
-      }else{
-        programError.innerText = '*Required';
-        return false;
+      function programValidator(program) {
+        let prgError = document.getElementById('ProgramnameError');
+        if (program.length > 0) {
+
+          prgError.innerText = '';
+          let count = 0;
+          for (let i = 0; i < program.length; i++) {
+            let prg = program.charAt(i);
+            if (prg >= 0 && prg <= 9) {
+              count++;
+            }
+          }
+
+          if (count == program.length) {
+            prgError.innerText = '*Program Name Must Contain Alphabets Also';
+            return false;
+          } else {
+            prgError.innerText = '';
+            return true;
+          }
+
+
+        } else {
+          prgError.innerText = '*Required';
+          return false;
+        }
       }
-    }
 
-    document.addEventListener('click',(e) => {
-      if(e.target.classList.contains('excelDataCancel')){
-      cancelButtonRedirect(`<%- BASE_URL %>elective/dashboard`);
+      function programIdValidatior(programId) {
+
+        let programError = document.getElementById('ProgramIdError');
+
+        if (programId.length > 0) {
+
+          let programIdValidate = specialCharacterValidation(programId);
+
+          if (programIdValidate) {
+            programError.innerText = '';
+            return true;
+
+          } else {
+            programError.innerText = '*Invalid Input Field';
+            return false;
+          }
+
+        } else {
+          programError.innerText = '*Required';
+          return false;
+        }
       }
-    });
+
+      document.addEventListener('click', (e) => {
+        if (e.target.classList.contains('excelDataCancel')) {
+          cancelButtonRedirect(`<%- BASE_URL %>elective/dashboard`);
+        }
+      });
+
+      window.onpageshow = function (event) {
+        if (event.persisted) {
+          window.location.reload();
+        }
+      };
+
+      window.onpopstate = function () {
+        window.location.reload();
+      };
 
 
-  
-    
 
 
 
@@ -393,5 +422,8 @@
 
 
 
-</script>
+
+
+    </script>
+
 </html>
