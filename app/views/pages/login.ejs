@@ -273,7 +273,11 @@ font-family: 'Poppins', sans-serif;
          let obj = {username,otp}; 
          dynamicFetchApi('<%- BASE_URL %>elective/checkOtpFromUser','POST',obj)
          .then(response => {
-          console.log(response);
+          if(response.status === 'error'){
+           window.location.href=`${response.redirectTo}`;
+          }else{
+            
+          } 
          })
         }
       }

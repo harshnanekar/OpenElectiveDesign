@@ -2,10 +2,9 @@ let query = require("../queries/user.js");
 const { get } = require("../router/route.js");
 const jwt = require("jsonwebtoken");
 const jwtauth = require("../middleware/request.js");
-const passwordClass = require('../middleware/password.js');
-const {redisDb} = require("../config/database.js");
+const passwordClass = require("../middleware/password.js");
+const { redisDb } = require("../config/database.js");
 const mail = require("../controller/email.js");
-
 
 module.exports = {
   loginPage: async function (req, res) {
@@ -181,5 +180,5 @@ module.exports = {
         redirectTo: `${res.locals.BASE_URL}elective/error`,
       });
     }
-  },
+  }
 };
