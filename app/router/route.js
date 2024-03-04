@@ -62,6 +62,6 @@ apiRouter.post('/deletEventBasket',middleware.verifyRequest,basketController.del
 apiRouter.post('/checkBasketAbbr',middleware.verifyRequest,basketController.checkBasketAbbr);
 apiRouter.post('/insertStudentCourses',middleware.verifyRequest,studentController.insertStudentCourses);
 apiRouter.post('/assignedBasketCourse',middleware.verifyRequest,basketController.assignedBasketCourse);
-
+apiRouter.post('/checkProgramId',middleware.verifyRequest,programController.checkProgramId);
 
 module.exports = apiRouter;

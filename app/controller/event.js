@@ -526,8 +526,10 @@ let controller = {
         startDate != undefined &&
         endDate != undefined
       ) {
-        let start_date = startDate.split("T")[0];
-        let end_date = endDate.split("T")[0];
+        let start_date = startDate.split("T");
+        let end_date = endDate.split("T");
+
+        console.log('start_date ',startDate,'end_date',endDate)
 
         if (role === "Role_Admin") {
           let eventObj = {

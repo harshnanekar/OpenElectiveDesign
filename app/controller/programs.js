@@ -255,4 +255,21 @@ module.exports = {
       return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/error` });
     }
   },
+
+  checkProgramId : async (req,res) => {
+    try{
+    let {programId} = req.body;
+    
+    let checkProgramid = await programQuery.checkProgramId(programId);
+
+    if(checkProgramid.rowCount > 0){
+      return res.json({status:'success',message:'*Program Id Must Be Unique'});
+    }else{
+      return res.json({message:undefined});
+    }
+    }catch(error){
+      console.log(error);
+      return res.json({ status: "error", redirectTo: `${res.locals.BASE_URL}elective/error` }); 
+    }
+  }
 };
