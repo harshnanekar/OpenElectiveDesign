@@ -31,7 +31,41 @@ const a = class data{
         }
     }
 
-  
+    static async checkUser(username){
+      let query ={
+        text:`select username,email from user_info where username=$1 and active=true`,
+        values:[username]
+      }
+      return pgPool.query(query);  
+    }
+
+    static insertOtp(username,otp){
+    let query ={
+      text:`insert into user_otp(username,otp,otp_time,created_date,createdby,modified_date,modifiedby,active)
+      values($1,$2,now(),now(),$3,now(),$4,true)`,
+      values:[username,otp,username,username]
+    }
+    return pgPool.query(query);    
+    }
+
+    static checkOtpTime(username,otp){
+     let query = {
+      text:`SELECT *,
+      CASE 
+          WHEN EXTRACT(EPOCH FROM (NOW() - otp_time)) / 60 <= 5 THEN 'Valid'
+          ELSE 'Expired' 
+      END AS otp_status 
+        FROM user_otp 
+        WHERE username=$1
+            AND otp=$2
+            AND DATE(created_date)=DATE(NOW()) 
+        ORDER BY otp_time DESC 
+        LIMIT 1`,
+      values:[username,otp]  
+     }
+     return pgPool.query(query);   
+    }
+
 }
 
 module.exports = a;

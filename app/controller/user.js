@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const jwtauth = require("../middleware/request.js");
 const passwordClass = require('../middleware/password.js');
 const {redisDb} = require("../config/database.js");
+const mail = require("../controller/email.js");
 
 
 module.exports = {
@@ -14,14 +15,13 @@ module.exports = {
       if (jwtreturn === "invalid") {
         res.render("login");
       } else {
-
-        redisDb.set('user',jwtreturn.username,'EX', 86400);
-        redisDb.set('role',jwtreturn.role[0].role_name,'EX', 86400);
+        redisDb.set("user", jwtreturn.username, "EX", 86400);
+        redisDb.set("role", jwtreturn.role[0].role_name, "EX", 86400);
 
         return res.redirect(`${res.locals.BASE_URL}elective/dashboard`);
       }
     } catch (err) {
-      console.log('error in login ',err.message);
+      console.log("error in login ", err.message);
       return res.redirect(`${res.locals.BASE_URL}elective/error`);
     }
   },
@@ -50,9 +50,9 @@ module.exports = {
           req.session.modules = querydata[0].username;
 
           let redisUser = querydata[0].username;
-          let redisRole = getUserRole[0].role_name
-          redisDb.set('user',redisUser, 'EX', 86400);
-          redisDb.set('role',redisRole, 'EX', 86400);
+          let redisRole = getUserRole[0].role_name;
+          redisDb.set("user", redisUser, "EX", 86400);
+          redisDb.set("role", redisRole, "EX", 86400);
 
           const user = querydata[0].username;
           const secretkey = process.env.JWT_SECRETKEY;
@@ -92,23 +92,25 @@ module.exports = {
       }
     } catch (err) {
       console.log(err.message);
-      return res.json({ status: "Error", redirectTo: `${res.locals.BASE_URL}elective/error` });
+      return res.json({
+        status: "error",
+        redirectTo: `${res.locals.BASE_URL}elective/error`,
+      });
     }
   },
 
   errorPage: async function (req, res) {
-    let username =  await redisDb.get('user');
+    let username = await redisDb.get("user");
     let getModules = await query.getModules(username);
     return res.render("500", { module: getModules });
   },
 
   dashboard: async function (req, res, next) {
     try {
-      let usermodules = await redisDb.get('user');
+      let usermodules = await redisDb.get("user");
 
-        let getModules = await query.getModules(usermodules);
-        return res.render("dashboard", { module: getModules });
-        
+      let getModules = await query.getModules(usermodules);
+      return res.render("dashboard", { module: getModules });
     } catch (err) {
       return res.redirect(`${res.locals.BASE_URL}elective/error`);
     }
@@ -118,13 +120,66 @@ module.exports = {
     try {
       req.session.destroy();
       res.clearCookie("jwtauth");
-      redisDb.del('user');
-      redisDb.del('role');
+      redisDb.del("user");
+      redisDb.del("role");
 
       return res.redirect(`${res.locals.BASE_URL}elective/loginPage`);
     } catch (err) {
       console.log(err.message);
       return res.redirect(`${res.locals.BASE_URL}elective/error`);
+    }
+  },
+
+  checkUsernameForOtp: async (req, res) => {
+    try {
+      console.log("mail config");
+      let { username } = req.body;
+
+      console.log("username: " + username);
+      let userDetails = await query.checkUser(username);
+      if (userDetails.rowCount > 0) {
+        min = Math.ceil(10000);
+        max = Math.floor(99999);
+        let otp = Math.floor(Math.random() * (max - min + 1) + min);
+
+        let sendMailTo = userDetails.rows.map((data) => data.email);
+        console.log("sendMailTo:: ", sendMailTo, otp);
+
+        let subject = "Otp To Reset Password";
+        let message = `Hello ${username}, your otp to reset password is ${otp}`;
+
+        Promise.all([
+          mail.sendMail(sendMailTo, subject, message),
+          query.insertOtp(username, otp),
+        ]).then(res.json({ status: "success", message: undefined }));
+      } else {
+        return res.json({ message: "*Invalid Username" });
+      }
+    } catch (error) {
+      console.log(error);
+      return res.json({
+        status: "error",
+        redirectTo: `${res.locals.BASE_URL}elective/error`,
+      });
+    }
+  },
+
+  checkOtpFromUser: async (req, res) => {
+    try {
+      let { username, otp } = req.body;
+      let checkOtpTime = await query.checkOtpTime(username, otp);
+
+      if (checkOtpTime.rowCount > 0) {
+        return res.json({ status: "success", message: checkOtpTime.rows });
+      } else {
+        return res.json({ message: "*Invalid Otp" });
+      }
+    } catch (error) {
+      console.log(error);
+      return res.json({
+        status: "Error",
+        redirectTo: `${res.locals.BASE_URL}elective/error`,
+      });
     }
   },
 };

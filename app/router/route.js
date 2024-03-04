@@ -63,5 +63,7 @@ apiRouter.post('/checkBasketAbbr',middleware.verifyRequest,basketController.chec
 apiRouter.post('/insertStudentCourses',middleware.verifyRequest,studentController.insertStudentCourses);
 apiRouter.post('/assignedBasketCourse',middleware.verifyRequest,basketController.assignedBasketCourse);
 apiRouter.post('/checkProgramId',middleware.verifyRequest,programController.checkProgramId);
+apiRouter.post('/checkUsernameForOtp',controller.checkUsernameForOtp);
+apiRouter.post('/checkOtpFromUser',controller.checkOtpFromUser); 
 
 module.exports = apiRouter;

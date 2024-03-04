@@ -132,9 +132,11 @@ font-family: 'Poppins', sans-serif;
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
-        <h5>Enter the Username</h5>&nbsp;
-        <input id="inputUser" type="text" class="form-control" placeholder="Username" />
+      <div class="modal-body pd-4">
+        <div id="mainBody">
+        <h6>Enter the Username</h6><p style="color:red;" id="unameError"></p>
+        <input id="inputUser" type="text" class="form-control" placeholder="Username" />&ensp;
+        </div>
         <hr>
         <div id="submitBtn">
         <buttton id="submitUser" class="btn btn-primary float-right">Submit</buttton>
@@ -160,7 +162,7 @@ font-family: 'Poppins', sans-serif;
 
         dynamicFetchApi(`<%- BASE_URL %>elective/login`,'POST',obj)
         .then(responseData => {
-        if(responseData.status === 'Error'){
+        if(responseData.status === 'error'){
          window.location.href=`${responseData.redirectTo}`;
         }else{
 
@@ -190,7 +192,7 @@ font-family: 'Poppins', sans-serif;
 
      dynamicFetchApi(`<%- BASE_URL %>elective/login`,'POST',obj)
      .then(responseData => {
-        if(responseData.status === 'Error'){
+        if(responseData.status === 'error'){
          window.location.href=`${responseData.redirectTo}`;
         }else{
 
@@ -214,13 +216,68 @@ font-family: 'Poppins', sans-serif;
 
     document.getElementById('submitUser').addEventListener('click',() => {
      let username = document.getElementById('inputUser').value;
-     let obj = {username};
+     console.log('username ',username)
+     let obj = {username:username};
 
-     dynamicFetchApi('/elective/checkUsernameForOtp','POST',obj)
-     .then(response => {
-      console.log(response);
+     dynamicFetchApi('<%- BASE_URL %>elective/checkUsernameForOtp', 'POST', obj)
+        .then(async response => {
+          if (response.status === 'error') {
+            window.location.href = `${response.redirectTo}`;
+          } else {
+
+            if (response.message != undefined) {
+              let errMessage = document.getElementById('unameError');
+              errMessage.innerText = response.message;
+            } else {
+              let body = document.getElementById('mainBody');
+              let otpInput = `<h6>Enter the Otp</h6><p class="otpError"></p>
+        <input type="text" class="form-control inputOtp" placeholder="Otp" />&ensp;`;
+
+              body.insertAdjacentHTML('beforeEnd', otpInput);
+              
+              let submitBtn = document.getElementById('submitBtn');
+              submitBtn.innerHTML = '';
+              submitBtn.innerHTML = `<buttton class="submitPass btn btn-primary float-right">Submit</buttton>`;
+            }
+          }
      })
     });
+
+    document.addEventListener('click',(e) => {
+     if(e.target.classList.contains('submitPass')){
+      let closestDiv = $(e.target).closest('div').prev();
+      let prevDiv =  $(closestDiv)[0].previousElementSibling;
+
+      let username = prevDiv.querySelector('#inputUser').value;
+      let otp = prevDiv.querySelector('.inputOtp').value;
+      let otpError =prevDiv.querySelector('.otpError');
+      let val;
+
+      if (otp.length > 0) {
+          let otpValidation = NumberValidation(otp);
+          if (otpValidation) {
+            otpError.innerText = '';
+            val = true;
+          } else {
+            otpError.innerText = '*Invalid Input';
+            val = false;
+          }
+
+        } else {
+          otpError.innerText = '*Required';
+          val = false;
+        }
+
+        if(otpValidation){
+
+         let obj = {username,otp}; 
+         dynamicFetchApi('<%- BASE_URL %>elective/checkOtpFromUser','POST',obj)
+         .then(response => {
+          console.log(response);
+         })
+        }
+      }
+    })
 
     errormessage();
     
