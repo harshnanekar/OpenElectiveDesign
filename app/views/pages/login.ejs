@@ -230,7 +230,7 @@ font-family: 'Poppins', sans-serif;
               errMessage.innerText = response.message;
             } else {
               let body = document.getElementById('mainBody');
-              let otpInput = `<h6>Enter the Otp</h6><p class="otpError"></p>
+              let otpInput = `<h6>Enter the Otp</h6><p style="color:red;" class="otpError"></p>
         <input type="text" class="form-control inputOtp" placeholder="Otp" />&ensp;`;
 
               body.insertAdjacentHTML('beforeEnd', otpInput);
@@ -268,17 +268,40 @@ font-family: 'Poppins', sans-serif;
           val = false;
         }
 
-        if(otpValidation){
+        if (val) {
 
-         let obj = {username,otp}; 
-         dynamicFetchApi('<%- BASE_URL %>elective/checkOtpFromUser','POST',obj)
-         .then(response => {
-          if(response.status === 'error'){
-           window.location.href=`${response.redirectTo}`;
-          }else{
-            
-          } 
-         })
+          let obj = { username, otp };
+          dynamicFetchApi('<%- BASE_URL %>elective/checkOtpFromUser', 'POST', obj)
+            .then(response => {
+              if (response.status === 'error') {
+                window.location.href = `${response.redirectTo}`;
+              } else {
+                let otpError = prevDiv.querySelector('.otpError');
+                if (response.otpStatus == false || response.otpStatus == true) {
+                  if (response.otpStatus == true) {
+                    otpError.innerText =response.message[0].otp_status;
+                    if (response.message[0].otp_status === 'Valid') {
+
+                      let body = document.getElementById('mainBody');
+                      let passInput = `<h6>Enter New Password</h6>
+                    <input type="text" class="form-control inputPass" placeholder="Password" />&ensp;`;
+
+                      body.insertAdjacentHTML('beforeEnd', passInput);
+
+                      let submitBtn = document.getElementById('submitBtn');
+                      submitBtn.innerHTML = '';
+                      submitBtn.innerHTML = `<buttton class="submitReset btn btn-primary float-right">Submit</buttton>`;
+                   
+                      console.log("check otp status ",response.message[0].otp_status)
+                    } else {
+                      otpError.innerText = response.message[0].otp_status;
+                    }
+                  }
+                  otpError.innerText = response.message;
+                }
+              }
+
+            })
         }
       }
     })

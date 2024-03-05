@@ -53,7 +53,7 @@ const a = class data{
       text:`SELECT *,
       CASE 
           WHEN EXTRACT(EPOCH FROM (NOW() - otp_time)) / 60 <= 5 THEN 'Valid'
-          ELSE 'Expired' 
+          ELSE 'Otp Expired' 
       END AS otp_status 
         FROM user_otp 
         WHERE username=$1

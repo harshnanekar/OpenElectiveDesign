@@ -169,9 +169,9 @@ module.exports = {
       let checkOtpTime = await query.checkOtpTime(username, otp);
 
       if (checkOtpTime.rowCount > 0) {
-        return res.json({ status: "success", message: checkOtpTime.rows });
+        return res.json({ otpStatus: true, message: checkOtpTime.rows });
       } else {
-        return res.json({ message: "*Invalid Otp" });
+        return res.json({ otpStatus: false,message: "*Invalid Otp" });
       }
     } catch (error) {
       console.log(error);
