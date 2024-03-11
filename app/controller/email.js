@@ -14,6 +14,7 @@ module.exports = class Email{
       body: body ? JSON.stringify(body) : undefined  
     }
 
+    console.log('fetch for mail')
     const response = await fetch(`${mailUrl}/send-email`,requestDetails)
     console.log('response::::: ',response);
     return response;
