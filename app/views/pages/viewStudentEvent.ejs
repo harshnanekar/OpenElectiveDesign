@@ -42,9 +42,9 @@
          <% let sdate = eventRow.startdate; %>
          <% const date = sdate.toISOString().slice(0, 10); const time = sdate.toTimeString().slice(0, 8); %>
          <td><%= date %><%= " " %><%= time %></td>
-         <% let edate = eventRow.end_dates; %>
+         <% let edate = eventRow.end_date; %>
          <% const dates = edate.toISOString().slice(0, 10); const times = edate.toTimeString().slice(0, 8); %>
-         <td id="eventEnd"><%= dates %><%= " " %><%= times %></td>
+         <td><%= dates %><%= " " %><%= times %></td>
          <td>
          <a href="<%- BASE_URL %>elective/startCourseSelection?id=<%= eventRow.id %>"><i style="cursor:pointer;text-decoration:none;color: black;" class="fa-solid fa-hand-pointer" data-toggle="tooltip" title="Start Selection" ></i></a>   
          </td>

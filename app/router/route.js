@@ -34,6 +34,9 @@ apiRouter.get('/viewPreferences',middleware.verifyRequest,eventController.viewPr
 apiRouter.get('/viewBasketPreference',middleware.verifyRequest,eventController.viewBasketPreference);
 apiRouter.get('/createExcelPreference',middleware.verifyRequest,eventController.createExcelPreference);
 
+//testing
+apiRouter.get('/getSvelte',controller.getSvelte)
+
 
 //Post Requests
 apiRouter.post('/login',controller.login);
@@ -65,5 +68,6 @@ apiRouter.post('/assignedBasketCourse',middleware.verifyRequest,basketController
 apiRouter.post('/checkProgramId',middleware.verifyRequest,programController.checkProgramId);
 apiRouter.post('/checkUsernameForOtp',controller.checkUsernameForOtp);
 apiRouter.post('/checkOtpFromUser',controller.checkOtpFromUser); 
+apiRouter.post('/resetPass',controller.resetPass);
 
 module.exports = apiRouter;

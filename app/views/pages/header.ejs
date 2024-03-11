@@ -38,7 +38,7 @@ box-sizing: border-box;
   color: black;
 }
 </style>
-
+<%- include('messageModal.ejs') %>
 <div id="header">
 
     <div class="headersection" style="display:flex;align-items: center;">
@@ -58,7 +58,7 @@ box-sizing: border-box;
     </a>
   
     <div style="position:relative;top:10%;" class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-      <a class="dropdown-item" href="#"><i class="fa-solid fa-user-gear"></i>&nbsp;Change Password</a>
+      <a class="dropdown-item" href="#"><i class="fa-solid fa-user"></i>&nbsp;View Profile</a>
       <a class="dropdown-item" href="<%- BASE_URL %>elective/logout"><i class="fa-solid fa-right-from-bracket"></i>&nbsp;Logout</a>
     </div>
   </div>
@@ -67,7 +67,5 @@ box-sizing: border-box;
 </div>
 </div>
 
-<script>
-   
 
-  </script>
+  

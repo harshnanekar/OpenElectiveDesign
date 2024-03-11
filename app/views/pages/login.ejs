@@ -87,7 +87,7 @@ font-family: 'Poppins', sans-serif;
 
 </head>
 <body>
-
+  <%- include('messageModal.ejs') %>
   <div id="commonDisplayMessage">
     <span id="showMessage"></span> 
    <button class="fa fa-close closeBtn" id= "closebutton" style="font-size:24px" ></button>
@@ -134,12 +134,14 @@ font-family: 'Poppins', sans-serif;
       </div>
       <div class="modal-body pd-4">
         <div id="mainBody">
+          <div>
         <h6>Enter the Username</h6><p style="color:red;" id="unameError"></p>
         <input id="inputUser" type="text" class="form-control" placeholder="Username" />&ensp;
-        </div>
+         </div>
+      </div>
         <hr>
         <div id="submitBtn">
-        <buttton id="submitUser" class="btn btn-primary float-right">Submit</buttton>
+        <buttton class="submitUser btn btn-primary float-right">Submit</buttton>
         </div>
       </div>
     </div>
@@ -148,7 +150,10 @@ font-family: 'Poppins', sans-serif;
   
 </body>
 <%- include ('../partials/partial2') %>
+<%- include('resetPassword.ejs') %>
+
 <script src= "../js/script.js" ></script>
+
 <script>
 
     //For Enter Button for Login
@@ -162,13 +167,15 @@ font-family: 'Poppins', sans-serif;
 
         dynamicFetchApi(`<%- BASE_URL %>elective/login`,'POST',obj)
         .then(responseData => {
-        if(responseData.status === 'error'){
+        if(responseData.status === 'Error'){
          window.location.href=`${responseData.redirectTo}`;
         }else{
 
         if(responseData.status === 'success'){
+          console.log(responseData)
         window.location.href = responseData.redirectTo;
         }else{
+          console.log(responseData)
         let displayMessage = document.getElementById('commonDisplayMessage');
         let showMessage = document.getElementById('showMessage');
         let message = responseData.message;
@@ -192,7 +199,7 @@ font-family: 'Poppins', sans-serif;
 
      dynamicFetchApi(`<%- BASE_URL %>elective/login`,'POST',obj)
      .then(responseData => {
-        if(responseData.status === 'error'){
+        if(responseData.status === 'Error'){
          window.location.href=`${responseData.redirectTo}`;
         }else{
 
@@ -214,98 +221,136 @@ font-family: 'Poppins', sans-serif;
 
     });
 
-    document.getElementById('submitUser').addEventListener('click',() => {
-     let username = document.getElementById('inputUser').value;
-     console.log('username ',username)
-     let obj = {username:username};
+//     document.addEventListener('click',(e) => {
 
-     dynamicFetchApi('<%- BASE_URL %>elective/checkUsernameForOtp', 'POST', obj)
-        .then(async response => {
-          if (response.status === 'error') {
-            window.location.href = `${response.redirectTo}`;
-          } else {
+//     if(e.target.classList.contains('submitUser')){
 
-            if (response.message != undefined) {
-              let errMessage = document.getElementById('unameError');
-              errMessage.innerText = response.message;
-            } else {
-              let body = document.getElementById('mainBody');
-              let otpInput = `<h6>Enter the Otp</h6><p style="color:red;" class="otpError"></p>
-        <input type="text" class="form-control inputOtp" placeholder="Otp" />&ensp;`;
+//       let username = document.getElementById('inputUser').value;
+//      console.log('username ',username)
+//      let obj = {username:username};
 
-              body.insertAdjacentHTML('beforeEnd', otpInput);
+//      dynamicFetchApi('<%- BASE_URL %>elective/checkUsernameForOtp', 'POST', obj)
+//         .then(response => {
+//           if (response.status === 'error') {
+//             window.location.href = `${response.redirectTo}`;
+//           } else {
+
+//             if (response.message != undefined) {
+//               let errMessage = document.getElementById('unameError');
+//               errMessage.innerText = response.message;
+//             } else {
+//               let body = document.getElementById('mainBody');
+//               let otpInput = `<div><h6>Enter the Otp</h6><p style="color:red;" class="otpError"></p>
+//         <input type="text" class="form-control inputOtp" placeholder="Otp" /></div>&ensp;`;
+
+//               body.insertAdjacentHTML('beforeEnd', otpInput);
               
-              let submitBtn = document.getElementById('submitBtn');
-              submitBtn.innerHTML = '';
-              submitBtn.innerHTML = `<buttton class="submitPass btn btn-primary float-right">Submit</buttton>`;
-            }
-          }
-     })
-    });
+//               let submitBtn = document.getElementById('submitBtn');
+//               submitBtn.innerHTML = '';
+//               submitBtn.innerHTML = `<buttton class="submitPass btn btn-primary float-right">Submit</buttton>`;
+//             }
 
-    document.addEventListener('click',(e) => {
-     if(e.target.classList.contains('submitPass')){
-      let closestDiv = $(e.target).closest('div').prev();
-      let prevDiv =  $(closestDiv)[0].previousElementSibling;
+//           }
+//      })
+//     }
 
-      let username = prevDiv.querySelector('#inputUser').value;
-      let otp = prevDiv.querySelector('.inputOtp').value;
-      let otpError =prevDiv.querySelector('.otpError');
-      let val;
+//      if(e.target.classList.contains('submitPass')){
 
-      if (otp.length > 0) {
-          let otpValidation = NumberValidation(otp);
-          if (otpValidation) {
-            otpError.innerText = '';
-            val = true;
-          } else {
-            otpError.innerText = '*Invalid Input';
-            val = false;
-          }
+//       let closestDiv = $(e.target).closest('div').prev();
+//       let prevDiv =  $(closestDiv)[0].previousElementSibling;
 
-        } else {
-          otpError.innerText = '*Required';
-          val = false;
-        }
+//       let username = prevDiv.querySelector('#inputUser').value;
+//       let otp = prevDiv.querySelector('.inputOtp').value;
+//       let otpError =prevDiv.querySelector('.otpError');
+//       let val;
 
-        if (val) {
+//       if (otp.length > 0) {
+//           let otpValidation = NumberValidation(otp);
+//           if (otpValidation) {
+//             otpError.innerText = '';
+//             val = true;
+//           } else {
+//             otpError.innerText = '*Invalid Input';
+//             val = false;
+//           }
 
-          let obj = { username, otp };
-          dynamicFetchApi('<%- BASE_URL %>elective/checkOtpFromUser', 'POST', obj)
-            .then(response => {
-              if (response.status === 'error') {
-                window.location.href = `${response.redirectTo}`;
-              } else {
-                let otpError = prevDiv.querySelector('.otpError');
-                if (response.otpStatus == false || response.otpStatus == true) {
-                  if (response.otpStatus == true) {
-                    otpError.innerText =response.message[0].otp_status;
-                    if (response.message[0].otp_status === 'Valid') {
+//         } else {
+//           otpError.innerText = '*Required';
+//           val = false;
+//         }
 
-                      let body = document.getElementById('mainBody');
-                      let passInput = `<h6>Enter New Password</h6>
-                    <input type="text" class="form-control inputPass" placeholder="Password" />&ensp;`;
+//         if (val) {
 
-                      body.insertAdjacentHTML('beforeEnd', passInput);
+//           let obj = { username, otp };
+//           dynamicFetchApi('<%- BASE_URL %>elective/checkOtpFromUser', 'POST', obj)
+//             .then(response => {
+//               if (response.status === 'error') {
+//                 window.location.href = `${response.redirectTo}`;
+//               } else {
+//                 if (response.otpStatus == false) {
+//                   otpError.innerText = response.message;
+//                 }  
+//                   if (response.otpStatus == true) {
+                
+//                     if (response.message[0].otp_status === 'Valid') {
 
-                      let submitBtn = document.getElementById('submitBtn');
-                      submitBtn.innerHTML = '';
-                      submitBtn.innerHTML = `<buttton class="submitReset btn btn-primary float-right">Submit</buttton>`;
+//                       let body = document.getElementById('mainBody');
+//                       let passInput = `<div><h6>Enter New Password</h6>
+//                     <input type="password" class="form-control inputPass" placeholder="Password" /></div>&nbsp;`;
+
+//                       body.insertAdjacentHTML('beforeEnd', passInput);
+
+//                       let submitBtn = document.getElementById('submitBtn');
+//                       submitBtn.innerHTML = '';
+//                       submitBtn.innerHTML = `<buttton class="submitReset btn btn-primary float-right" data-dismiss="modal">Submit</buttton>`;
                    
-                      console.log("check otp status ",response.message[0].otp_status)
-                    } else {
-                      otpError.innerText = response.message[0].otp_status;
-                    }
-                  }
-                  otpError.innerText = response.message;
-                }
-              }
+//                       console.log("check otp status ",response.message[0].otp_status)
+//                     } else {
+//                       otpError.innerText = response.message[0].otp_status;
+//                     }
+//                   }
+              
+//                 }
+//               })
+//               }
+//             }
 
-            })
-        }
-      }
-    })
+//           if(e.target.classList.contains('submitReset')){
+//           let username = document.getElementById('inputUser').value;
+//           let closestDiv = $(e.target).closest('div').prev();
+//           let prevDiv =  $(closestDiv)[0].previousElementSibling;
 
+//           let otp = prevDiv.querySelector('.inputOtp').value;
+//           let password = prevDiv.querySelector('.inputPass').value;
+
+//           let obj = {username,otp,password};
+//           dynamicFetchApi('<%- BASE_URL %>elective/resetPass','POST',obj)
+//           .then(response => {
+//             if(response.status === 'error'){
+//               window.location.href=`${response.redirectTo}`; 
+//             }else{
+
+//               let modalBody = document.getElementById('msgModal');
+//               let modalPage = `<div><h4 style="text-align:center;">${response.message}</h4></div>`
+//               modalBody.innerHTML = modalPage;
+//               document.querySelector('[data-target="#messageModal"]').click();
+//             } 
+ 
+//           })
+//           }
+
+//           if(e.target.classList.contains('messageOkModal')){ 
+//             let username =  document.getElementById('inputUser');
+//             username.value = '';
+
+//             let body = document.getElementById('mainBody');
+//             body.removeChild(body.lastElementChild);
+//             body.removeChild(body.lastElementChild);
+//           }
+// })
+  
+      
+      
     errormessage();
     
     //Displaying Error Message

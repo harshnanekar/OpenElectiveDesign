@@ -66,6 +66,34 @@ const a = class data{
      return pgPool.query(query);   
     }
 
+    static updatePassword(username,password) {
+     let query = {
+      text:`update user_info set password=$1 where username=$2`, 
+      values:[password,username] 
+     }
+     return pgPool.query(query);   
+    }
+
+    //testing
+    static getStudentForTest(acadLid){
+        console.log('query called');
+        let query = {
+            text:`select * from student_info where acad_session = $1`,
+            values:[acadLid]
+        }
+        return pgPool.query(query);
+    }
+
+    //testing
+    static insertStudentForAllocationTesting(userlid,basketlid,subjectlid,eventlid,electiveNo,subjectPref){
+     let query={
+      text:`insert into student_sub_allocation(user_lid,basket_lid,subject_lid,event_lid,elective_no,sub_pref,created_date,modified_date,createdby,modifiedby,active)
+      values($1,$2,$3,$4,$5,$6,now(),now(),'admin','admin',true)`,
+      values:[userlid,basketlid,subjectlid,eventlid,electiveNo,subjectPref]  
+     }   
+     return pgPool.query(query);
+    }
+
 }
 
 module.exports = a;

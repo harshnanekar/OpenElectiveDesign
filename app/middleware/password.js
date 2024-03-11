@@ -4,6 +4,13 @@ const scryptAsync = promisify(scrypt);
 
 module.exports = class Password {
 
+    
+    static async hashPassword(password) {
+        const buf = await scryptAsync(password, process.env.PASSWORD_SALT, 64);
+        return `${buf.toString('hex')}.${process.env.PASSWORD_SALT}`;
+    }
+
+
     static async comparePassword(storedPassword, suppliedPassword)  {
     
         const [hashedPassword, salt] = storedPassword.split('.');
