@@ -17,6 +17,72 @@
     tr:nth-child(odd) {
     background-color: white;
     }
+
+    .indeterminate-progress-bar {
+    /* Color */
+    background-color: #d1d5db;
+
+    /* Rounded border */
+    border-radius: 9999px;
+
+    /* Size */
+    height: 0.5rem;
+
+    position: relative;
+    overflow: hidden;
+}
+
+.indeterminate-progress-bar__progress {
+    /* Color */
+    background-color: red;
+
+    /* Rounded border */
+    border-radius: 9999px;
+
+    /* Absolute position */
+    position: absolute;
+    bottom: 0;
+    top: 0;
+    width: 50%;
+
+    /* Move the bar infinitely */
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    animation-name: indeterminate-progress-bar;
+}
+
+@keyframes indeterminate-progress-bar {
+    from {
+        left: -50%;
+    }
+    to {
+        left: 100%;
+    }
+}
+.loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.2); 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 999; 
+            display: none;
+        
+}
+#modalLoader{
+    background-color: white;
+    padding:50px;
+    width:20%;
+    margin:auto;
+    position:relative;
+    top:35%;
+}
+
+
     </style>
 </head>
 <body>
@@ -25,7 +91,19 @@
     <div id="main">
 
       <%- include('paginationHeader.ejs')  %>
+      <%- include('messageModal.ejs') %>
 
+
+      <div class="loading">
+        <div id="modalLoader">
+            <h2 style="text-align: center;">Allocating Event</h2>
+        </br>
+        <div class="indeterminate-progress-bar">
+            <div class="indeterminate-progress-bar__progress"></div>
+        </div>
+
+        </div>
+       </div>
 
         <table id="datatable" class="table text-center mt-4 table-bordered table-responsive-lg custom-pagination">
         <thead>
@@ -58,7 +136,7 @@
                <td id="eventPublish"><%= event.is_published %></td>  
                <td ><i style="cursor:pointer;" class="fa-solid fa-trash-arrow-up deleteModal"  data-toggle='modal' data-toggle='tooltip' data-target="#deletModal" title = 'Delete' width="2%" ></i>&ensp;
                <i style="cursor:pointer;" class="fa-solid fa-pencil editEventModal" data-toggle='modal' data-toggle='tooltip' data-target='#exampleModalCenter' title = 'Edit' width="2%"></i>&ensp;
-               <i class="fa-solid fa-file-export" data-toggle='tooltip' title = 'Allocate Event Users' width="2%" ></i>&ensp;
+               <i style="cursor:pointer;" class="fa-solid fa-file-export allocateEvents" data-toggle='tooltip' title = 'Allocate Event Users' width="2%" ></i>&ensp;
                <i class="fa-solid fa-file-arrow-down" data-toggle='tooltip' title = 'Download Allocation Report' width="2%" ></i>&ensp;
                <i style="cursor:pointer;" class="fa-solid fa-book publishEvent" data-toggle="modal" data-toggle='tooltip' data-target="#publishModal" title = 'Publish' width="20%" ></i>&ensp;
                <a style="color:black;" href="<%- BASE_URL %>elective/viewPreferences?id=<%= event.id %>"><i class="fa-solid fa-eye" data-toggle='tooltip' title = 'View Preferences' width="2%" ></i></a>&ensp;
@@ -320,6 +398,29 @@ document.addEventListener('click',(e) => {
           document.querySelector('[data-target="#exampleModal"]').click();
         }
       })
+  }
+
+  if(e.target.classList.contains('allocateEvents')){
+    let eventId = e.target.closest('tr').getAttribute('data-eid');
+    let loader = document.querySelector('.loading');
+    loader.style.display='block';
+
+    let obj = {eventId};
+
+    dynamicFetchApi('<%- BASE_URL %>elective/adminAllocatingEvents','POST',obj)
+    .then(response => {
+      loader.style.display='none';
+
+     if (response.status === 'error') {
+        window.location.href = `${response.redirectTo}`;
+      } else {
+        let msg = document.getElementById('msgModal');
+        let modalPage = `<div><h4 style="text-align:center;">${response.message}</h4></div>`
+        msg.innerHTML = modalPage;
+        document.querySelector('[data-target="#messageModal"]').click();
+      } 
+
+    })
   }
 
 })

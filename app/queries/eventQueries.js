@@ -97,6 +97,14 @@ const query = class EventQuery{
 
   }
 
+  static adminAllocatingEvents(eventId){
+   let query = {
+    text:`select allocate_course($1)`,
+    values:[eventId]
+   } 
+   return pgPool.query(query);
+  }
+
 
 }
 

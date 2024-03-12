@@ -69,5 +69,6 @@ apiRouter.post('/checkProgramId',middleware.verifyRequest,programController.chec
 apiRouter.post('/checkUsernameForOtp',controller.checkUsernameForOtp);
 apiRouter.post('/checkOtpFromUser',controller.checkOtpFromUser); 
 apiRouter.post('/resetPass',controller.resetPass);
+apiRouter.post('/adminAllocatingEvents',middleware.verifyRequest,eventController.adminAllocatingEvents);
 
 module.exports = apiRouter;

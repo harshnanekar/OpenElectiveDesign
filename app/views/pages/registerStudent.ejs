@@ -93,6 +93,8 @@
       .notes {
         margin-left: 0;
       }
+   
+
     </style>
 </head>
 
@@ -100,6 +102,8 @@
   <%- include('sidebar.ejs') %>
     <%- include('header.ejs') %>
       <div id="mains">
+
+        <%- include('loader.ejs') %>
 
         <div id="registerSuccess"></div>
         <%- include('messageModal.ejs') %>
@@ -122,8 +126,11 @@
 
 
             </div>
+         
+  
           </div>
 
+        
 </body>
 
 <%- include ('../partials/partial2') %>
@@ -246,12 +253,19 @@
           const formData = new FormData();
           formData.append('studentDetails', fileData);
 
+          let loader=document.querySelector('.overlay');
+          loader.style.display = 'block';
+
           dynamicExcelUploadFetch(`<%- BASE_URL %>elective/uploadStudentData`, 'POST', formData)
             .then(response => {
               console.log('Error Response: ', response.nonInserted);
               if (response.status === 'error') {
+
+                loader.style.display = 'none';
                 window.location.href = response.redirectTo;
               } else if (response.status === 'fileError') {
+
+                loader.style.display = 'none';
 
                 let msg = document.getElementById('msgModal');
                 let modalPage = `<div><h4 style="text-align:center;">${response.message}</h4></div>`
@@ -259,11 +273,14 @@
                 document.querySelector('[data-target="#messageModal"]').click();
 
               } else {
+                loader.style.display = 'none';
                 fileMessage(response);
               }
             });
 
         } else {
+
+          loader.style.display = 'none';
 
           let message = `File Format Should Be In Excel Only !!`;
           let msg = document.getElementById('msgModal');
@@ -300,13 +317,18 @@
         if (fnameVal && lnameVal && rollNoVal && campusVal && unameVal && yearVal && sessionVal) {
 
           let obj = { fname, lname, rollNo, campus, studUsername, acadYear, acadSession };
+          let loader=document.querySelector('.overlay');
+          loader.style.display = 'block';
+
+
           dynamicFetchApi(`<%- BASE_URL %>elective/registerStudentManually`, 'POST', obj)
             .then(responseData => {
               console.log('response----- ', responseData.status);
               if (responseData.status === 'error') {
+                loader.style.display = 'none';
                 window.location.href = responseData.redirectTo;
               } else {
-
+                loader.style.display = 'none';
                 let msg = document.getElementById('msgModal');
                 let modalPage = `<div><h4 style="text-align:center;">${responseData.message}</h4></div>`
                 msg.innerHTML = modalPage;

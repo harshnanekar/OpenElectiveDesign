@@ -44,8 +44,8 @@
         <%- include('header.ejs') %>
 
             <div id="mains">
-                <%- include('messageModal.ejs') %>
-
+     <%- include('messageModal.ejs') %>
+     <%- include('loader.ejs') %>
 
                     <div id='basketForm'>
                         <div class="form-row">
@@ -134,8 +134,12 @@
                 if (basketValidation && basketAbbrValidation) {
 
                     let basketobj = { basketAbbr };
+                    let loader=document.querySelector('.overlay');
+                    loader.style.display = 'block';
+
                     dynamicFetchApi(`<%- BASE_URL %>elective/checkBasketAbbr`, 'POST', basketobj)
                         .then(response => {
+                            loader.style.display = 'none';
                             if (response.status === 'error') {
                                 window.location.href = `${response.redirectTo}`;
                             } else {
@@ -153,6 +157,7 @@
                                     let obj = { basketName, basketAbbr, eventId };
                                     dynamicFetchApi(`<%- BASE_URL %>elective/createBasket`, 'POST', obj)
                                         .then(async response => {
+                                            loader.style.display = 'none';
                                             console.log('response:::: ', response.message);
                                             if (response.status === 'error') {
                                                 window.location.href = `${response.redirectTo}`;

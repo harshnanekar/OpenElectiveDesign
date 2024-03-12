@@ -1,0 +1,39 @@
+<style>
+   .spinner-3 {
+  width: 100px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: 
+    radial-gradient(farthest-side,red,94%,#0000) top/8px 8px no-repeat,
+    conic-gradient(#0000 30%,red);
+  -webkit-mask: radial-gradient(farthest-side,#0000 calc(100% - 8px),#000 0);
+  animation: s3 1s infinite linear;
+  position:relative;
+  top: 42%;
+  margin:auto;
+ 
+}
+
+@keyframes s3{ 
+  100%{transform: rotate(1turn)}
+}
+
+.overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.2); 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 999; 
+            display:none;
+        }
+
+</style>
+ <div class="overlay">
+          <div class="spinner-3"></div>
+        </div>
+

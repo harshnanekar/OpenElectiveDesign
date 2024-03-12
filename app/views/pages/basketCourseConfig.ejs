@@ -33,6 +33,8 @@
     <%- include('header.ejs')  %> 
     <div id="mains">
         <%- include('messageModal.ejs') %>
+        <%- include('loader.ejs') %>
+
         <div id='basketConfig' class="container col-md-12 col-lg-12 col-sm-12">
             <div class="form-group ">
 
@@ -175,9 +177,13 @@
                     if (basketValidation && coursesValidation && subjectValidation) {
 
                         let obj = { basketId, basketCourses, compulsorySub };
+
+                        let loader=document.querySelector('.overlay');
+                        loader.style.display = 'block'; 
                         
                        dynamicFetchApi(`<%- BASE_URL %>elective/insertBasketCourses`, 'POST', obj)
                             .then(response => {
+                                loader.style.display = 'none';
                                 if (response.status === 'error') {
                                     window.location.href = `${response.redirectTo}`;
                                 } else {

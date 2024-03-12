@@ -66,6 +66,7 @@
       <div id="mains">
 
         <%- include('messageModal.ejs') %>
+        <%- include('loader.ejs') %>
 
           <div class="eventNewDiv">
             <div class="eventForm">
@@ -155,17 +156,23 @@
       if(eventValidation && sessionValidation && yearValidation && campusValidation && startValidation && endValidation){
 
       let obj = { eventName, semester, acad_year, campus, start_date, end_date };
+      
+      let loader=document.querySelector('.overlay');
+      loader.style.display = 'block';
+
       dynamicFetchApi(`<%- BASE_URL %>elective/eventData`, 'POST', obj)
         .then(response => {
           console.log('Error ', response.message);
           if (response.status === 'error') {
+            loader.style.display = 'none';
             window.location.href = `<%- BASE_URL %>elective/loginPage`;
           } else {
 
             if (response.status === 'success') {
+              loader.style.display = 'none';
               window.location.href = response.redirectTo;
             } else {
-
+              loader.style.display = 'none';
               let msg = document.getElementById('msgModal');
               let modalPage = `<div><h4 style="text-align:center;">${response.message}</h4></div>`
               msg.innerHTML = modalPage;

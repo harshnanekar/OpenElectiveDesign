@@ -86,6 +86,7 @@
       <div id="main">
 
         <%- include('messageModal.ejs') %>
+        <%- include('loader.ejs') %>
 
           <div id="uploadOptions">
             <h3>Upload Course</h3>
@@ -327,8 +328,13 @@
 
         if (subjectValidate && departmentValidate && batchesValidate && batchCapacityValidate && minBatchValidator) {
           let obj = { subjectName, department, batches, batchCapacity,batchMinCapacity,campus, radioTypeValue };
+          let loader=document.querySelector('.overlay');
+          loader.style.display = 'block';
+
           dynamicFetchApi(`<%- BASE_URL %>elective/insertCourseManually`, 'POST', obj)
             .then(response => {
+              loader.style.display = 'none';
+
               if (response.status === 'error') {
                 window.location.href = `${response.redirectTo}`;
               } else {
@@ -366,8 +372,14 @@
           let formData = new FormData();
           formData.append('courseDetails', file);
 
+          let loader=document.querySelector('.overlay');
+          loader.style.display = 'block';
+
+
           dynamicExcelUploadFetch(`<%- BASE_URL %>elective/insertCourseViaExcel`, 'POST', formData)
             .then(async response => {
+              loader.style.display = 'none';
+
               if (response.status === 'error') {
                 window.location.href = `${response.redirectTo}`;
               }else if(response.status === 'fileError'){ 
@@ -388,6 +400,8 @@
             });
 
         } else {
+          loader.style.display = 'none';
+
           let messageDisplay = `File Must Be In Excel Format Only !!`;
 
           let msg = document.getElementById('msgModal');

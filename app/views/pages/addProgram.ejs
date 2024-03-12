@@ -87,6 +87,8 @@
     <div id="mains">
 
      <%- include('messageModal.ejs') %>
+     <%- include('loader.ejs') %>
+
 
      <div id= "uploadOptions" >
      <h3>Upload Programs</h3>
@@ -196,25 +198,31 @@
      const formData = new FormData();
      formData.append("programFile",fileData);
 
+     let loader=document.querySelector('.overlay');
+      loader.style.display = 'block';
+
      dynamicExcelUploadFetch(`<%- BASE_URL %>elective/insertProgramsViaExcel`,'POST',formData)
      .then(response => {
          if (response.status === 'error') {
+           loader.style.display = 'none';
            window.location.href = `${response.redirectTo}`;
 
          } else if (response.status === 'fileError') {
-
+            loader.style.display = 'none';
            let msg = document.getElementById('msgModal');
            let modalPage = `<div><h4 style="text-align:center;">${response.message}</h4></div>`
            msg.innerHTML = modalPage;
            document.querySelector('[data-target="#messageModal"]').click();
 
          } else {
+           loader.style.display = 'none';
            messageDisplay(response);
          }  
      });
 
      }else{
       
+      loader.style.display = 'none';
       let message = `File Must Be In Excel Format Only !!`;
 
       let msg = document.getElementById('msgModal');
@@ -290,8 +298,12 @@
 
             let programObj = { programId };
 
+            let loader=document.querySelector('.overlay');
+            loader.style.display = 'block';
+
             dynamicFetchApi(`<%- BASE_URL %>elective/checkProgramId`, 'POST', programObj)
               .then(response => {
+                loader.style.display = 'none';
                 console.log(response)
                 if (response.status === 'error') {
                   window.location.href = `${response.redirectTo}`;
@@ -306,6 +318,7 @@
 
                     dynamicFetchApi(`<%- BASE_URL %>elective/insertprogramManually`, 'POST', obj)
                       .then(responseData => {
+                        loader.style.display = 'none';
                         if (responseData.status === 'error') {
                           window.location.href = `${responseData.redirectTo}`;
                         } else {

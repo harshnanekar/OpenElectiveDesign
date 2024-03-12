@@ -656,6 +656,31 @@ let controller = {
       return res.redirect(`${res.locals.BASE_URL}elective/error`);
     }
   },
+
+  adminAllocatingEvents : async (req,res) => {
+ 
+    try {
+
+      let {eventId} = req.body;
+      let result = await eventQuery.adminAllocatingEvents(eventId);
+
+      if(result.rowCount > 0){
+       return res.json({status:'success',message:'Event Allocated Succesfully !!'});
+      }else{
+       return res.json({message:'Failed To Allocate Event !!'});
+      }
+      
+    } catch (error) {
+      console.log(error);
+      return res.json({
+      status: "error",
+      redirectTo: `${res.locals.BASE_URL}elective/error`,
+      });
+    }
+
+  }
+
+
 };
 
 
