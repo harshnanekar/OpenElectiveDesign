@@ -15,8 +15,12 @@
     <div id="main">
         <% childModules.forEach(data => { %>
             <div id="mainDiv">
+                <a id="horizontalModule"  href="<%= data.url %>">
+                <div style="display: flex;justify-content: center;">
                 <img src="<%= data.photo %>" style= "width:15%;" />&ensp;
-            <a id="horizontalModule" href="<%= data.url %>"><%= data.module_name %></a>
+                <p><%= data.module_name %></p>
+                </div>
+                </a>
             </div>
           <% }); %>
     </div>

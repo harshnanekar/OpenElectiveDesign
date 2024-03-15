@@ -201,14 +201,23 @@ let controller = {
           let excelKeys = getData[0];
           let excelHeader = Object.keys(excelKeys);
 
+          console.log('length of object ',Object.keys(programJson).length,excelHeader.length)
+
+          if(Object.keys(programJson).length == excelHeader.length){
           for (let data of excelHeader) {
             if (!Object.values(programJson).includes(data)) {
               return res.json({
                 status: "fileError",
-                message: "Malformed Excel File !!",
+                message: "Invalid Excel Format !!",
               });
             }
           }
+        }else{
+          return res.json({
+            status: "fileError",
+            message: "Invalid Excel Format !!",
+          });
+        }
 
           getData.forEach(async (data) => {
             let excelStudentUname = new String(data.Username);

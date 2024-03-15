@@ -50,11 +50,15 @@ module.exports = {
            let excelHeaderKeys = excelData[0];
            let excelHeader =Object.keys(excelHeaderKeys);
 
+           if(Object.keys(courseExcel).length == excelHeader.length){
            for (let data of excelHeader) {
             if (!Object.values(courseExcel).includes(data)) {
-                return res.json({ status: 'fileError', message: 'Malformed Excel File !!' });
+                return res.json({ status: 'fileError', message: 'Invalid Excel Format !!' });
             }
-          }
+           }
+           }else{
+            return res.json({ status: 'fileError', message: 'Invalid Excel Format!!' });
+           }
 
             excelData.forEach(async (data) => {
               let subName = new String(data.Subject_Name);

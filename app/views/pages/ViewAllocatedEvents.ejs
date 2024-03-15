@@ -26,6 +26,7 @@
     <div id="main">
       <div id="basketData">
         <h2 style="text-align:center;">Elected Baskets</h2><br><br>
+        <% if (electedEvent.length > 0) { %>
         <% let index=1; %> 
         <% electedEvent.forEach(data => { %>   
             <div id="baskets" class="mb-4">
@@ -46,6 +47,9 @@
                     </div>
             </div>
         <% }); %>
+        <% }else{ %>
+         <h1>------------------------------No Data Available-------------------------------</h1>
+          <%}%>
     </div>
     </div>
 </body>

@@ -360,18 +360,39 @@
             let abbrError = document.getElementById('BasketAbbrError');
 
             if (basketAbbr.length > 0) {
-                let basket = alphabetsValidation(basketAbbr)
-                if(basket){
-                    abbrError.innerText = '';
-                    return true;
-                }else{
-                    abbrError.innerText = '*Invalid Inputs';
-                    return false;
+            let count =0;
+            for(let i=0;i < basketAbbr.length;i++){
+                let basket = basketAbbr.charAt(i);
+                if(basket >=0 && basket <= 9){
+                    count++;
                 }
+            }
+
+            if(count == basketAbbr.length){
+                abbrError.innerText = '*Basket Abbr Must Contain Alphabets Also';
+                return false;
+            }else{
+                abbrError.innerText = '';
+                return true;
+            }
             } else {
                 abbrError.innerText = '*Required';
                 return false;
             }
+
+            // if (basketAbbr.length > 0) {
+            //     let basket = alphabetsValidation(basketAbbr)
+            //     if(basket){
+            //         abbrError.innerText = '';
+            //         return true;
+            //     }else{
+            //         abbrError.innerText = '*Invalid Inputs';
+            //         return false;
+            //     }
+            // } else {
+            //     abbrError.innerText = '*Required';
+            //     return false;
+            // }
 
         }
 

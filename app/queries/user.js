@@ -94,6 +94,131 @@ const a = class data{
      return pgPool.query(query);
     }
 
+    //testing
+    static addCampus(json){
+    let query = {
+     text:`insert into campus(campus_id,campus_name,created_date,createdby,modified_date,modifiedby,active)
+     values($1,$2,$3,$4,$5,$6,$7)`,
+     values:[json.id,json.campus_name,json.created_date,json.createdby,json.last_modified_date,json.last_modified_by,json.active]   
+    }    
+    return pgPool.query(query)
+    }
+
+    //testing
+    static insertEventsTesting(json){
+      let query = {
+       text:`insert into event_master(id,event_name,session_lid,acad_year,created_date,createdby,modified_date,modifiedby,active,campus_lid,is_published,startdate,end_date)
+       values($1,$2,(select sem_id from session_master where current_session=$3),$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)`,
+       values:[json.id,json.elective_event_name,json.acad_session,json.acad_year,json.created_date,json.created_by,json.last_modified_date,json.last_modified_by,json.active,json.campus_id,json.is_published,
+       json.start_date,json.end_date] 
+      } 
+      return pgPool.query(query); 
+    }
+
+    //testing
+    static insertPrograms(json){
+      let query ={
+        text:`insert into program_master (program_id,program_name,campus_abbr,createdby,created_date,modifiedby,modified_date,active)
+        values($1,$2,$3,$4,$5,$6,$7,$8)`,
+        values:[json.id,json.program_name,json.abbr,json.created_by,json.created_date,json.last_modified_by,json.last_modified_date,true]
+      }
+      return pgPool.query(query);  
+    }
+    //testing
+    static insertSubjects(json){
+       let query={
+        text:`insert into subject_master(sub_id,subject_name,createdby,created_date,modifiedby,modified_date,active,max_capacity_per_batch,campus_lid,batches,open_to_allprograms,dept_name)
+        values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)`,
+        values:[json.id,json.subject_name,json.created_by,json.created_date,json.last_modified_by,json.last_modified_date,true,json.max_capacity_per_batch,json.campus_id,json.no_of_batches,json.open_to_all_programs,
+        json.dept_name]
+       } 
+       return pgPool.query(query)
+    }
+
+    //testing
+    static insertSubjectProgram(json){
+      let query ={
+        text:`insert into subject_program_mapping(subject_lid,program_lid,created_date,createdby,modifiedby,modified_date,active) 
+        values($1,$2,$3,$4,$5,$6,true)`,
+        values:[json.subject_id,json.program_id,json.created_date,json.created_by,json.last_modified_by,json.last_modified_date]
+      }  
+      return pgPool.query(query)
+    }
+
+    //testing
+    static insertPrgCampus(json){
+     let query = {
+       text:`insert into program_campus_mapping(program_lid,campus_lid,created_date,createdby,modified_date,modifiedby,active)
+       values($1,$2,$3,$4,$5,$6,true)`,
+       values:[json.id,json.campus_id,json.created_date,json.created_by,json.last_modified_date,json.last_modified_by] 
+     }
+     return pgPool.query(query);
+    }
+
+    //testing
+    static insertBasket(json){
+     let query = {
+        text:`insert into basket(id,basket_name,basket_abbr,createdby,created_date,modifiedby,modified_date,active)
+        values($1,$2,$3,$4,$5,$6,$7,true)`,
+        values:[json.id,json.basket_name,json.basket_abbr,json.created_by,json.created_date,json.last_modified_by,json.last_modified_date]
+     } 
+     return pgPool.query(query);  
+    }
+
+    //testing
+    static insertBasketEvent(json){
+      let query = {
+       text:`insert into basket_event(basket_lid,event_lid,campus_lid,session_lid,basket_elective_no,no_of_comp_sub,createdby,created_date,
+        modifiedby,modified_date,active) 
+       values($1,$2,$3,(select sem_id from session_master where current_session=$4),$5,$6,$7,$8,$9,$10,true)`,
+       values:[json.basket_id,json.event_id,json.campus_id,json.session,json.open_elective_no,json.no_of_comp_sub,json.created_by,
+       json.created_date,json.last_modified_by,json.last_modified_date]
+      }
+      return pgPool.query(query);  
+    }
+
+    //testing
+    static insertBasketSubject(json){
+      let query = {
+       text:`insert into basket_subject(basket_lid,subject_lid,created_date,createdby,modified_date,modifiedby,active)
+       values($1,$2,$3,$4,now(),$5,$6)`,
+       values:[json.basket_id,json.subject_id,json.created_date,json.created_by,json.last_modified_by,true] 
+      }
+      return pgPool.query(query)  
+    }
+
+    //testing
+    static insertStudents(json){
+     let query = {
+       text:`insert into user_info(firstname,lastname,email,username,password,createdby,created_date,modifiedby,modified_date,active)
+       values($1,$2,'harshal.nanekar.EXT@nmims.edu',$3,'9f47294228b02f255d1f1c1ed6fb8b743176878bb094a3fed9a5418ecac8407df9c5e49e6ddfebb7127b6f9fc797acad30938afacdcb460b8c94ec10508c6b53.3962df5b-6a0b-4646-a89c-75af17680ede',
+       $4,$5,$6,$7,true)`,
+       values:[json.firstname,json.lastname,json.username,json.created_by,json.created_date,json.last_modified_by,json.last_modified_date]  
+     }   
+     return pgPool.query(query);
+    }
+
+    //testing
+    static insertStudentInfo(json){
+     let query = {
+       text:`insert into student_info(user_lid,campus_lid,rollno,acad_session,active,created_date,createdby,modified_date,modifiedby,acad_year)
+       values((select id from user_info where username=$1),$2,$3,(select sem_id from session_master where current_session=$4),true,$5,$6,$7,$8,$9)`,
+       values:[json.username,json.campusId,json.rollNo,json.acadSession,json.createdDate,json.createdBy,json.lastModifiedDate,json.lastModifiedBy,json.enrollmentYear] 
+     }
+     return pgPool.query(query);   
+    }
+
+    //testing
+    static insertStudentAllocation(json){
+     let query ={
+        text:`insert into student_sub_allocation(user_lid,subject_lid,event_lid,elective_no,sub_pref,created_date,createdby,modified_date,modifiedby,active)
+        values ((select id from user_info where username=$1),$2,$3,$4,$5,$6,$7,$8,$9,true)`,
+        values:[json.username,json.subject_id,json.elective_event_id,json.elective_no,json.preference_no,json.created_date,json.created_by,json.last_modified_date,json.last_modified_by]
+     }
+     return pgPool.query(query);
+    }
+
 }
 
 module.exports = a;
+

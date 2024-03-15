@@ -17,7 +17,7 @@ app.use((req, res, next) => {
   next();
 })
 
-app.use(express.json());
+app.use(express.json({limit :'30mb'}));
 app.use(express.urlencoded({ extended: true }));
 
 app.set("view engine", "ejs");
@@ -36,6 +36,10 @@ app.use(
 );
 
 app.use(nocache());
+app.use((req, res, next) => {
+  res.setHeader('Cache-Control', 'no-store, max-age=0');
+  next();
+});
 
 app.use('/elective',indexRouter);
 

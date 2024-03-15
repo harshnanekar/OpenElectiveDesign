@@ -71,4 +71,7 @@ apiRouter.post('/checkOtpFromUser',controller.checkOtpFromUser);
 apiRouter.post('/resetPass',controller.resetPass);
 apiRouter.post('/adminAllocatingEvents',middleware.verifyRequest,eventController.adminAllocatingEvents);
 
+//testing0
+apiRouter.post('/addCampus',controller.addCampus);
+
 module.exports = apiRouter;

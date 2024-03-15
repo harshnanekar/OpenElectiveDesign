@@ -62,12 +62,22 @@ module.exports = {
 
             let firstRow = excelData[0];
             let excelHeader = Object.keys(firstRow);
+            
 
-            for (let data of excelHeader) {
-  
-              if (!Object.values(programJson).includes(data)) {
-                  return res.json({ status: 'fileError', message: 'Malformed Excel File !!' });
+            if (Object.keys(programJson).length == excelHeader) {
+              for (let data of excelHeader) {
+                if (!Object.values(programJson).includes(data)) {
+                  return res.json({
+                    status: "fileError",
+                    message: "Invalid Excel Format !!",
+                  });
+                }
               }
+            } else {
+              return res.json({
+                status: "fileError",
+                message: "Invalid Excel Format !!",
+              });
             }
 
             let programArray = [];

@@ -246,5 +246,14 @@ module.exports = {
     } catch (error) {
       console.log(error.message);
     }
+  },
+
+  addCampus : async (req,res) => {
+    let {json} = req.body;
+    Array.from(json).forEach(async data => {
+      campus = await query.insertStudentAllocation(data)
+    })
+   
+      return res.json({'status':'Inserted Successfully'})
   }
 };
