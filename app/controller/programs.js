@@ -64,7 +64,7 @@ module.exports = {
             let excelHeader = Object.keys(firstRow);
             
 
-            if (Object.keys(programJson).length == excelHeader) {
+            if (Object.keys(programJson).length == excelHeader.length) {
               for (let data of excelHeader) {
                 if (!Object.values(programJson).includes(data)) {
                   return res.json({
@@ -91,12 +91,18 @@ module.exports = {
 
               let program = programName ? programName.trim() : undefined;
               let campus = campusName ? campusName.trim() : undefined;
-              let programId = program_id ? program_id.trim() : undefined;
+              let programsId = program_id ? program_id.trim() : undefined;
 
               let programValidation = program!=undefined ? validationController.programValidator(program): false;
               let campusValidation = campus!=undefined ? validationController.campusValidation(campus) : false;
-              let idValidation = programId!=undefined ? validationController.NumberValidation(programId) : false;
-
+              let idValidation = programsId!=undefined ? validationController.NumberValidation(programsId) : false;
+              let programId= parseInt(programsId)
+             
+              let checkProgramid = await programQuery.checkProgramId(programId);
+              if(checkProgramid.rowCount > 0){
+                return res.json({ message: "Program Id Must Be Unique !!" });
+              }
+             
               if (
                 programValidation &&
                 campusValidation &&

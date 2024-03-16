@@ -11,6 +11,8 @@
   }
   #DashboardTab{
     width:15%;
+    position:relative;
+    bottom:18px;
   }
  
 </style>
@@ -22,8 +24,12 @@
     <div id="main">
         <% module.forEach(data => { %>
             <div id="mainDiv">
-                <img id="DashboardTab" src="<%= data.photo %>" />&ensp;
-                <a id="horizontalModule" href="<%= data.url %>"><%= data.module_name %></a>
+              <a id="horizontalModule"  href="<%= data.url %>">
+              <div style="display: flex;justify-content: center;">
+                <img id="DashboardTab" src="<%= data.photo %>"/>&ensp;
+                <p><%= data.module_name %></p>
+             </div>
+              </a>  
             </div>
         <% }); %>
     </div>

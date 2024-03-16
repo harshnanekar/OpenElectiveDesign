@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include ('../partials/partial') %>
+    <title>Programs</title>
+    
+    <style>
+      body{
+        background-color: whitesmoke;
+      }  
+      
+      th{
+    background-color: #e6f7ff;
+    width:280px;
+      }
+    tr:nth-child(even) {
+    background-color: #e6f7ff;
+    }
+    tr:nth-child(odd) {
+    background-color: white;
+    }
+    </style>
+
+</head>
+<body>
+    <%- include('sidebar.ejs') %>
+    <%- include('header.ejs')  %>
+    <div id="main">
+       <table class="table mt-4 table-bordered table-responsive-lg text-center">
+      <tr>
+        <th>Sr.No</th>
+        <th>Firstname</th>
+        <th>Lastname</th>
+        <th>Username</th>
+        <th>Campus</th>
+        <th>Acad Session</th>
+        <th>Roll No.</th>
+      </tr>
+      <% let index=1;%>
+      <% if(students.length > 0) { %>
+      <% students.forEach(data => { %>
+        <tr>
+         <td><%= index %></td>
+         <td><%= data.firstname %></td>
+         <td><%= data.lastname %></td>
+         <td><%= data.username %></td>
+         <td><%= data.campus_name %></td>
+         <td><%= data.current_session %></td>
+         <td><%= data.rollno %></td>
+
+        </tr>
+       <% index++; %> 
+      <% }); %>
+      <% }else{ %>
+       <tr>
+        <td colspan='7px' >-------------No Data Available-----------</td>
+       </tr>
+      <% } %>  
+       </table>
+    </div>
+</body>
+
+<%- include ('../partials/partial2') %>
+<script src= "../js/script.js" ></script>
+</html>

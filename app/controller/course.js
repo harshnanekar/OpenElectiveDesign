@@ -84,7 +84,7 @@ module.exports = {
                 : undefined;
               let openPrograms;  
 
-              let subjectValidation = subjectName ? Validation.NotNumberValidation(subjectName) : false;
+              let subjectValidation = subjectName ? Validation.courseNameValidator(subjectName) : false;
               let departmentValidation = departMentName ? Validation.alphabetValidation(departMentName) : false;
               let campusValidation = campus ? Validation.campusValidation(campus) : false ;
               let batchValidation = batchNo ? Validation.NumberValidation(batchNo) : false;

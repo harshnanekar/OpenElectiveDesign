@@ -687,7 +687,35 @@ let controller = {
       });
     }
 
+  },
+
+  downloadAllocationReport : async (req,res) => {
+    try {
+
+      let eventId = req.query.id;
+      let allocationData = await eventQuery.getAllocationReport(eventId);
+
+      if (allocationData.rowCount > 0) {
+        let file = "D:/AllocationReport.xlsx";
+        excelController.createExcel(allocationData.rows, file);
+
+        let filePath = path.resolve(__dirname, file);
+
+        res.setHeader(
+          "Content-Type",
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        );
+        res.setHeader("Content-Disposition", "attachment; filename=" + file);
+
+        return res.sendFile(filePath);
+      }
+      
+    } catch (error) {
+      console.log("Error " + error.message);
+      return res.redirect(`${res.locals.BASE_URL}elective/error`); 
+    }
   }
+
 
 
 };

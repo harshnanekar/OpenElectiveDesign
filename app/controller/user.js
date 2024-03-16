@@ -203,6 +203,43 @@ module.exports = {
     }
   },
 
+  viewProfile : async (req,res) => {
+   
+    try {
+
+      let username = await redisDb.get('user');
+      let userdetails = await query.getUserDetails(username);
+      let modules = await query.getModules(username);
+
+      return res.render('viewProfile',{module:modules,userdetails : userdetails.rows});
+      
+    } catch (error) {
+      console.log(error);
+      return res.json({
+        status: "error",
+        redirectTo: `${res.locals.BASE_URL}elective/error`,
+      });
+    }
+  },
+
+  viewStudents : async (req,res) => {
+    try{
+
+      let username = await redisDb.get('user');
+      let modules = await query.getModules(username);
+      let getStudentsList = await query.getStudents();
+
+      return res.render('viewRegisteredStudents',{module:modules,students:getStudentsList.rows});   ;
+
+    }catch(error){
+      console.log(error);
+      return res.json({
+        status: "error",
+        redirectTo: `${res.locals.BASE_URL}elective/error`,
+      });
+    }
+  },
+
   getSvelte:async (req,res) => {
     try {
 

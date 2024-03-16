@@ -33,6 +33,9 @@ apiRouter.get('/viewElectedEvents',middleware.verifyRequest,studentController.vi
 apiRouter.get('/viewPreferences',middleware.verifyRequest,eventController.viewPreferences);
 apiRouter.get('/viewBasketPreference',middleware.verifyRequest,eventController.viewBasketPreference);
 apiRouter.get('/createExcelPreference',middleware.verifyRequest,eventController.createExcelPreference);
+apiRouter.get('/viewProfile',middleware.verifyRequest,controller.viewProfile)
+apiRouter.get('/downloadAllocationReport',middleware.verifyRequest,eventController.downloadAllocationReport);
+apiRouter.get('/viewStudents',middleware.verifyRequest,controller.viewStudents);
 
 //testing
 apiRouter.get('/getSvelte',controller.getSvelte)
