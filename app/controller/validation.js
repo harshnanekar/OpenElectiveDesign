@@ -25,6 +25,62 @@ module.exports = class Validation {
    
   }
 
+  static emailValidation(email){
+    if (email.length > 0) {
+
+      let emailArr = email.split('');
+      let mail = emailArr.filter(data => data === '@');
+      console.log(JSON.stringify(mail));
+      if (mail.length == 1) {
+          let index = email.indexOf('@');
+          let dotIndex = email.lastIndexOf('.');
+
+          if (index != 0 && (index + 1) != dotIndex && (dotIndex != email.length - 1)) {
+              return true;
+          } else {
+              return false;
+          }
+      } else {
+          return false;
+      }
+
+  } else {
+      return false;
+  }
+  }
+
+  static genderValidation(gender){
+    if (gender.length > 0) {
+
+      if (gender === 'Male' || gender === 'Female' || gender === 'Other') {
+          return true;
+      } else {
+          return false;
+      }
+  } else {
+      return false;
+  }
+}
+
+   static adharValidation(adhar){
+    if (adhar.length > 0) {
+
+      if(adhar.length === 12){  
+        let adharval = Validation.NumberValidation(adhar);
+        if (adharval) {
+            return true;
+
+        } else {
+            return false;
+        }
+    }else{
+        return false;
+    }
+    } else {
+        return false;
+    }
+   }
+
   static rollNoValidation(rollNo) {
    
       if (rollNo.length > 0) {

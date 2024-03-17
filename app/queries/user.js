@@ -91,6 +91,14 @@ const a = class data{
      return pgPool.query(query);
     }
 
+    static insertProfileDetails(id,firstname,lastname,email,gender,adhar){
+      let query = {
+        text:`update user_info set firstname=$1,lastname=$2,email=$3,gender=$4,adharno=$5 where id=$6`,
+        values:[firstname,lastname,email,gender,adhar,id] 
+      }
+      return pgPool.query(query);
+    }
+
 
     //testing
     static getStudentForTest(acadLid){

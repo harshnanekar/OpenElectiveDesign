@@ -5,6 +5,7 @@ const jwtauth = require("../middleware/request.js");
 const passwordClass = require("../middleware/password.js");
 const { redisDb } = require("../config/database.js");
 const mail = require("../controller/email.js");
+const validation = require('../controller/validation.js');
 
 module.exports = {
   loginPage: async function (req, res) {
@@ -203,16 +204,17 @@ module.exports = {
     }
   },
 
-  viewProfile : async (req,res) => {
-   
+  viewProfile: async (req, res) => {
     try {
-
-      let username = await redisDb.get('user');
-      let userdetails = await query.getUserDetails(username);
+      let username = await redisDb.get("user");
+      console.log("redis user ", username);
+      let userdetails = await query.getUserDetails(username.trim());
       let modules = await query.getModules(username);
-
-      return res.render('viewProfile',{module:modules,userdetails : userdetails.rows});
-      
+      console.log("view students ", JSON.stringify(userdetails.rows));
+      return res.render("viewProfile", {
+        module: modules,
+        userDetails: userdetails.rows,
+      });
     } catch (error) {
       console.log(error);
       return res.json({
@@ -222,16 +224,19 @@ module.exports = {
     }
   },
 
-  viewStudents : async (req,res) => {
-    try{
-
-      let username = await redisDb.get('user');
+  viewStudents: async (req, res) => {
+    try {
+      let username = await redisDb.get("user");
       let modules = await query.getModules(username);
       let getStudentsList = await query.getStudents();
+      let rowlength = getStudentsList.length;
 
-      return res.render('viewRegisteredStudents',{module:modules,students:getStudentsList.rows});   ;
-
-    }catch(error){
+      return res.render("viewRegisteredStudents", {
+        module: modules,
+        students: getStudentsList.rows,
+        dataRows: rowlength,
+      });
+    } catch (error) {
       console.log(error);
       return res.json({
         status: "error",
@@ -240,57 +245,129 @@ module.exports = {
     }
   },
 
-  getSvelte:async (req,res) => {
+  editProfile: async (req, res) => {
     try {
+      let username = await redisDb.get("user");
+      let userdetails = await query.getUserDetails(username.trim());
+      let modules = await query.getModules(username);
 
-      let basket1 = [209,210,211,232,233,234]
-      let basket2 = [212,214,217,216,228,229,230,231]
-      let basket3 = [175,152,176,225,226,227]
-      
-      let preference = [1,2,3,4,5];
-  
+      return res.render("editProfile", {
+        module: modules,
+        userDetails: userdetails.rows,
+      });
+    } catch (error) {
+      console.log(error);
+      return res.json({
+        status: "error",
+        redirectTo: `${res.locals.BASE_URL}elective/error`,
+      });
+    }
+  },
+
+  insertProfileDetails: async (req, res) => {
+    try {
+      let { id, firstname, lastname, email, gender, adhar } = req.body;
+      console.log("user id ", id);
+      let fnameVal = validation.fnameValidation(firstname);
+      let lnameVal = validation.lnameValidation(lastname);
+      let emailVal = validation.emailValidation(email);
+      let genderVal = validation.genderValidation(gender);
+      let adharVal = validation.adharValidation(adhar);
+
+      console.log(fnameVal, lnameVal, emailVal, genderVal, adharVal);
+      if (fnameVal && lnameVal && emailVal && genderVal && adharVal) {
+        let insertDetails = await query.insertProfileDetails(
+          id,
+          firstname,
+          lastname,
+          email,
+          gender,
+          adhar
+        );
+
+        if (insertDetails.rowCount > 0) {
+          return res.json({
+            status: "success",
+            message: "Profile Updated Successfully !!",
+          });
+        } else {
+          return res.json({ message: "Failed To Update Profile !!" });
+        }
+      } else {
+        return res.json({ message: "Invalid Input Field !!" });
+      }
+    } catch (error) {
+      console.log(error);
+      return res.json({
+        status: "error",
+        redirectTo: `${res.locals.BASE_URL}elective/error`,
+      });
+    }
+  },
+
+  getSvelte: async (req, res) => {
+    try {
+      let basket1 = [209, 210, 211, 232, 233, 234];
+      let basket2 = [212, 214, 217, 216, 228, 229, 230, 231];
+      let basket3 = [175, 152, 176, 225, 226, 227];
+
+      let preference = [1, 2, 3, 4, 5];
+
       let students = await query.getStudentForTest(1);
       let studentArray = students.rows;
 
-      for(let i=0;i<studentArray.length;i++){
-   
-        for(let j=0;j<basket1.length;j++){
-
+      for (let i = 0; i < studentArray.length; i++) {
+        for (let j = 0; j < basket1.length; j++) {
           let randomIndex = Math.floor(Math.random() * preference.length);
           let randomPreference = preference[randomIndex];
-          await query.insertStudentForAllocationTesting(studentArray[i].user_lid,122,basket1[j],34,1,randomPreference);
-
+          await query.insertStudentForAllocationTesting(
+            studentArray[i].user_lid,
+            122,
+            basket1[j],
+            34,
+            1,
+            randomPreference
+          );
         }
 
-        for(let k=0;k<basket2.length;k++){
-
+        for (let k = 0; k < basket2.length; k++) {
           let randomIndex = Math.floor(Math.random() * preference.length);
           let randomPreference = preference[randomIndex];
-          await query.insertStudentForAllocationTesting(studentArray[i].user_lid,123,basket2[k],34,2,randomPreference);
- 
+          await query.insertStudentForAllocationTesting(
+            studentArray[i].user_lid,
+            123,
+            basket2[k],
+            34,
+            2,
+            randomPreference
+          );
         }
 
-        for(let m=0;m<basket3.length;m++){
-
+        for (let m = 0; m < basket3.length; m++) {
           let randomIndex = Math.floor(Math.random() * preference.length);
           let randomPreference = preference[randomIndex];
-          await query.insertStudentForAllocationTesting(studentArray[i].user_lid,124,basket3[m],34,3,randomPreference);
-
+          await query.insertStudentForAllocationTesting(
+            studentArray[i].user_lid,
+            124,
+            basket3[m],
+            34,
+            3,
+            randomPreference
+          );
         }
-
       }
-      return res.json({'users':'Students Inserted'});
+      return res.json({ users: "Students Inserted" });
     } catch (error) {
       console.log(error.message);
     }
   },
 
-  addCampus : async (req,res) => {
-    let {json} = req.body;
-    Array.from(json).forEach(async data => {
-      campus = await query.insertStudentAllocation(data)
-    })
-   
-      return res.json({'status':'Inserted Successfully'})
-  }
+  addCampus: async (req, res) => {
+    let { json } = req.body;
+    Array.from(json).forEach(async (data) => {
+      campus = await query.insertStudentAllocation(data);
+    });
+
+    return res.json({ status: "Inserted Successfully" });
+  },
 };

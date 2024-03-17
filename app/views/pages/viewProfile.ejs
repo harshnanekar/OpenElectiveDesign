@@ -8,6 +8,13 @@
       body{
         background-color: whitesmoke;
       }  
+      #profileForm{
+        background-color: white;
+        padding:20px;
+        width:1256px;
+        border-radius:10px;
+      }
+     
     </style>
 
 </head>
@@ -15,10 +22,68 @@
     <%- include('sidebar.ejs') %>
     <%- include('header.ejs')  %>
     <div id="main">
+
+      <div id="profileForm">
+        <div class="form-row form">
+          <div class="form-group col-md-6">
+            <label for="inputfname">Firstname</label>
+            <% if (userDetails.firstname && userDetails.firstname.length > 0) { %>
+              <input type="text" class="form-control" id="inputfname" disabled>
+            <%}else{%>
+              <input type="text" class="form-control" id="inputfname" value="<%= userDetails[0].firstname %>" disabled>
+             <%}%> 
+            </div>
+          <div class="form-group col-md-6">
+            <label for="inputlname">Lastname</label>
+            <% if (userDetails.lastname && userDetails.lastname.length > 0) { %>
+            <input type="text" class="form-control" id="inputlname"  disabled>
+            <% }else{ %>
+              <input type="text" class="form-control" id="inputlname" value="<%= userDetails[0].lastname %>" disabled>
+            <% } %>  
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="inputEmail">Email</label>
+          <% if (userDetails.email && userDetails.email.length > 0) { %>
+          <input type="text" class="form-control" id="inputEmail" disabled>
+          <% }else { %>
+            <input type="text" class="form-control" id="inputEmail" value="<%= userDetails[0].email %>" disabled>
+          <% } %>  
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="inputGender">Gender</label>
+            <% if (userDetails.gender && userDetails.gender.length > 0) { %>
+            <input type="text" class="form-control" id="inputGender"  disabled>
+            <% }else{ %>
+              <input type="text" class="form-control" id="inputGender" value="<%= userDetails[0].gender %>" disabled>
+            <% } %> 
+          </div>
+          <div class="form-group col-md-6">
+            <label for="inputAdhar">Adhar No.</label>
+            <% if (userDetails.adharno && userDetails.adharno.length > 0) { %>
+            <input type="text" class="form-control" id="inputAdhar"  disabled>
+            <% }else{ %>
+              <input type="text" class="form-control" id="inputAdhar" value="<%= userDetails[0].adharno %>" disabled>
+            <% } %> 
+          </div>
+        </div>
+      
+        <button type="submit" class="btn btn-danger mt-4 editForm">Edit ?</button>
+      </div>
         
     </div>
 </body>
 
 <%- include ('../partials/partial2') %>
 <script src= "../js/script.js" ></script>
+<script>
+ 
+ document.querySelector('.editForm').addEventListener('click',() => {
+  window.location.href='<%- BASE_URL %>elective/editProfile';
+ })
+
+
+
+</script>
 </html>

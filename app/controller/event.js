@@ -585,6 +585,10 @@ let controller = {
       let role = await redisDb.get("role");
       let { eventId } = req.body;
       if (role === "Role_Admin") {
+
+        let eventDate = await eventQuery.checkEventDate(eventId);
+
+        if(eventDate.status == 'Valid'){
         let publishEvent = await eventQuery.publishEvent(eventId);
         if (publishEvent.rowCount > 0) {
           return res.json({
@@ -594,6 +598,9 @@ let controller = {
         } else {
           return res.json({ message: "Failed To Publish Event !!" });
         }
+      }else{
+        return res.json({ message: "Cannot Publish Event, End Date Is Over !!" });
+      }
       } else {
         res.clearCookie("jwtauth");
         return res.json({
@@ -632,9 +639,12 @@ let controller = {
       let basketId = req.query.id;
       let modules = await query.getModules(username);
       let viewBasketUser = await eventQuery.getBasketPreference(basketId);
+      let rowlength = viewBasketUser.length;
+
       return res.render("viewBasketUserPreference", {
         module: modules,
         basketUser: viewBasketUser.rows,
+        dataRows:rowlength
       });
     } catch (error) {
       console.log("Error " + err.message);
