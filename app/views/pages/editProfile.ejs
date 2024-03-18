@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include ('../partials/partial') %>
+    <title>Programs</title>
+
+    <style>
+      body {
+        background-color: whitesmoke;
+      }
+
+      #profileForm {
+        background-color: white;
+        padding: 20px;
+        width: 1256px;
+        border-radius: 10px;
+      }
+
+      span {
+        color: red;
+      }
+    </style>
+
+</head>
+
+<body>
+  <%- include('sidebar.ejs') %>
+    <%- include('header.ejs') %>
+      <div id="main">
+        <%- include('messageModal.ejs') %>
+          <div id="profileForm">
+            <div class="form-row form">
+              <div class="form-group col-md-6">
+                <label for="inputfname">Firstname</label>&ensp;<span id="fnameError"></span>
+                <% if (userDetails.firstname && userDetails.firstname.length> 0) { %>
+                  <input type="text" class="form-control" id="inputfname" placeholder="Firstname">
+                  <%}else{%>
+                    <input type="text" class="form-control" id="inputfname" value="<%= userDetails[0].firstname %>">
+                    <%}%>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="inputlname">Lastname</label>&ensp;<span id="lnameError"></span>
+                <% if (userDetails.lastname && userDetails.lastname.length> 0) { %>
+                  <input type="text" class="form-control" id="inputlname" placeholder="Lastname">
+                  <% }else{ %>
+                    <input type="text" class="form-control" id="inputlname" value="<%= userDetails[0].lastname %>">
+                    <% } %>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputEmail">Email</label>&ensp;<span id="emailError"></span>
+              <% if (userDetails.email && userDetails.email.length> 0) { %>
+                <input type="text" class="form-control" id="inputEmail" placeholder="Email" <% }else { %>
+                <input type="text" class="form-control" id="inputEmail" value="<%= userDetails[0].email %>">
+                <% } %>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="inputGender">Gender</label>&ensp;<span id="genderError"></span>
+                <select id="inputGender" class="form-control">
+                  <% if (userDetails.gender && userDetails.gender.length> 0) { %>
+                    <option value="Select Gender" selected>Select Gender</option>
+                    <option value="Male" <%=userDetails[0].gender==="Male" ? "selected" : "" %>>Male</option>
+                    <option value="Female" <%=userDetails[0].gender==="Female" ? "selected" : "" %>>Female</option>
+                    <option value="Other" <%=userDetails[0].gender==="Other" ? "selected" : "" %>>Other</option>
+                    <% } else { %>
+                      <option value="Select Gender">Select Gender</option>
+                      <option value="Male" <%=userDetails[0].gender==="Male" ? "selected" : "" %>>Male</option>
+                      <option value="Female" <%=userDetails[0].gender==="Female" ? "selected" : "" %>>Female</option>
+                      <option value="Other" <%=userDetails[0].gender==="Other" ? "selected" : "" %>>Other</option>
+                      <% } %>
+                </select>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="inputAdhar">Adhar No.</label>&ensp;<span id="adharError"></span>
+                <% if (userDetails.adharno && userDetails.adharno.length> 0) { %>
+                  <input type="text" class="form-control" id="inputAdhar" placeholder="Adhar No.">
+                  <% }else{ %>
+                    <input type="text" class="form-control" id="inputAdhar" value="<%= userDetails[0].adharno %>">
+                    <% } %>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-danger mt-4 editForm">Submit</button>
+          </div>
+
+      </div>
+</body>
+
+<%- include ('../partials/partial2') %>
+  <script src="../js/script.js"></script>
+
+  <script>
+
+
+
+
+    document.querySelector('.editForm').addEventListener('click', () => {
+      let firstname = document.getElementById('inputfname').value;
+      let lastname = document.getElementById('inputlname').value;
+      let email = document.getElementById('inputEmail').value;
+      let gender = document.getElementById('inputGender').value;
+      let adhar = document.getElementById('inputAdhar').value;
+      let id = JSON.parse("<%= userDetails[0].id %>");
+
+      let fnameVal = fnameValidation(firstname);
+      let lnamVal = lnameValidation(lastname);
+      let adharVal = adharValidation(adhar);
+      let emailVal = emailValidation(email);
+      let genderVal = genderValidation(gender);
+
+      if (fnameVal && lnamVal && adharVal && emailVal && genderVal) {
+        let obj = { id, firstname, lastname, email, gender, adhar };
+        dynamicFetchApi('<%- BASE_URL %>elective/insertProfileDetails', 'POST', obj)
+          .then(response => {
+            if (response.status === 'error') {
+              window.location.href = `${response.redirectTo}`;
+            } else {
+              let msg = document.getElementById('msgModal');
+              let modalPage = `<div><h4 style="text-align:center;">${response.message}</h4></div>`
+              msg.innerHTML = modalPage;
+              document.querySelector('[data-target="#messageModal"]').click();
+            }
+
+          })
+      }
+
+    })
+
+    document.querySelector('.messageOkModal').addEventListener('click', () => {
+      window.location.href = `<%- BASE_URL %>elective/viewProfile`;
+    })
+
+    function fnameValidation(fname) {
+      let fnameError = document.getElementById('fnameError');
+      if (fname.length > 0) {
+
+        let fVal = alphabetsValidation(fname);
+        if (fVal) {
+          fnameError.innerText = '';
+          return true;
+        } else {
+          fnameError.innerText = '*Invalid Input Field';
+          return false;
+        }
+      } else {
+        fnameError.innerText = '*Required';
+        return false;
+      }
+    }
+
+    function lnameValidation(lname) {
+      let lnameError = document.getElementById('lnameError');
+      if (lname.length > 0) {
+
+        let lVal = alphabetsValidation(lname);
+        if (lVal) {
+          lnameError.innerText = '';
+          return true;
+        } else {
+          lnameError.innerText = '*Invalid Input Field';
+          return false;
+        }
+      } else {
+        lnameError.innerText = '*Required';
+        return false;
+      }
+    }
+
+    function adharValidation(adhar) {
+      let adharError = document.getElementById('adharError');
+      if (adhar.length > 0) {
+
+        if (adhar.length === 12) {
+          let adharval = NumberValidation(adhar);
+          if (adharval) {
+            adharError.innerText = '';
+            return true;
+
+          } else {
+            adharError.innerText = '*Invalid Input Field';
+            return false;
+          }
+        } else {
+          adharError.innerText = '*Adhar No. Must Be Of 12 Digits Only';
+          return false;
+        }
+      } else {
+        adharError.innerText = '*Required';
+        return false;
+      }
+    }
+
+    function emailValidation(email) {
+      let emailError = document.getElementById('emailError');
+      if (email.length > 0) {
+
+        let emailArr = email.split('');
+        let mail = emailArr.filter(data => data === '@');
+        console.log(JSON.stringify(mail));
+        if (mail.length == 1) {
+          let index = email.indexOf('@');
+          let dotIndex = email.lastIndexOf('.');
+
+          if (index != 0 && (index + 1) != dotIndex && (dotIndex != email.length - 1)) {
+            emailError.innerText = '';
+            return true;
+          } else {
+            emailError.innerText = '*Invalid Email-Id';
+            return false;
+          }
+        } else {
+          emailError.innerText = '*Invalid Email-Id';
+          return false;
+        }
+
+      } else {
+        emailError.innerText = '*Required';
+        return false;
+      }
+    }
+
+    function genderValidation(gender) {
+      let genderError = document.getElementById('genderError');
+      if (gender.length > 0) {
+
+        if (gender === 'Male' || gender === 'Female' || gender === 'Other') {
+          genderError.innerText = '';
+          return true;
+        } else {
+          genderError.innerText = '*Invalid Input Field';
+          return false;
+        }
+      } else {
+        genderError.innerText = '*Required';
+        return false;
+      }
+    }
+
+
+  </script>
+
+</html>

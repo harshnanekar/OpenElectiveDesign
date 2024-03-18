@@ -1,29 +1,35 @@
 <style>
-  #module_list{
-   text-decoration: none;
-   color:black;
+  #module_list {
+    text-decoration: none;
+    color: black;
   }
-  #module_list:hover{
-   text-decoration: none;
-   font-weight: bold;
+
+  #module_list:hover {
+    text-decoration: none;
+    font-weight: bold;
   }
 </style>
 
-<div id="sidebar">
-    <div style="display:flex; justify-content: center;">
-    <img id="sidebarlogo" src="../images/logo-nmims-prod.png" width="60%"/>
-    </div>
+<div id="sidebar" >
+  <div style="display:flex; justify-content: center;">
+    <img id="sidebarlogo" src="../images/logo-nmims-prod.png" width="60%" />
+  </div>
 
-    <ul>
-<li id="module_name"><img src="../images/dashboard.png" width="25px">&ensp;</img><a id="module_list" href= '<%- BASE_URL %>elective/dashboard' >Dashboard</a></li>
-  <hr/>
-<% module.forEach(data => { %>
-  <li id="module_name"><img src="<%= data.photo %>" width="25px">&ensp;</img><a id="module_list" href= '<%= data.url %>' ><%= data.module_name %></a></li>
-  <hr/>
-<% }); %> 
-<li  id="module_name"><img src="../images/logout1.png" width="30px">&ensp;</img><a id="module_list" href= '<%- BASE_URL %>elective/logout' >Logout</a></li>
-<hr/>    
-</ul>  
+  <ul>
+    <li id="module_name"><img src="../images/dashboard.png" width="25px">&ensp;</img><a id="module_list"
+        href='<%- BASE_URL %>elective/dashboard'>Dashboard</a></li>
+    <hr />
+    <% module.forEach(data=> { %>
+      <li id="module_name"><img src="<%= data.photo %>" width="25px">&ensp;</img><a id="module_list"
+          href='<%= data.url %>'>
+          <%= data.module_name %>
+        </a></li>
+      <hr />
+      <% }); %>
+        <li id="module_name"><img src="../images/logout1.png" width="30px">&ensp;</img><a id="module_list"
+            href='<%- BASE_URL %>elective/logout'>Logout</a></li>
+        <hr />
+  </ul>
 </div>
 
 

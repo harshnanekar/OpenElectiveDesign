@@ -23,10 +23,13 @@
 
 </head>
 <body>
+
     <%- include('sidebar.ejs') %>
     <%- include('header.ejs')  %>
     <div id="main">
-       <table class="table mt-4 table-bordered table-responsive-lg text-center">
+      <%- include('paginationHeader.ejs')  %>
+
+       <table class="table mt-4 table-bordered table-responsive-lg text-center custom-pagination">
       <tr>
         <th>Sr.No</th>
         <th>Firstname</th>
@@ -57,9 +60,17 @@
        </tr>
       <% } %>  
        </table>
+       <%- include('pagination.ejs')  %>
+
     </div>
 </body>
 
 <%- include ('../partials/partial2') %>
 <script src= "../js/script.js" ></script>
+<script src= "../js/paginationMain.js" ></script>
+
+<script>
+      initializePagination('.custom-pagination');
+
+</script>
 </html>

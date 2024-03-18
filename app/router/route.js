@@ -36,6 +36,7 @@ apiRouter.get('/createExcelPreference',middleware.verifyRequest,eventController.
 apiRouter.get('/viewProfile',middleware.verifyRequest,controller.viewProfile)
 apiRouter.get('/downloadAllocationReport',middleware.verifyRequest,eventController.downloadAllocationReport);
 apiRouter.get('/viewStudents',middleware.verifyRequest,controller.viewStudents);
+apiRouter.get('/editProfile',middleware.verifyRequest,controller.editProfile);
 
 //testing
 apiRouter.get('/getSvelte',controller.getSvelte)
@@ -73,6 +74,9 @@ apiRouter.post('/checkUsernameForOtp',controller.checkUsernameForOtp);
 apiRouter.post('/checkOtpFromUser',controller.checkOtpFromUser); 
 apiRouter.post('/resetPass',controller.resetPass);
 apiRouter.post('/adminAllocatingEvents',middleware.verifyRequest,eventController.adminAllocatingEvents);
+apiRouter.post('/insertProfileDetails',middleware.verifyRequest,controller.insertProfileDetails);
+
+
 
 //testing0
 apiRouter.post('/addCampus',controller.addCampus);

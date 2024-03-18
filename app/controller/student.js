@@ -128,8 +128,9 @@ module.exports = {
      let username = await redisDb.get('user');
 
      let electedEvents = await studentQuery.viewStudentElectedEvent(username); 
+     let rowlength = electedEvents.length;
      let getModules = await userQuery.getModules(username);
-     return res.render('viewElectedEvent',{module:getModules,event:electedEvents.rows});
+     return res.render('viewElectedEvent',{module:getModules,event:electedEvents.rows,dataRows:rowlength});
 
     } catch (error) {
       console.log(error.message);
