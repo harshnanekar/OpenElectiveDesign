@@ -2,7 +2,7 @@ const { scrypt, timingSafeEqual } = require('crypto');
 const { promisify } =  require('util');
 const scryptAsync = promisify(scrypt);
 
-module.exports = class Password {
+let a = class Password {
 
     
     static async hashPassword(password) {
@@ -20,3 +20,4 @@ module.exports = class Password {
         
     }
 }
+module.exports = a;
