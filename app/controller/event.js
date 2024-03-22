@@ -587,8 +587,9 @@ let controller = {
       if (role === "Role_Admin") {
 
         let eventDate = await eventQuery.checkEventDate(eventId);
+        console.log('event date: ',eventDate)
 
-        if(eventDate.status == 'Valid'){
+        if(eventDate.rows[0].status == true){
         let publishEvent = await eventQuery.publishEvent(eventId);
         if (publishEvent.rowCount > 0) {
           return res.json({

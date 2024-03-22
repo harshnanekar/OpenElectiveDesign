@@ -117,7 +117,7 @@ const query = class EventQuery{
 
   static checkEventDate(eventId){
     let query={
-    text:`SELECT (CASE WHEN DATE(end_date) >= CURRENT_DATE THEN 'Valid' ELSE 'Invalid' END) as status
+    text:`SELECT (CASE WHEN DATE(end_date) >= CURRENT_DATE THEN true ELSE false END) as status
     FROM event_master WHERE id = $1`,
     values:[eventId]
     }

@@ -86,6 +86,8 @@ function initializePagination(className) {
         .value.toLowerCase();
       if (searchKeyword !== "") {
         filterRows(searchKeyword);
+      }else{
+        document.location.reload();
       }
     }
   
