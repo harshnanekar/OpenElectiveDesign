@@ -31,19 +31,19 @@
       .eventNewDiv {
         background-color: white;
         padding: 10px;
-        width: 165%;
-        margin-top: 30px;
+        width: 100%;   
+       margin-top: 30px;
         border-radius: 10px;
       }
-
+     
       .eventForm {
 
         background-color: white;
         padding: 30px;
         box-sizing: border-box;
         border-radius: 20px;
-        width: 100%;
-        transition: 0.8s;
+        /* width: 100%;
+        transition: 0.8s; */
         padding-bottom: 15%;
 
       }
@@ -63,58 +63,63 @@
   <%- include('sidebar.ejs') %>
     <%- include('header.ejs') %>
 
-      <div id="mains">
+      <div id="mains" class="container">
 
         <%- include('messageModal.ejs') %>
         <%- include('loader.ejs') %>
 
-          <div class="eventNewDiv">
-            <div class="eventForm">
-              <div style="margin:0;" id="formdata">
-                <div class="form-row">
-                  <div class="form-group col-md-12">
-                    <label for="Event">Event Name</label>&ensp;&ensp;<span id="eventError"></span>
-                    <input type="text" class="form-control " id="event" name="eventName" placeholder="Event Name">
+       
+          <div class="row justify-content-center">
+            <div class="divWidth">
+              <div class="eventNewDiv card">
+                <div class="card-body">
+                  <div class="eventForm">
+                    <div style="margin:0;" id="formdata">
+                      <div class="form-group">
+                        <label for="Event">Event Name</label>&ensp;&ensp;<span id="eventError"></span>
+                        <input type="text" class="form-control" id="event" name="eventName" placeholder="Event Name">
+                      </div>
+                      <div class="form-group">
+                        <label for="Semester">Semester</label>&ensp;&ensp;<span id="sessionError"></span>
+                        <select id="session_master" name="semester" class="form-control">
+                          <option value="Select Acad Session" selected>Select Acad Session</option>
+                          <% acadSession.forEach(data=> { %>
+                            <option>
+                              <%= data.current_session %>
+                            </option>
+                            <% });%>
+                        </select>
+                      </div>
+                      <div class="form-row">
+                        <div class="form-group col-md-6">
+                          <label for="acad_year">Acad Year</label>&ensp;&ensp;<span id="yearError"></span>
+                          <select id="acad_year" name="acad_year" class="form-control">
+                          </select>
+                        </div>
+                        <div class="form-group col-md-6">
+                          <label for="campus">Campus</label>&ensp;&ensp;<span id="campusError"></span>
+                          <select id="campus" name="campus" class="form-control campusOption">
+                            <option selected>Select Campus</option>
+                            <% campus.forEach(data=> { %>
+                              <option>
+                                <%= data.campus_name %>
+                              </option>
+                              <% }); %>
+                          </select>
+                        </div>
+                        <div class="form-group col-md-6">
+                          <label for="Start Date">Start Date</label>&ensp;&ensp;<span id="startError"></span>
+                          <input type="datetime-local" name="start_date" class="form-control" id="start_date">
+                        </div>
+                        <div class="form-group col-md-6">
+                          <label for="End Date">End Date</label>&ensp;&ensp;<span id="endError"></span>
+                          <input type="datetime-local" name="end_date" class="form-control" id="end_date">
+                        </div>
+                      </div>
+                      <button type="submit" id="formSubmit" class="btn btn-danger signin submitBtn">Add Event</button>
+                    </div>
                   </div>
                 </div>
-                <div class="form-group">
-                  <label for="Semester">Semester</label>&ensp;&ensp;<span id="sessionError"></span>
-                  <select id="session_master" name="semester" class="form-control ">
-                    <option value="Select Acad Session" selected>Select Acad Session</option>
-                    <% acadSession.forEach(data=> { %>
-                      <option>
-                        <%= data.current_session %>
-                      </option>
-                      <% });%>
-                  </select>
-                </div>
-                <div class="form-row">
-                  <div class="form-group col-md-6">
-                    <label for="acad_year">Acad Year</label>&ensp;&ensp;<span id="yearError"></span>
-                    <select id="acad_year" name="acad_year" class="form-control ">
-                    </select>
-                  </div>
-                  <div class="form-group col-md-6">
-                    <label for="campus">Campus</label>&ensp;&ensp;<span id="campusError"></span>
-                    <select id="campus" name="campus" class="form-control  campusOption">
-                      <option selected>Select Campus</option>
-                      <% campus.forEach(data=> { %>
-                        <option>
-                          <%= data.campus_name %>
-                        </option>
-                        <% }); %>
-                    </select>
-                  </div>
-                  <div class="form-group col-md-6">
-                    <label for="Start Date">Start Date</label>&ensp;&ensp;<span id="startError"></span>
-                    <input type="datetime-local" name="start_date" class="form-control " id="start_date">
-                  </div>
-                  <div class="form-group col-md-6">
-                    <label for="End Date">End Date</label>&ensp;&ensp;<span id="endError"></span>
-                    <input type="datetime-local" name="end_date" class="form-control  " id="end_date">
-                  </div>
-                </div>
-                <button type="submit" id="formSubmit" class="btn btn-danger signin submitBtn">Add Event</button>
               </div>
             </div>
           </div>

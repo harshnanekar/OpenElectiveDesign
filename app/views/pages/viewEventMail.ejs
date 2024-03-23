@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include ('../partials/partial') %>
+    <title>View Students</title>
+    
+    <style>
+      body{
+        background-color: whitesmoke;
+      }  
+      table{
+        width:500px;
+     } 
+      th{
+    background-color: #e6f7ff;
+      }
+    tr:nth-child(odd) {
+    background-color: #e6f7ff;
+    }
+    tr:nth-child(even) {
+    background-color: white;
+    }
+    .table-responsive{
+        width: 100%;
+      overflow-x: auto;
+    }
+    
+    </style>
+
+</head>
+<body>
+    <%- include('sidebar.ejs') %>
+    <%- include('header.ejs')  %>
+    <div id="main" class="container">
+       <div class="table-responsive">
+       <table class="table text-center mt-4 table-bordered ">
+        <tr>
+        <th>Sr.No</th>
+        <th>Username</th>
+        <th>Actions</th>
+        </tr>
+        <tr>
+         <% let count= 1; %>
+         <% if (studentData.length > 0 ) {%>
+         <% studentData.forEach(data => { %>   
+         <tr data-userId="<%= data.user_lid %>" data-eventId="<%= data.event_lid %>">
+         <td ><%= count %></td>
+         <td ><%= data.username %></td>
+         <td ><i style="cursor:pointer;" class="fa-solid fa-paper-plane sendmail" data-toggle="tooltip" title="Send Mail"></i></td>   
+         </tr>
+         <% count++; %>
+         <% }); %>
+         <% }else{ %>
+          <td colspan="3px">------------------------------------No Data Available--------------------------------------</td> 
+         <% } %>   
+        </tr>
+       </table>
+       </div>
+    </div>
+</body>
+
+<%- include ('../partials/partial2') %>
+<script src= "../js/script.js" ></script>
+<script>
+
+document.addEventListener('click',function(e){
+
+    if(e.target.classList.contains('sendmail')){
+      
+        let userId = e.target.closest('tr').dataset.userid;
+        let eventId = e.target.closest('tr').dataset.eventid;
+
+        let obj = {userId,eventId};
+        
+        dynamicFetchApi('<%- BASE_URL %>elective/sendMailStudent','POST',obj)
+        .then(response => {
+          if(response.status === 'error'){
+            window.location.href= `${response.redirectTo}`;   
+          }else{
+            console.log(response);
+          }  
+        })
+    }
+
+});
+
+
+
+
+</script>
+</html>

@@ -37,6 +37,8 @@ apiRouter.get('/viewProfile',middleware.verifyRequest,controller.viewProfile)
 apiRouter.get('/downloadAllocationReport',middleware.verifyRequest,eventController.downloadAllocationReport);
 apiRouter.get('/viewStudents',middleware.verifyRequest,controller.viewStudents);
 apiRouter.get('/editProfile',middleware.verifyRequest,controller.editProfile);
+apiRouter.get('/sendEventMail',middleware.verifyRequest,eventController.sendEventMail);
+apiRouter.get('/sendMailStudent',middleware.verifyRequest,eventController.sendMailStudent);
 
 //testing
 apiRouter.get('/getSvelte',controller.getSvelte)

@@ -725,6 +725,36 @@ let controller = {
       console.log("Error " + error.message);
       return res.redirect(`${res.locals.BASE_URL}elective/error`); 
     }
+  },
+
+  sendEventMail : async (req,res) => {
+
+    try {
+      let username = await redisDb.get("user");
+      let eventId = req.query.id;
+      let studentAllocateData = await eventQuery.loadStudentData(eventId);
+      let getmodules = await query.getModules(username);
+
+      return res.render('viewEventMail',{module:getmodules,studentData:studentAllocateData.rows});
+      
+    } catch (error) {
+      console.log("Error " + error.message);
+      return res.redirect(`${res.locals.BASE_URL}elective/error`); 
+    }
+  },
+
+  sendMailStudent : async(req,res) => {
+
+    try{
+     
+      let {userId,eventId} = req.body;
+      
+
+
+    }catch (error) {
+      console.log("Error " + error.message);
+      return res.redirect(`${res.locals.BASE_URL}elective/error`); 
+    }
   }
 
 

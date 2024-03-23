@@ -32,7 +32,6 @@ const query = class EventQuery{
 
   static async getAllEventData(username){
     
-    console.log('Query called for pagination :: ' );
     let queries = {
       text:`select e.id,e.event_name,s.current_session,e.acad_year,e.createdby,e.startdate,e.end_date,c.campus_name,e.is_published from event_master e 
       inner join session_master s on e.session_lid = s.sem_id inner join campus c on e.campus_lid = c.campus_id where e.createdby = $1 
@@ -122,6 +121,15 @@ const query = class EventQuery{
     values:[eventId]
     }
     return pgPool.query(query)
+  }
+
+  static loadStudentData(eventId){
+   let query={
+    text:`select distinct s.user_lid,u.username,s.event_lid from student_sub_allocation s  inner join user_info u on u.id=s.user_lid where s.event_lid=$1 and s.id in 
+    (select id from student_sub_allocation where event_lid=$2 and active=true) and s.active=true and u.active=true`,
+    values:[eventId,eventId]
+   } 
+   return pgPool.query(query)
   }
 
 
