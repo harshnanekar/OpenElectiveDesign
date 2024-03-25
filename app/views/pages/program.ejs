@@ -14,7 +14,7 @@
 <body>
     <%- include('sidebar.ejs') %>
     <%- include('header.ejs')  %>
-    <div id="main">
+    <div id="main" class="container">
         <% childModules.forEach(data => { %>
             <div id="mainDiv">
               <a id="horizontalModule"  href="<%= data.url %>">

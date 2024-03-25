@@ -15,7 +15,8 @@
         }
         #uploadOptions{
          background-color: white;
-         width:1450px;
+         /* width:1450px; */
+         width:100%;
          padding:20px;   
          position:relative;
          top: 40px;
@@ -28,6 +29,7 @@
         }
   
         #uploadFormat{
+          width:100%;
           position:relative;
           top:100px;  
           background-color: white;
@@ -84,7 +86,7 @@
 <body>
     <%- include('sidebar.ejs') %>
     <%- include('header.ejs')  %>
-    <div id="mains">
+    <div id="mains"  class="container">
 
      <%- include('messageModal.ejs') %>
      <%- include('loader.ejs') %>
