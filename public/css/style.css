@@ -97,4 +97,14 @@ hr{
     flex-direction: column;
     transition: 0.8s;
 }
+@media (max-width: 1550px) {
 
+    :root{
+        --sidebar : 300px;
+    }
+    
+   #sidebar{
+    width: var(--sidebar);
+   }
+  
+  }

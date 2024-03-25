@@ -49,7 +49,7 @@
         font-size: 18px;
         position: relative;
         top: 40px;
-        width: 1450px;
+        width:100%;
 
       }
 
@@ -101,11 +101,11 @@
 <body>
   <%- include('sidebar.ejs') %>
     <%- include('header.ejs') %>
-      <div id="mains">
+      <div id="mains" class="container">
 
         <%- include('loader.ejs') %>
 
-        <div id="registerSuccess"></div>
+        <div id="registerSuccess" ></div>
         <%- include('messageModal.ejs') %>
 
           <div id="registerOptions">
