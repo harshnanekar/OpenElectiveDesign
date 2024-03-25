@@ -10,53 +10,11 @@
       padding:0;
       margin:0;
    }
- .maindiv{
-   display:flex;
-   justify-content: center;
-   margin-top:130px;
-   box-sizing: border-box;
-   width:100vw;
-  }
- .innerdiv{
-    background-color: white;
-    box-shadow:0 0 10px lightgrey;
-    border-radius:20px;
-    padding:20px;
-    overflow: hidden;
-    position: fixed;
-  }
- input{
-    border:0;
-    border-bottom: solid black 2px;
-   width:100%;
- }
- input:focus{
-   outline: none;
- }
- h1{
-font-family: 'Lilita One', sans-serif;
-font-family: 'Open Sans', sans-serif;
-font-family: 'Poppins', sans-serif;
-position: absolute;
-top:20px;
- }
- i{
-    font-size:20px;
-    padding-right:10px;
- }
- a{
-font-family: 'Lilita One', sans-serif;
-font-family: 'Open Sans', sans-serif;
-font-family: 'Poppins', sans-serif; 
- }
  #commonDisplayMessage{
-   
-  justify-content: center;
-  display:flex;
-  box-shadow: 0px 0px 6px 1px red;
-  font-weight:bold;
-  visibility: hidden;
-
+   display: flex;
+   background-color: #FFB6C1;
+   justify-content: center;
+   visibility: hidden;
  }
  span{
   font-size:20px;
@@ -65,97 +23,162 @@ font-family: 'Poppins', sans-serif;
   font-family: 'Poppins', sans-serif;
   text-align:center;
   padding:5px;
-  color:red;
+  color:#800000;
   font-weight:bold;
   width:100%;
  }
  #closebutton{
-  color:red;
-  background-color: whitesmoke;
+  color:#800000;
+  background-color: #FFB6C1;
   margin-right:20px;
   border:0;
  }
  #closebutton:focus{
   outline: none;
  }
-#passIcon{
-  font-size: 15px;
-  cursor:pointer;
-}
 
-@media screen and (max-width: 900px) {
-    .maindiv {
-        margin-top: 30px;
+ .container{
+     background-color:white;
+     border-radius: 10px;
+     box-shadow: 0 0 8px lightgray;
+     margin:auto;
+     margin-top:8%;
+     display:flex;
+     padding:10px
     }
-    .innerdiv {
-        width: 90%; 
+    h2{
+    text-align:center;
+    text-decoration-line: underline;
+    text-decoration-style: double;
+    margin-top:20px;
+    margin-bottom:70px;    
     }
-}
+
+    #login{
+        background-color: red;
+        margin-top:30px;
+        color:white;
+        width:90%;
+        margin-left:20px;
+
+    }
+    input{
+        width:90%; 
+        border:0;
+        border-bottom: solid black 2px;
+    }
+    input:focus{
+   outline: none;
+     }
+     button:focus{
+      outline: none;
+     }
+     .btn:focus, .btn:active:focus, .btn.active:focus, .btn.focus, .btn:active.focus, .btn.active.focus {
+      outline: none !important;
+      box-shadow: none !important;
+    }
+    @media screen and (max-width: 767px) {
+     .container{
+        display: grid;
+        grid-template-columns: auto;
+        justify-content: center;
+        
+     }
+     #nmims{
+        width: 100%;
+     }
+     input{
+        width:90%;
+     }
+     button{
+      width:90%;
+      margin-left: 20px;
+      
+     }
+      span{
+        font-size:15px;
+     margin-left: 40%;
+      }
+      #closebutton{
+        width:18px;
+        margin-left: 30%;
+      }
+    }
+
+
 
 </style>   
 
 </head>
 <body>
-  <%- include('messageModal.ejs') %>
-  <div id="commonDisplayMessage">
-    <span id="showMessage"></span> 
-   <button class="fa fa-close closeBtn" id= "closebutton" style="font-size:24px" ></button>
-  </div>
-  </div>
+ 
 
-   <div class="row maindiv">
-   <div style="display:flex;" class="col-xs-8 col-sm-8 col-md-8 col-lg-8 col-xl-8 innerdiv">
-   
-   <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 col-xl-8" >
-     <img style= "position: relative;width:25%; left:10px; padding-bottom:20px;" src="../images/logo-nmims-prod.png"/></br>
-     <img style= "position: relative;width:80%; left:10px;"  src="../images/login-animate-nmims.svg" />
-   </div>
-   
-   <div style="position:relative;right:60px;" class="col-xs-8 col-sm-8 col-md-8 col-lg-8 col-xl-8" >
-   <h2 style="margin-left:50px; margin-top: 15px;">Welcome</h2>
-  
-   <div style="margin-top:15%;" class="col-xs-8 col-sm-8 col-md-8 col-lg-8 col-xl-8" >
-   
-
-   <i class="fi fi-rr-user" ></i><input name="username" id="user" style="margin-bottom:40px;width:66%;" placeholder="LoginId" type="text"/></br>
-
-   <i class="fi fi-rr-lock" ></i><input name="password" id="pass" placeholder="Password" type="password" style="width:66%;"/>
-   <i class="fa-solid fa-eye" id="passIcon"></i></br>
-
-   <a href="#"  data-toggle="modal" data-target="#passwordModal" style="position:absolute; right:25%; font-size:18px; color:red; width:20%; text-decoration:none;" id="forgotPass" >Forgot?</a>
-
-   <button style="padding:5px; margin-top: 80px; font-weight:bold; border:0; border-radius:10px; background-color: red; color:white;position: relative; width:70%; left:20px; top:10px; outline: none;" id="login" type="submit" >Login</button>
-     
-     </div>
-
-   </div>
- </div>
+<div id="commonDisplayMessage">
+  <span id="showMessage"></span> 
+ <button class="fa fa-close closeBtn" id= "closebutton" style="font-size:24px" ></button>
 </div>
 
-<div class="modal fade" id="passwordModal" tabindex="-1" role="dialog" aria-labelledby="passwordModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="passwordModalLabel">Reset Password</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+<div class="container">
+  <%- include('messageModal.ejs') %>
+  
+  <div style="padding:20px;margin-right:20px;" class="col-sm photoDiv">
+    <img width="25%" src="../images/logo-nmims-prod.png" /></br>
+    <img id="nmims" width="100%;" src="../images/login-animate-nmims.svg" />
+  </div>
+  
+  <div id="loginPage" class="col-sm">
+    <h2 style="margin-bottom: 20%;">Welcome</h2>
+    <div>
+      <div>
+        <div style="display: flex;"><i class="fa-solid fa-user mt-2"></i>&ensp;<input name="username" id="user"
+            style="margin-bottom: 50px;" placeholder="LoginId" type="text" /></div>
       </div>
-      <div class="modal-body pd-4">
-        <div id="mainBody">
-          <div>
-        <h6>Enter the Username</h6><p style="color:red;" id="unameError"></p>
-        <input id="inputUser" type="text" class="form-control" placeholder="Username" />&ensp;
-         </div>
+  
+      <div class="form-group">
+        <div style="display: flex;"><i class="fa-solid fa-lock mt-2"></i>&ensp;<input name="password" id="pass"
+            placeholder="Password" type="password" />
+          <i class="fa-solid fa-eye" id="passIcon"></i>
+        </div></br>
+        <a href="#" data-toggle="modal" data-target="#passwordModal"
+          style="position:relative;margin-left:83%;text-decoration: none;color:red;font-weight: bold;" id="forgotPass">Forgot?</a>
       </div>
-        <hr>
-        <div id="submitBtn">
-        <buttton class="submitUser btn btn-primary float-right">Submit</buttton>
+  
+      <button type="submit" id="login" class="btn font-weight-bold">Login ?</button>
+  
+  
+    </div>
+  
+  </div>
+
+
+  <div class="modal fade" id="passwordModal" tabindex="-1" role="dialog" aria-labelledby="passwordModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="passwordModalLabel">Reset Password</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body pd-4">
+          <div id="mainBody">
+            <div>
+          <h6>Enter the Username</h6><p style="color:red;" id="unameError"></p>
+          <input id="inputUser" type="text" class="form-control" placeholder="Username" />&ensp;
+           </div>
+        </div>
+          <hr>
+          <div id="submitBtn">
+          <buttton class="submitUser btn btn-primary float-right">Submit</buttton>
+          </div>
         </div>
       </div>
     </div>
+  </div> 
+
   </div>
-</div>
+
+
   
 </body>
 <%- include ('../partials/partial2') %>
@@ -229,137 +252,7 @@ font-family: 'Poppins', sans-serif;
         });
 
     });
-
-//     document.addEventListener('click',(e) => {
-
-//     if(e.target.classList.contains('submitUser')){
-
-//       let username = document.getElementById('inputUser').value;
-//      console.log('username ',username)
-//      let obj = {username:username};
-
-//      dynamicFetchApi('<%- BASE_URL %>elective/checkUsernameForOtp', 'POST', obj)
-//         .then(response => {
-//           if (response.status === 'error') {
-//             window.location.href = `${response.redirectTo}`;
-//           } else {
-
-//             if (response.message != undefined) {
-//               let errMessage = document.getElementById('unameError');
-//               errMessage.innerText = response.message;
-//             } else {
-//               let body = document.getElementById('mainBody');
-//               let otpInput = `<div><h6>Enter the Otp</h6><p style="color:red;" class="otpError"></p>
-//         <input type="text" class="form-control inputOtp" placeholder="Otp" /></div>&ensp;`;
-
-//               body.insertAdjacentHTML('beforeEnd', otpInput);
-              
-//               let submitBtn = document.getElementById('submitBtn');
-//               submitBtn.innerHTML = '';
-//               submitBtn.innerHTML = `<buttton class="submitPass btn btn-primary float-right">Submit</buttton>`;
-//             }
-
-//           }
-//      })
-//     }
-
-//      if(e.target.classList.contains('submitPass')){
-
-//       let closestDiv = $(e.target).closest('div').prev();
-//       let prevDiv =  $(closestDiv)[0].previousElementSibling;
-
-//       let username = prevDiv.querySelector('#inputUser').value;
-//       let otp = prevDiv.querySelector('.inputOtp').value;
-//       let otpError =prevDiv.querySelector('.otpError');
-//       let val;
-
-//       if (otp.length > 0) {
-//           let otpValidation = NumberValidation(otp);
-//           if (otpValidation) {
-//             otpError.innerText = '';
-//             val = true;
-//           } else {
-//             otpError.innerText = '*Invalid Input';
-//             val = false;
-//           }
-
-//         } else {
-//           otpError.innerText = '*Required';
-//           val = false;
-//         }
-
-//         if (val) {
-
-//           let obj = { username, otp };
-//           dynamicFetchApi('<%- BASE_URL %>elective/checkOtpFromUser', 'POST', obj)
-//             .then(response => {
-//               if (response.status === 'error') {
-//                 window.location.href = `${response.redirectTo}`;
-//               } else {
-//                 if (response.otpStatus == false) {
-//                   otpError.innerText = response.message;
-//                 }  
-//                   if (response.otpStatus == true) {
-                
-//                     if (response.message[0].otp_status === 'Valid') {
-
-//                       let body = document.getElementById('mainBody');
-//                       let passInput = `<div><h6>Enter New Password</h6>
-//                     <input type="password" class="form-control inputPass" placeholder="Password" /></div>&nbsp;`;
-
-//                       body.insertAdjacentHTML('beforeEnd', passInput);
-
-//                       let submitBtn = document.getElementById('submitBtn');
-//                       submitBtn.innerHTML = '';
-//                       submitBtn.innerHTML = `<buttton class="submitReset btn btn-primary float-right" data-dismiss="modal">Submit</buttton>`;
-                   
-//                       console.log("check otp status ",response.message[0].otp_status)
-//                     } else {
-//                       otpError.innerText = response.message[0].otp_status;
-//                     }
-//                   }
-              
-//                 }
-//               })
-//               }
-//             }
-
-//           if(e.target.classList.contains('submitReset')){
-//           let username = document.getElementById('inputUser').value;
-//           let closestDiv = $(e.target).closest('div').prev();
-//           let prevDiv =  $(closestDiv)[0].previousElementSibling;
-
-//           let otp = prevDiv.querySelector('.inputOtp').value;
-//           let password = prevDiv.querySelector('.inputPass').value;
-
-//           let obj = {username,otp,password};
-//           dynamicFetchApi('<%- BASE_URL %>elective/resetPass','POST',obj)
-//           .then(response => {
-//             if(response.status === 'error'){
-//               window.location.href=`${response.redirectTo}`; 
-//             }else{
-
-//               let modalBody = document.getElementById('msgModal');
-//               let modalPage = `<div><h4 style="text-align:center;">${response.message}</h4></div>`
-//               modalBody.innerHTML = modalPage;
-//               document.querySelector('[data-target="#messageModal"]').click();
-//             } 
- 
-//           })
-//           }
-
-//           if(e.target.classList.contains('messageOkModal')){ 
-//             let username =  document.getElementById('inputUser');
-//             username.value = '';
-
-//             let body = document.getElementById('mainBody');
-//             body.removeChild(body.lastElementChild);
-//             body.removeChild(body.lastElementChild);
-//           }
-// })
-  
-      
-      
+     
     errormessage();
     
     //Displaying Error Message
