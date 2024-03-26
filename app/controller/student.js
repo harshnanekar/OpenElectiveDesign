@@ -31,6 +31,7 @@ module.exports = {
           username,
           eventId
         );
+        console.log('showyearbacksubjects ',JSON.stringify(showYearBackSubjects))
         let getModules = await userQuery.getModules(username);
 
         return res.render("selectBasket", {
@@ -77,6 +78,7 @@ module.exports = {
         );
 
         let nextBasketData = insertStudentBasket.rows;
+       
         let yearBackSubjects = await studentQuery.showYearBackSubjects(
           username,
           eventLid

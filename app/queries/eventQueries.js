@@ -142,6 +142,15 @@ const query = class EventQuery{
     return pgPool.query(query);
   }
 
+  static checkStudentRollNo(rollNo){
+    let query = {
+      text:`select count(*) as rollCount from student_info where rollno=$1`,
+      values:[rollNo]
+    }
+    return pgPool.query(query);
+  }
+
+
 }
 
 module.exports = query;

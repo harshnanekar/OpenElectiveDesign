@@ -296,6 +296,20 @@ let controller = {
               campusValidation &&
               rollValidation
             ) {
+
+              let checkRollNo = await eventQuery.checkStudentRollNo(rollNo);
+              if(checkRollNo.rows[0].rollcount > 0){
+                emptyStudentArray.push({
+                  studentUname,
+                  studentFirstName,
+                  studentLastName,
+                  acadSession,
+                  acadYear,
+                  campus,
+                  rollNo,
+                  username,
+                });
+              }else{
               studentArray.push({
                 studentUname,
                 studentFirstName,
@@ -307,6 +321,7 @@ let controller = {
                 username,
               });
               console.log("Array found--- ", studentArray);
+            }
             } else {
               console.log("Array not found empty");
               emptyStudentArray.push({
@@ -426,6 +441,12 @@ let controller = {
           sessionVal,
           usernameVal
         );
+
+        let checkRollNo = await eventQuery.checkStudentRollNo(rollNo);
+        if(checkRollNo.rows[0].rollcount > 0){
+          return res.json({message:'Roll No Should Be Unique !!'})
+        }
+
         manualArray.push({
           studentFirstName,
           studentLastName,
@@ -737,17 +758,18 @@ let controller = {
       let { eventId } = req.body;
       let studentAllocateData = await eventQuery.loadStudentData(eventId);
       console.log(studentAllocateData.rowCount);
-      
+      let sendMailResults;
+  
       if (studentAllocateData.rowCount > 0) {
         let studentArray =  studentAllocateData.rows;
-        let sendMailPromises = studentArray.map(async (data) => {
+          studentArray.map(async (data) => {
           let electedEventData = await eventQuery.electedData(data.user_lid, eventId);
           let electedArray = electedEventData.rows;
   
           let sendMailTo = new Array(data.email);
-          let subject = `Allocated Subjects for Event ${electedEventData.rows[0].event_name} `;
-          let message = `<p>Hello ${data.username}, below are the mentioned elected subjects</p></br></br>
-          <table>
+          let subject = `Elected Subjects for Event ${electedEventData.rows[0].event_name} `;
+          let message = `<p>Hello ${data.username}, below are the mentioned elected subjects for the Event ${electedEventData.rows[0].event_name}</p>
+          <table border="1" style="text-align:center;">
           <tr>
           <th>Sr.No</th>
           <th>Username</th>
@@ -756,7 +778,7 @@ let controller = {
           <th>Subject Name</th>
           <th>Subject Preference</th>
           </tr>
-          ${electedArray.map((data, index) => `
+          ${electedArray.map( (data, index) => `
           <tr>
           <td>${index + 1}</td>
           <td>${data.username}</td>
@@ -767,12 +789,11 @@ let controller = {
           </tr>`).join("")}
           </table>`;
   
-          return emailController.sendMail(sendMailTo, subject, message);
+          sendMailResults = await Promise.all([emailController.sendMail(sendMailTo, subject, message)]);
+
         });
-  
-        let sendMailResults = await Promise.all(sendMailPromises);
-  
-        if (sendMailResults.some(result => result && result.rowCount > 0)) {
+         
+        if (sendMailResults.rowCount > 0) {
           return res.json({ message: "Emails Sent Successfully !!" });
         } else {
           return res.json({ message: "Failed To Send Emails !!" });
