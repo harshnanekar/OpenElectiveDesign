@@ -280,6 +280,8 @@ let controller = {
 
             console.log("validations ", yearValidation);
 
+              
+
             if (
               usernameValidation &&
               firstNameValidation &&
@@ -408,6 +410,11 @@ let controller = {
         studentFirstName = fname;
         studentLastName = lname;
         studentUname = studUsername;
+
+        let checkRollNo = await eventQuery.checkStudentRollNo(rollNo);
+        if(checkRollNo.rowCount > 0){
+          return res.json({message:'Roll No Should Be Unique !!'})
+        }
 
         console.log(
           "Validated rightly",

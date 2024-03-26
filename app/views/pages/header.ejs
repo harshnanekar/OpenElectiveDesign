@@ -1,123 +1,71 @@
 <style>
-.sidebutton{
-position: relative;
-top:15px;
-left:10px;
-width:5%;
-background:white;
-padding:0;
-border:0;
-}
-.sidebutton:focus{
-  outline: none;
-}
-.profilediv{
-display: flex;
-/* position:relative; */
-/* margin-left:85%; */
-/* position: fixed;
-left:73%; */
-top:10px;
-box-sizing: border-box;
-}
-.profiledropdown{
-    position: relative;
-    top:15px;
-    padding-left: 150px;
-}
-.roleName{
-    font-size: 18px;
-    position: relative;
-    top:15px;
-    left:10px;
-    color:red;
-}
-.imagelogo{
-    position:relative;
-    top:10px;
-}
-#dropdownMenuLink:hover {
-  color: black;
-}
-#hamburgerMenu{
-  display: flex;
-align-items: center;
-position: relative;
-right:10px;
-font-weight:bold;
-visibility: hidden;
-margin-left:10px;
-}
-
-@media screen and (max-width:1200px){
-  :root{
-    --sidebar:0px;
+  .sidebutton{
+  position: relative;
+  top:15px;
+  left:10px;
+  width:5%;
+  background:white;
+  padding:0;
+  border:0;
   }
-  #hamburgerMenu{
-    visibility: visible;
-  }
-
-  #sidebar{
-    width:var(--sidebar);
-  }
-  #header{
-    left:var(--sidebar);
-    width:100%;
+  .sidebutton:focus{
+    outline: none;
   }
   .profilediv{
-    margin-left:20px;
-
-  }
-  .imagelogo{
-    width:30px;
-  }
-  #main{
-    width: 100%;
-  }
-  #mains{
-    width:100%;
-  }
-  .arrowAngles{
-    visibility: hidden;
+  display: flex;
+  position: fixed;
+  left:73%;
+  top:10px;
+  box-sizing: border-box;
   }
   .profiledropdown{
-    visibility: hidden;
+      position: relative;
+      top:15px;
+      padding-left: 150px;
   }
-  #hamburgerMenu{
-    position: absolute;
-    right:20px;
+  .roleName{
+      font-size: 18px;
+      position: relative;
+      top:15px;
+      left:10px;
+      color:red;
   }
-}
-</style>
-<%- include('messageModal.ejs') %>
-<div id="header" class="row">
-
-    <div class="headersection" style="display:flex;align-items: center;">
-    <button id="sidebuttonid" class="sidebutton" ><i class="fa-solid fa-angles-left arrowAngles"></i></button> 
-
-<div class="profilediv row">
-<img class="imagelogo" src="../images/admin.png" width="40px;" height="100%"/>
-<p class="roleName"><%= module[0].username %></p>
-
-<div class="dropdown show profiledropdown row">
-    <a style="text-decoration: none;" class= "dropdown-toggle togglebutton" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-     <% if(module[0].role_name === 'Role_Admin') { %>
-      <img src="../images/user1.png" > Hii Admin!</img>
-      <% }else{ %>
-        <img src="../images/user1.png" > Hii User!</img>
-      <% } %>  
-    </a>
+  .imagelogo{
+      position:relative;
+      top:10px;
+  }
+  #dropdownMenuLink:hover {
+    color: black;
+  }
+  </style>
+  <%- include('messageModal.ejs') %>
+  <div id="header">
   
-    <div style="position:relative;top:10%;" class="dropdown-menu row" aria-labelledby="dropdownMenuLink">
-      <a class="dropdown-item" href="<%- BASE_URL %>elective/viewProfile"><i class="fa-solid fa-user"></i>&nbsp;View Profile</a>
-      <a class="dropdown-item" href="<%- BASE_URL %>elective/logout"><i class="fa-solid fa-right-from-bracket"></i>&nbsp;Logout</a>
+      <div class="headersection" style="display:flex;align-items: center;">
+      <button id="sidebuttonid" class="sidebutton" ><img src= "../images/left.png" width="25%;"/></button> 
+  
+  <div class="profilediv">
+  <img class="imagelogo" src="../images/admin.png" width="8%;" height="100%"/>
+  <p class="roleName"><%= module[0].username %></p>
+  
+  <div class="dropdown show profiledropdown">
+      <a style="text-decoration: none;" class= "dropdown-toggle togglebutton" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+       <% if(module[0].role_name === 'Role_Admin') { %>
+        <img src="../images/user1.png" > Hii Admin!</img>
+        <% }else{ %>
+          <img src="../images/user1.png" > Hii User!</img>
+        <% } %>  
+      </a>
+    
+      <div style="position:relative;top:10%;" class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+        <a class="dropdown-item" href="<%- BASE_URL %>elective/viewProfile"><i class="fa-solid fa-user"></i>&nbsp;View Profile</a>
+        <a class="dropdown-item" href="<%- BASE_URL %>elective/logout"><i class="fa-solid fa-right-from-bracket"></i>&nbsp;Logout</a>
+      </div>
     </div>
-  </div>
-  &ensp;
-  <div id="hamburgerMenu"><i class="fa-solid fa-bars" ></i></div>
-  </div>
-</div>
-</div>
-
-
+    </div>
   
+  </div>
+  </div>
+  
+  
+    
