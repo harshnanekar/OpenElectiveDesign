@@ -40,9 +40,12 @@ module.exports = class Student {
 
   static showYearBackSubjects(username, eventId) {
     let query = {
-      text: `select distinct su.subject_lid,be.event_lid,s.subject_name from student_sub_allocation su inner join subject_master s on su.subject_lid = s.sub_id  
- inner join basket_event be on be.event_lid = su.event_lid inner join user_info u on u.id=su.user_lid where u.username = $1 and su.event_lid not in ($2)
- and su.active=true and be.active=true and s.active=true and u.active=true`,
+//       text: `select distinct su.subject_lid,be.event_lid,s.subject_name from final_allocation su inner join subject_master s on su.subject_lid = s.sub_id  
+//  inner join basket_event be on be.event_lid = su.event_lid inner join user_info u on u.id=su.user_lid where u.username = $1 and su.event_lid not in ($2)
+//  and su.active=true and be.active=true and s.active=true and u.active=true`,
+      text:`select distinct su.subject_lid,be.event_lid,s.subject_name from student_sub_allocation su inner join subject_master s on su.subject_lid = s.sub_id  
+      inner join basket_event be on be.event_lid = su.event_lid inner join user_info u on u.id=su.user_lid where u.username = $1 and su.event_lid not in ($2)
+      and su.active=true and be.active=true and s.active=true and u.active=true`,
       values: [username, eventId],
     };
     return pgPool.query(query);

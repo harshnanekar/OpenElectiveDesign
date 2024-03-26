@@ -142,7 +142,7 @@
                <a style="color:black;" href="<%- BASE_URL %>elective/viewPreferences?id=<%= event.id %>"><i class="fa-solid fa-eye" data-toggle='tooltip' title = 'View Preferences' width="2%" ></i></a>&ensp;
                <a style="text-decoration: none;color:black" href="<%- BASE_URL %>elective/addBasketPage?id=<%= event.id %>"><i class="fa-solid fa-cart-plus addBasket" data-toggle='tooltip' title = 'Add Basket' width="2%"></i></a>&ensp;
                <a style="text-decoration:none;color:black;" href="<%- BASE_URL %>elective/basketCourseConfig?id=<%= event.id %>" ><i class="fa-solid fa-book-bible" data-toggle='tooltip' width="2%" title="Add Basket Courses"></i></a>&ensp;
-               <a style="text-decoration:none;color:black;" href="<%- BASE_URL %>elective/sendEventMail?id=<%= event.id %>" ><i class="fa-solid fa-envelope" data-toggle='tooltip' width="2%" title="Send Mail To Students"></i></a>
+               <i style="cursor:pointer;" class="fa-solid fa-envelope sendmail" data-toggle='tooltip' width="2%" title="Send Mail To Students"></i>
               </td>     
             </tr>
            <% count++ %>
@@ -421,6 +421,29 @@ document.addEventListener('click',(e) => {
         document.querySelector('[data-target="#messageModal"]').click();
       } 
 
+    })
+  }
+
+  if(e.target.classList.contains('sendmail')){
+    let eventId = e.target.closest('tr').dataset.eid;
+    let obj = {eventId};
+    console.log(obj)
+    let modalLoader = document.getElementById('modalLoader');
+    let htmlPage = `<h2 style="text-align: center;">Sending Mail To Students</h2>`;
+    modalLoader.innerHTML = htmlPage;
+
+    let loader = document.querySelector('.loading');
+    loader.style.display='block';
+
+
+    dynamicFetchApi('<%- BASE_URL %>elective/sendEventMail','POST',obj)
+    .then(response => {
+      loader.style.display='block';
+      if(response.status === 'error'){
+      window.location.href=`${response.redirectTo}`;
+      }else{
+        console.log(response)
+      }
     })
   }
 

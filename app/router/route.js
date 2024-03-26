@@ -37,8 +37,6 @@ apiRouter.get('/viewProfile',middleware.verifyRequest,controller.viewProfile)
 apiRouter.get('/downloadAllocationReport',middleware.verifyRequest,eventController.downloadAllocationReport);
 apiRouter.get('/viewStudents',middleware.verifyRequest,controller.viewStudents);
 apiRouter.get('/editProfile',middleware.verifyRequest,controller.editProfile);
-apiRouter.get('/sendEventMail',middleware.verifyRequest,eventController.sendEventMail);
-apiRouter.get('/sendMailStudent',middleware.verifyRequest,eventController.sendMailStudent);
 
 //testing
 apiRouter.get('/getSvelte',controller.getSvelte)
@@ -77,6 +75,7 @@ apiRouter.post('/checkOtpFromUser',controller.checkOtpFromUser);
 apiRouter.post('/resetPass',controller.resetPass);
 apiRouter.post('/adminAllocatingEvents',middleware.verifyRequest,eventController.adminAllocatingEvents);
 apiRouter.post('/insertProfileDetails',middleware.verifyRequest,controller.insertProfileDetails);
+apiRouter.post('/sendEventMail',middleware.verifyRequest,eventController.sendEventMail);
 
 
 
