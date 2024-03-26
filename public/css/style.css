@@ -97,7 +97,7 @@ hr{
     flex-direction: column;
     transition: 0.8s;
 }
-@media screen and (max-width: 1550px) and (min-width: 1201px) {
+@media screen and (max-width: 1550px) and (max-width: 1201px) {
 
     :root{
         --sidebar : 300px;
@@ -106,5 +106,6 @@ hr{
    #sidebar{
     width: var(--sidebar);
    }
+
   
   }

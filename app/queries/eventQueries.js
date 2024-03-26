@@ -132,6 +132,12 @@ const query = class EventQuery{
    return pgPool.query(query)
   }
 
+  static checkStudentRollNo(rollNo){
+    let query = {
+      text:`select * from student_info where roll_no`
+    }
+  }
+
 
 }
 
