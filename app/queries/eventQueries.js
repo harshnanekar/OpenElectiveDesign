@@ -125,13 +125,22 @@ const query = class EventQuery{
 
   static loadStudentData(eventId){
    let query={
-    text:`select distinct s.user_lid,u.username,s.event_lid from student_sub_allocation s  inner join user_info u on u.id=s.user_lid where s.event_lid=$1 and s.id in 
-    (select id from student_sub_allocation where event_lid=$2 and active=true) and s.active=true and u.active=true`,
-    values:[eventId,eventId]
+    text:`select distinct u.email,u.username,s.user_lid from student_sub_allocation s  inner join user_info u on u.id=s.user_lid 
+    where s.event_lid=$1 and s.active=true and u.active=true limit 5`,
+    values:[eventId]
    } 
    return pgPool.query(query)
   }
 
+  static electedData(userId,eventId){
+    let query={
+    text:`select s.id,u.username,e.event_name,b.basket_name,sm.subject_name,s.elective_no,s.sub_pref from student_sub_allocation s inner join user_info u on s.user_lid = u.id 
+    inner join basket b on s.basket_lid=b.id inner join event_master e on s.event_lid=e.id inner join subject_master sm on s.subject_lid=sm.sub_id 
+    where user_lid =$1 and event_lid=$2 and s.active=true and b.active=true and e.active=true and sm.active=true order by s.id asc `,
+    values:[userId,eventId]
+    }
+    return pgPool.query(query);
+  }
 
 }
 

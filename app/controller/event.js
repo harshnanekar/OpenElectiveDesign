@@ -4,6 +4,9 @@ const validation = require("../controller/validation.js");
 const excelController = require("../controller/excel.js");
 const {redisDb} = require("../config/database.js");
 const path = require('path');
+const student = require("./student.js");
+const emailController = require("../controller/email.js");
+
 
 
 
@@ -54,7 +57,7 @@ let controller = {
       let { eventName, semester, acad_year, campus, start_date, end_date } =
         req.body;
 
-     let eventValidation = validation.eventvalidator(eventName);
+      let eventValidation = validation.eventvalidator(eventName);
       let campusValidate = validation.campusValidation(campus);
       let sessionValidate = validation.acadSessionValidation(semester);
       let acadYearValidation = validation.newAcadYearValidation(acad_year);
@@ -70,7 +73,7 @@ let controller = {
         let startDate = start_date.split("T")[0];
         let endDate = end_date.split("T")[0];
 
-        console.log('start_date', startDate, 'end_date', endDate)
+        console.log("start_date", startDate, "end_date", endDate);
         let dateValidate = new Date(startDate) < new Date(endDate);
         if (dateValidate) {
           let jsonData = JSON.stringify({
@@ -201,23 +204,27 @@ let controller = {
           let excelKeys = getData[0];
           let excelHeader = Object.keys(excelKeys);
 
-          console.log('length of object ',Object.keys(programJson).length,excelHeader.length)
+          console.log(
+            "length of object ",
+            Object.keys(programJson).length,
+            excelHeader.length
+          );
 
-          if(Object.keys(programJson).length == excelHeader.length){
-          for (let data of excelHeader) {
-            if (!Object.values(programJson).includes(data)) {
-              return res.json({
-                status: "fileError",
-                message: "Invalid Excel Format !!",
-              });
+          if (Object.keys(programJson).length == excelHeader.length) {
+            for (let data of excelHeader) {
+              if (!Object.values(programJson).includes(data)) {
+                return res.json({
+                  status: "fileError",
+                  message: "Invalid Excel Format !!",
+                });
+              }
             }
+          } else {
+            return res.json({
+              status: "fileError",
+              message: "Invalid Excel Format !!",
+            });
           }
-        }else{
-          return res.json({
-            status: "fileError",
-            message: "Invalid Excel Format !!",
-          });
-        }
 
           getData.forEach(async (data) => {
             let excelStudentUname = new String(data.Username);
@@ -538,7 +545,7 @@ let controller = {
         let start_date = startDate.split("T");
         let end_date = endDate.split("T");
 
-        console.log('start_date ',startDate,'end_date',endDate)
+        console.log("start_date ", startDate, "end_date", endDate);
 
         if (role === "Role_Admin") {
           let eventObj = {
@@ -585,23 +592,24 @@ let controller = {
       let role = await redisDb.get("role");
       let { eventId } = req.body;
       if (role === "Role_Admin") {
-
         let eventDate = await eventQuery.checkEventDate(eventId);
-        console.log('event date: ',eventDate)
+        console.log("event date: ", eventDate);
 
-        if(eventDate.rows[0].status == true){
-        let publishEvent = await eventQuery.publishEvent(eventId);
-        if (publishEvent.rowCount > 0) {
-          return res.json({
-            status: "success",
-            message: "Event Published Successfully !!",
-          });
+        if (eventDate.rows[0].status == true) {
+          let publishEvent = await eventQuery.publishEvent(eventId);
+          if (publishEvent.rowCount > 0) {
+            return res.json({
+              status: "success",
+              message: "Event Published Successfully !!",
+            });
+          } else {
+            return res.json({ message: "Failed To Publish Event !!" });
+          }
         } else {
-          return res.json({ message: "Failed To Publish Event !!" });
+          return res.json({
+            message: "Cannot Publish Event, End Date Is Over !!",
+          });
         }
-      }else{
-        return res.json({ message: "Cannot Publish Event, End Date Is Over !!" });
-      }
       } else {
         res.clearCookie("jwtauth");
         return res.json({
@@ -645,7 +653,7 @@ let controller = {
       return res.render("viewBasketUserPreference", {
         module: modules,
         basketUser: viewBasketUser.rows,
-        dataRows:rowlength
+        dataRows: rowlength,
       });
     } catch (error) {
       console.log("Error " + err.message);
@@ -677,32 +685,30 @@ let controller = {
     }
   },
 
-  adminAllocatingEvents : async (req,res) => {
- 
+  adminAllocatingEvents: async (req, res) => {
     try {
-
-      let {eventId} = req.body;
+      let { eventId } = req.body;
       let result = await eventQuery.adminAllocatingEvents(eventId);
 
-      if(result.rowCount > 0){
-       return res.json({status:'success',message:'Event Allocated Succesfully !!'});
-      }else{
-       return res.json({message:'Failed To Allocate Event !!'});
+      if (result.rowCount > 0) {
+        return res.json({
+          status: "success",
+          message: "Event Allocated Succesfully !!",
+        });
+      } else {
+        return res.json({ message: "Failed To Allocate Event !!" });
       }
-      
     } catch (error) {
       console.log(error);
       return res.json({
-      status: "error",
-      redirectTo: `${res.locals.BASE_URL}elective/error`,
+        status: "error",
+        redirectTo: `${res.locals.BASE_URL}elective/error`,
       });
     }
-
   },
 
-  downloadAllocationReport : async (req,res) => {
+  downloadAllocationReport: async (req, res) => {
     try {
-
       let eventId = req.query.id;
       let allocationData = await eventQuery.getAllocationReport(eventId);
 
@@ -720,45 +726,69 @@ let controller = {
 
         return res.sendFile(filePath);
       }
-      
     } catch (error) {
       console.log("Error " + error.message);
-      return res.redirect(`${res.locals.BASE_URL}elective/error`); 
+      return res.redirect(`${res.locals.BASE_URL}elective/error`);
     }
   },
 
-  sendEventMail : async (req,res) => {
-
+  sendEventMail: async (req, res) => {
     try {
-      let username = await redisDb.get("user");
-      let eventId = req.query.id;
+      let { eventId } = req.body;
       let studentAllocateData = await eventQuery.loadStudentData(eventId);
-      let getmodules = await query.getModules(username);
-
-      return res.render('viewEventMail',{module:getmodules,studentData:studentAllocateData.rows});
+      console.log(studentAllocateData.rowCount);
       
+      if (studentAllocateData.rowCount > 0) {
+        let studentArray =  studentAllocateData.rows;
+        let sendMailPromises = studentArray.map(async (data) => {
+          let electedEventData = await eventQuery.electedData(data.user_lid, eventId);
+          let electedArray = electedEventData.rows;
+  
+          let sendMailTo = new Array(data.email);
+          let subject = `Allocated Subjects for Event ${electedEventData.rows[0].event_name} `;
+          let message = `<p>Hello ${data.username}, below are the mentioned elected subjects</p></br></br>
+          <table>
+          <tr>
+          <th>Sr.No</th>
+          <th>Username</th>
+          <th>Basket Name</th>
+          <th>Elective No</th>
+          <th>Subject Name</th>
+          <th>Subject Preference</th>
+          </tr>
+          ${electedArray.map((data, index) => `
+          <tr>
+          <td>${index + 1}</td>
+          <td>${data.username}</td>
+          <td>${data.basket_name}</td>
+          <td>${data.elective_no}</td>
+          <td>${data.subject_name}</td>
+          <td>${data.sub_pref}</td>
+          </tr>`).join("")}
+          </table>`;
+  
+          return emailController.sendMail(sendMailTo, subject, message);
+        });
+  
+        let sendMailResults = await Promise.all(sendMailPromises);
+  
+        if (sendMailResults.some(result => result && result.rowCount > 0)) {
+          return res.json({ message: "Emails Sent Successfully !!" });
+        } else {
+          return res.json({ message: "Failed To Send Emails !!" });
+        }
+      } else {
+        return res.json({ message: "No Students Found !!" });
+      }
     } catch (error) {
-      console.log("Error " + error.message);
-      return res.redirect(`${res.locals.BASE_URL}elective/error`); 
+      console.log(error);
+      return res.json({
+        status: "error",
+        redirectTo: `${res.locals.BASE_URL}elective/error`,
+      });
     }
   },
-
-  sendMailStudent : async(req,res) => {
-
-    try{
-     
-      let {userId,eventId} = req.body;
-      
-
-
-    }catch (error) {
-      console.log("Error " + error.message);
-      return res.redirect(`${res.locals.BASE_URL}elective/error`); 
-    }
-  }
-
-
-
+  
 };
 
 
