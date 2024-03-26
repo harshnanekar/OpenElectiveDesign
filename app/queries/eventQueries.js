@@ -132,6 +132,7 @@ const query = class EventQuery{
    return pgPool.query(query)
   }
 
+<<<<<<< HEAD
   static electedData(userId,eventId){
     let query={
     text:`select s.id,u.username,e.event_name,b.basket_name,sm.subject_name,s.elective_no,s.sub_pref from student_sub_allocation s inner join user_info u on s.user_lid = u.id 
@@ -148,6 +149,12 @@ const query = class EventQuery{
       values:[rollNo]
     }
     return pgPool.query(query);
+=======
+  static checkStudentRollNo(rollNo){
+    let query = {
+      text:`select * from student_info where roll_no`
+    }
+>>>>>>> e511f5294962b4c78032e97c01d7910aea589ff5
   }
 
 

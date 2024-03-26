@@ -7,6 +7,7 @@ const pgPool = new Pool({
     user: 'postgres',
     password: 'root',
     database: 'open_elective'
+    database: 'open_elective_new',
 });
 
 const redisDb = createClient({

@@ -24,7 +24,8 @@
             #basketForm {
                 background-color: white;
                 padding: 2%;
-                width: 100%;
+                width:100%;
+                /* width: 1450px; */
                 margin-top: 40px;
                 border-radius: 10px;
             }
@@ -43,11 +44,11 @@
     <%- include('sidebar.ejs') %>
         <%- include('header.ejs') %>
 
-            <div id="mains" class="container">
+            <div id="mains" class="container col-md-8 col-sm-8 col-xs-12 col-lg-8" >
      <%- include('messageModal.ejs') %>
      <%- include('loader.ejs') %>
 
-                    <div id='basketForm'>
+                    <div id='basketForm' >
                         <div class="form-row">
                             <div class="form-group col-md-12">
                                 <label for="inputBasketName">Basket Name</label>&ensp;&ensp;<span
@@ -64,7 +65,7 @@
                         </div>
                         <button type="submit" id="submitbtn" class="btn btn-danger mt-4 btnSubmit">Add Basket</button>
                     </div></br>
-                    <div id="basketData">
+                    <div id="basketData" >
                         <h4 id="totalRecord">
                             <%= basket.length %> Record Found
                         </h4>

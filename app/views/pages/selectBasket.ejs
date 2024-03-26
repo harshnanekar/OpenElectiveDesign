@@ -211,6 +211,11 @@
                     modalBody.innerHTML = `<h4 style="text-align:center;">Select Courses ${compSub} or more than ${compSub} !!</h4>`;
                     document.querySelector('[data-target="#messageModal"]').click();
                 }
+            }else{
+                let modalBody = document.querySelector('#msgModal');
+                modalBody.innerHTML = `<h4 style="text-align:center;">No Duplicate Subjects Allowed !!</h4>`;
+                document.querySelector('[data-target="#messageModal"]').click();
+            }
 
             }else{
                 let modalBody = document.querySelector('#msgModal');

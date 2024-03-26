@@ -59,6 +59,7 @@ module.exports = {
           basketLid,
         };
         console.log(
+          'basket data::::::::::::: ',
           JSON.stringify({
             eventLid,
             timeString,
@@ -78,7 +79,11 @@ module.exports = {
         );
 
         let nextBasketData = insertStudentBasket.rows;
+<<<<<<< HEAD
        
+=======
+        console.log('next basket data ',JSON.stringify(nextBasketData))
+>>>>>>> e511f5294962b4c78032e97c01d7910aea589ff5
         let yearBackSubjects = await studentQuery.showYearBackSubjects(
           username,
           eventLid
